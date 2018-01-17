@@ -1,1 +1,1 @@
-# Applitools Selenium IDE plugin
+# Applitools Selenium IDE plugin &middot; [![Build Status](https://travis-ci.com/applitools/applitools-for-selenium-ide.svg?token=QdqsevXuKPcBpNJ7ADxQ&branch=master)](https://travis-ci.com/applitools/applitools-for-selenium-ide)
