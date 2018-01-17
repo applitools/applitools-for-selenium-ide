@@ -1,0 +1,10 @@
+node_modules
+_MACOSX/
+.DS_Store
+build
+.tern-port
+applitools.pem
+yarn-error.log
+dist
+.web-extension-id
+*.log
