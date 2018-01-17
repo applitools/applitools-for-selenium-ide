@@ -1,23 +1,6 @@
-// Licensed to the Software Freedom Conservancy (SFC) under one
-// or more contributor license agreements.  See the NOTICE file
-// distributed with this work for additional information
-// regarding copyright ownership.  The SFC licenses this file
-// to you under the Apache License, Version 2.0 (the
-// "License"); you may not use this file except in compliance
-// with the License.  You may obtain a copy of the License at
-//
-//   http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
-
 import path from "path";
 import webpack from "webpack";
-import HtmlWebpackPlugin from "html-webpack-plugin";
+//import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import autoprefixer from "autoprefixer";
@@ -28,9 +11,9 @@ export default {
   context: path.resolve(__dirname, "src"),
   devtool: isProduction ? "source-map" : false,
   entry: {
-    content: ["./content"],
-    background: ["./background"],
-    app: ["react-hot-loader/patch", "./app/containers/Root"]
+    //content: ["./content"],
+    background: ["./background"]/*,
+    app: ["react-hot-loader/patch", "./app/containers/Root"]*/
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -136,7 +119,7 @@ export default {
       { from: "icons", to: "../icons" }
     ]),
     // Generates an `index.html` file with the <script> injected.
-    new HtmlWebpackPlugin({
+    /*new HtmlWebpackPlugin({
       filename: "index.html",
       inject: true,
       template: path.resolve(__dirname, "src/app/index.html"),
@@ -153,7 +136,7 @@ export default {
         minifyCSS: true,
         minifyURLs: true
       }
-    }),
+    }),*/
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
