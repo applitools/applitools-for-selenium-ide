@@ -1,0 +1,1 @@
+# Applitools Selenium IDE plugin
