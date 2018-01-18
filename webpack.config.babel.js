@@ -143,7 +143,8 @@ export default {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin({
       "process.env": {
-        "NODE_ENV": JSON.stringify(process.env.NODE_ENV)
+        "NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+        "SIDE_ID": JSON.stringify(process.env.SIDE_ID)
       }
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
