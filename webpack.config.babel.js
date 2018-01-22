@@ -11,7 +11,7 @@ export default {
   context: path.resolve(__dirname, "src"),
   devtool: isProduction ? "source-map" : false,
   entry: {
-    //content: ["./content"],
+    content: ["./content"],
     background: ["./background"]/*,
     app: ["react-hot-loader/patch", "./app/containers/Root"]*/
   },
