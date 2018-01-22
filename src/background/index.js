@@ -7,10 +7,20 @@ browser.browserAction.onClicked.addListener(() => {
     payload: {
       name: "Applitools",
       version: "1.0.0",
-      commands: [{
-        id: "checkWindow",
-        name: "check window"
-      }]
+      commands: [
+        {
+          id: "checkWindow",
+          name: "check window"
+        },
+        {
+          id: "checkPlugin",
+          name: "check plugin"
+        }]
     }
   }).then(console.log).catch(console.error);
+});
+
+browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  console.log(message);
+  sendResponse({ error: "This command is no longer in use" });
 });
