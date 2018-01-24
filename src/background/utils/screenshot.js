@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import Buffer from "buffer/";
+import { Buffer } from "buffer/";
 import GeometryUtils from "eyes.utils/src/GeometryUtils";
 
 const _MAX_SCROLL_BAR_SIZE = 50;
@@ -138,33 +138,33 @@ export function getTabScreenshot(windowId, withImage = false, scaleRatio = 1.0, 
             }
           }
           if (isScaled) {
-            scaleImage(originalDataUri, scaleRatio).then(dataUri => (resolve(dataUri)));
+            return scaleImage(originalDataUri, scaleRatio).then(dataUri => (resolve(dataUri)));
           } else {
-            resolve(originalDataUri);
+            return resolve(originalDataUri);
           }
         };
         image.src = originalDataUri;
       } else {
         // If there's no "sizesNotToScale" list, we scale the image.
-        scaleImage(originalDataUri, scaleRatio).then(dataUri => (resolve(dataUri)));
+        return scaleImage(originalDataUri, scaleRatio).then(dataUri => (resolve(dataUri)));
       }
-    }).then(dataUri => {
-      // Whether or not we scaled the image, we should now return the result.
-      return new Promise((resolve) => {
-        // Create the image buffer.
-        const image64 = dataUri.replace("data:image/png;base64,", "");
-        const imageBuffer = new Buffer(image64, "base64");
-        if (withImage) {
-          const updatedImage = new Image();
-          updatedImage.onload = function () {
-            return resolve({imageBuffer, image: updatedImage, isScaled});
-          };
-          updatedImage.src = dataUri;
-        } else {
-          // If we don't need to return an Image object
-          return resolve({imageBuffer, isScaled});
-        }
-      });
+    });
+  }).then(dataUri => {
+    // Whether or not we scaled the image, we should now return the result.
+    return new Promise((resolve) => {
+      // Create the image buffer.
+      const image64 = dataUri.replace("data:image/png;base64,", "");
+      const imageBuffer = new Buffer(image64, "base64");
+      if (withImage) {
+        const updatedImage = new Image();
+        updatedImage.onload = function () {
+          return resolve({imageBuffer, image: updatedImage, isScaled});
+        };
+        updatedImage.src = dataUri;
+      } else {
+        // If we don't need to return an Image object
+        return resolve({imageBuffer, isScaled});
+      }
     });
   });
 }
