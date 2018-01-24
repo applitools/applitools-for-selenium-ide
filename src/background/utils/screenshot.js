@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import Buffer from "buffer/";
 import GeometryUtils from "eyes.utils/src/GeometryUtils";
 
 const _MAX_SCROLL_BAR_SIZE = 50;

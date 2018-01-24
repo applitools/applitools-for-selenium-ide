@@ -46,6 +46,7 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
+    "buffer": "^5.0.8",
     "classnames": "^2.2.5",
     "eyes.utils": "^0.0.26",
     "prop-types": "^15.5.10",
