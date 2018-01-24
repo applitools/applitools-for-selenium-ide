@@ -42,7 +42,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "checkPlugin": {
         console.log("working on screenshot");
         console.log(message.options);
-        getScreenshot(message.options.tabId, message.options.windowId, false, false, undefined).then(console.log);
+        getScreenshot(message.options.tabId, message.options.windowId, false, false, { width: 300, height: 300 }).then(console.log);
       }
     }
   }
