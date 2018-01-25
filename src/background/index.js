@@ -40,7 +40,10 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "checkPlugin": {
-        checkWindow(message.options.tabId, message.options.windowId, { width: 750, height: 500 }).then(console.log);
+        checkWindow(message.options.tabId, message.options.windowId, { width: 750, height: 500 }).then((results) => {
+          sendResponse(true);
+        });
+        return true;
       }
     }
   }

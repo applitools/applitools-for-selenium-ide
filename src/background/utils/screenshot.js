@@ -31,11 +31,10 @@ export function setTransform(tabId, transformToSet = "") {
 }
 
 export function translateTo(tabId, x, y) {
-  return setTransform(tabId, { code: `translate(-${x}px, -${y}px)` });
+  return setTransform(tabId, `translate(-${x}px, -${y}px)`);
 }
 
 export function getEntirePageSize(tabId) {
-  console.log(tabId);
   const scrollWidthPromise = browser.tabs.executeScript(tabId, { code: "document.documentElement.scrollWidth" });
   const bodyScrollWidthPromise = browser.tabs.executeScript(tabId, { code: "document.body.scrollWidth" });
 
@@ -286,7 +285,7 @@ export function getFullPageScreenshot(tabId, windowId, scaleRatio = 1.0, viewpor
         }
 
         return partsPromise.then(() => (
-          setTransform(tabId, originalTransform, 250).then(() => (
+          setTransform(tabId, originalTransform).then(() => (
             // Okay, we've got all the parts, return to the original location.
             scrollTo(tabId, originalScrollPosition.x, originalScrollPosition.y).then(() => (
               // Give the scrolling time to stabilize.
