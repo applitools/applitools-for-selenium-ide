@@ -1,5 +1,4 @@
 import browser from "webextension-polyfill";
-import { Buffer } from "buffer/";
 import GeometryUtils from "eyes.utils/src/GeometryUtils";
 
 const _MAX_SCROLL_BAR_SIZE = 50;
@@ -153,17 +152,15 @@ export function getTabScreenshot(windowId, withImage = false, scaleRatio = 1.0, 
     // Whether or not we scaled the image, we should now return the result.
     return new Promise((resolve) => {
       // Create the image buffer.
-      const image64 = dataUri.replace("data:image/png;base64,", "");
-      const imageBuffer = new Buffer(image64, "base64");
       if (withImage) {
         const updatedImage = new Image();
         updatedImage.onload = function () {
-          return resolve({imageBuffer, image: updatedImage, isScaled});
+          return resolve({imageBuffer: dataUri, image: updatedImage, isScaled});
         };
         updatedImage.src = dataUri;
       } else {
         // If we don't need to return an Image object
-        return resolve({imageBuffer, isScaled});
+        return resolve({imageBuffer: dataUri, isScaled});
       }
     });
   });
@@ -213,10 +210,7 @@ export function stitchImage(fullSize, parts) {
       currentPart.position.left, currentPart.position.top, currentPart.size.width, currentPart.size.height);
   }
 
-  const stitchedDataUri = canvas.toDataURL();
-  // Create the image buffer.
-  const image64 = stitchedDataUri.replace("data:image/png;base64,", "");
-  return Promise.resolve(new Buffer(image64, "base64"));
+  return Promise.resolve(canvas.toDataURL());
 }
 
 export function getFullPageScreenshot(tabId, windowId, scaleRatio = 1.0, viewportSize, entirePageSize) {
@@ -285,10 +279,9 @@ export function getFullPageScreenshot(tabId, windowId, scaleRatio = 1.0, viewpor
           }
 
           // Since both the scrolling and the capturing operations are async, we must chain them.
-          //noinspection JSLint
           partsPromise = getPagePart(partsPromise, tabId, windowId, partRegion, scaleRatio, viewportSize).then((part) => {
             imageParts.push(part);
-            return resolve();
+            return Promise.resolve();
           });
         }
 

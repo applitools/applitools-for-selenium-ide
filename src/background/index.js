@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { setViewportSize } from "./commands/viewport";
-import { getScreenshot } from "./utils/screenshot";
+import { checkWindow } from "./commands/check";
 
 browser.browserAction.onClicked.addListener(() => {
   browser.runtime.sendMessage(process.env.SIDE_ID, {
@@ -40,9 +40,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "checkPlugin": {
-        console.log("working on screenshot");
-        console.log(message.options);
-        getScreenshot(message.options.tabId, message.options.windowId, false, false, { width: 750, height: 500 }).then(console.log);
+        checkWindow(message.options.tabId, message.options.windowId, { width: 750, height: 500 }).then(console.log);
       }
     }
   }
