@@ -9,6 +9,7 @@ export function getEyes() {
   });
   eyes.setApiKey(process.env.API_KEY);
   eyes.setAgentId(navigator.userAgent);
+  eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
 
   return eyes;
 }
