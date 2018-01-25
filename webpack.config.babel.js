@@ -116,7 +116,8 @@ export default {
     // Copy non-umd assets to vendor
     new CopyWebpackPlugin([
       { from: "manifest.json", to: "../" },
-      { from: "icons", to: "../icons" }
+      { from: "icons", to: "../icons" },
+      { from: "../node_modules/eyes.images/dist/eyes-browser.min.js", to: "./"}
     ]),
     // Generates an `index.html` file with the <script> injected.
     /*new HtmlWebpackPlugin({
@@ -144,7 +145,8 @@ export default {
     new webpack.DefinePlugin({
       "process.env": {
         "NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-        "SIDE_ID": JSON.stringify(process.env.SIDE_ID)
+        "SIDE_ID": JSON.stringify(process.env.SIDE_ID),
+        "API_KEY": JSON.stringify(process.env.API_KEY)
       }
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.

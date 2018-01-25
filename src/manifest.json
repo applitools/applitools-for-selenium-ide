@@ -38,6 +38,6 @@
   ],
   "background":
   {
-    "scripts": ["assets/background.js"]
+    "scripts": ["assets/eyes-browser.min.js", "assets/background.js"]
   }
 }

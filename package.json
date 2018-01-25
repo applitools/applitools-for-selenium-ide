@@ -48,7 +48,7 @@
   "dependencies": {
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
-    "eyes.images": "^0.0.46",
+    "eyes.images": "^0.0.47",
     "eyes.utils": "^0.0.26",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
