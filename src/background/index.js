@@ -29,6 +29,7 @@ browser.browserAction.onClicked.addListener(() => {
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.action === "execute") {
+    console.log(message.options);
     switch (message.command.command) {
       case "setViewportSize": {
         const [width, height] = message.command.value.split(",").map((s) => parseInt(s));
@@ -40,7 +41,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "checkPlugin": {
-        checkWindow(message.options.tabId, message.options.windowId, { width: 750, height: 500 }, false).then((results) => {
+        checkWindow(message.options.runId, message.options.tabId, message.options.windowId, { width: 750, height: 500 }, false).then((results) => {
           sendResponse(results);
         });
         return true;
