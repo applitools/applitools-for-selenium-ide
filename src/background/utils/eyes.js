@@ -15,7 +15,7 @@ function makeEyes() {
   eyes.setAgentId(navigator.userAgent);
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
 
-  return eyes.open("Selenium IDE", "Visual test!!!!", { width: 750, height: 500 }).then(() => (eyes));
+  return eyes.open("Selenium IDE", "Visual test!!!!").then(() => (eyes));
 }
 
 export function getEyes(runId) {

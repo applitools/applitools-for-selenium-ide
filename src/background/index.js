@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { setViewportSize } from "./commands/viewport";
+import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow } from "./commands/check";
 
 browser.browserAction.onClicked.addListener(() => {
@@ -42,8 +42,10 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       }
       case "checkPlugin": {
         if (message.options.runId) {
-          checkWindow(message.options.runId, message.options.tabId, message.options.windowId, { width: 750, height: 500 }, false).then((results) => {
-            sendResponse(results);
+          getViewportSize(message.options.tabId).then(viewport => {
+            checkWindow(message.options.runId, message.options.tabId, message.options.windowId, viewport, false).then((results) => {
+              sendResponse(results);
+            });
           });
           return true;
         } else {
