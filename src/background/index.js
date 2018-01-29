@@ -32,7 +32,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     console.log(message.options);
     switch (message.command.command) {
       case "setViewportSize": {
-        const [width, height] = message.command.value.split(",").map((s) => parseInt(s));
+        const [width, height] = message.command.value.split("x").map((s) => parseInt(s));
         setViewportSize(width, height, message.options).then(() => (
           sendResponse(true)
         )).catch(error => (
