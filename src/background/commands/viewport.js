@@ -17,11 +17,15 @@ export function setViewportSize(width, height, playbackOptions) {
   }, playbackOptions));
 }
 
+export function getViewportSize(tabId) {
+  return browser.tabs.sendMessage(tabId, {
+    getSize: true
+  });
+}
+
 function fixInaccuracies(sizes, playbackOptions, retries = 3) {
   if (!retries) return Promise.reject(`Can not accurately set viewport size, set as ${sizes.actualSize.width}px x ${sizes.actualSize.height}px`);
-  return browser.tabs.sendMessage(playbackOptions.tabId, {
-    getSize: true
-  }).then(actualSize => {
+  return getViewportSize(playbackOptions.tabId).then(actualSize => {
     if (actualSize.width === sizes.wantedSize.width && actualSize.height === sizes.wantedSize.height) {
       return Promise.resolve(true);
     } else {
