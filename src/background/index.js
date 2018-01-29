@@ -35,13 +35,13 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         setViewportSize(width, height, message.options).then(() => (
           sendResponse(true)
         )).catch(error => (
-          sendResponse({ error })
+          sendResponse({ error, status: "fatal" })
         ));
         return true;
       }
       case "checkPlugin": {
-        checkWindow(message.options.tabId, message.options.windowId, { width: 750, height: 500 }).then((results) => {
-          sendResponse(true);
+        checkWindow(message.options.tabId, message.options.windowId, { width: 750, height: 500 }, false).then((results) => {
+          sendResponse(results);
         });
         return true;
       }
