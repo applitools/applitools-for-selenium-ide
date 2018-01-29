@@ -41,10 +41,14 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "checkPlugin": {
-        checkWindow(message.options.runId, message.options.tabId, message.options.windowId, { width: 750, height: 500 }, false).then((results) => {
-          sendResponse(results);
-        });
-        return true;
+        if (message.options.runId) {
+          checkWindow(message.options.runId, message.options.tabId, message.options.windowId, { width: 750, height: 500 }, false).then((results) => {
+            sendResponse(results);
+          });
+          return true;
+        } else {
+          sendResponse({ status: "fatal", error: "This command can't be run individually, please run the test case." });
+        }
       }
     }
   }
