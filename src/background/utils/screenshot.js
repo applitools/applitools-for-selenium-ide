@@ -216,7 +216,7 @@ export function getFullPageScreenshot(tabId, windowId, scaleRatio = 1.0, viewpor
   let originalScrollPosition, originalTransform, partSize;
   const imageParts = [];
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
 
     // Saving the original scroll position.
     getCurrentScrollPosition(tabId).then((originalScrollPosition_) => {
