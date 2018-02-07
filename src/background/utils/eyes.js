@@ -14,8 +14,9 @@ function makeEyes() {
   eyes.setApiKey(process.env.API_KEY);
   eyes.setAgentId(navigator.userAgent);
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
+  eyes.setBatch("projectname");
 
-  return eyes.open("Selenium IDE", "Visual test!!!!").then(() => (eyes));
+  return eyes.open("Selenium IDE", "test name").then(() => (eyes));
 }
 
 export function getEyes(runId) {

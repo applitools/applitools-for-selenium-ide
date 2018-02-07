@@ -10,12 +10,16 @@ export function checkWindow(runId, tabId, windowId, viewport, forceFullPageScree
         return eyes.checkImage(image64, "Education");
       }).then((imageResult) => {
         console.log(imageResult);
-        return closeEyes(runId);
-      }).then(results => {
-        resolve(results.isPassed
-          ? { message: `All visual tests have passed,\nresults: ${results.appUrls.session}` }
-          : { error: `There are visual tests failures,\nresults: ${results.appUrls.session}` });
+        return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
       }).catch(reject);
     });
   });
+}
+
+export function endTest(runId) {
+  return closeEyes(runId).then(results => (
+    results.isPassed
+      ? { message: `All visual tests have passed,\nresults: ${results.appUrls.session}` }
+      : { error: `There are visual tests failures,\nresults: ${results.appUrls.session}` }
+  ));
 }

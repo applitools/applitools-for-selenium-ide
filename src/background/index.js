@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
-import { checkWindow } from "./commands/check";
+import { checkWindow, endTest } from "./commands/check";
 
 browser.browserAction.onClicked.addListener(() => {
   browser.runtime.sendMessage(process.env.SIDE_ID, {
@@ -28,8 +28,14 @@ browser.browserAction.onClicked.addListener(() => {
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  console.log(message);
+  if (message.event === "playbackStopped" && message.options.runId) {
+    endTest(message.options.runId).then(results => {
+      return sendResponse(results);
+    }).catch(sendResponse);
+    return true;
+  }
   if (message.action === "execute") {
-    console.log(message.options);
     switch (message.command.command) {
       case "setViewportSize": {
         const [width, height] = message.command.value.split("x").map((s) => parseInt(s));
@@ -40,7 +46,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         ));
         return true;
       }
-      case "checkPlugin": {
+      case "checkWindow": {
         if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
             checkWindow(message.options.runId, message.options.tabId, message.options.windowId, viewport, false).then((results) => {
