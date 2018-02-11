@@ -56,7 +56,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "checkWindow": {
         if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
-            checkWindow(message.options.runId, message.options.testId, message.options.commandId, message.options.tabId, message.options.windowId, viewport, false).then((results) => {
+            checkWindow(message.options.runId, message.options.testId, message.options.commandId, message.options.tabId, message.options.windowId, undefined, viewport, false).then((results) => {
               sendResponse(results);
             });
           });
