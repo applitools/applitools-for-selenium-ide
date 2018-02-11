@@ -2,9 +2,9 @@ import browser from "webextension-polyfill";
 import { getScreenshot } from "../utils/screenshot";
 import { getEyes, closeEyes } from "../utils/eyes";
 
-export function checkWindow(runId, commandId, tabId, windowId, viewport, forceFullPageScreenshot = true, removeScrollBars = false) {
+export function checkWindow(runId, testId, commandId, tabId, windowId, viewport, forceFullPageScreenshot = true, removeScrollBars = false) {
   return new Promise((resolve, reject) => {
-    getEyes(runId).then(eyes => {
+    getEyes(`${runId}${testId}`).then(eyes => {
       eyes.commands.push(commandId);
       eyes.setViewportSize(viewport);
       getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {
@@ -17,8 +17,8 @@ export function checkWindow(runId, commandId, tabId, windowId, viewport, forceFu
   });
 }
 
-export function endTest(runId) {
-  return closeEyes(runId).then(results => {
+export function endTest(id) {
+  return closeEyes(id).then(results => {
     console.log(results);
     return Promise.all(results.commands.map((commandId, index) => (
       browser.runtime.sendMessage(process.env.SIDE_ID, {
