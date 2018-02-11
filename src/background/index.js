@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, endTest } from "./commands/check";
+import { hasEyes } from "./utils/eyes";
 
 browser.browserAction.onClicked.addListener(() => {
   browser.runtime.sendMessage(process.env.SIDE_ID, {
@@ -29,7 +30,7 @@ browser.browserAction.onClicked.addListener(() => {
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   console.log(message);
-  if (message.event === "playbackStopped" && message.options.runId) {
+  if (message.event === "playbackStopped" && message.options.runId && hasEyes(message.options.runId)) {
     endTest(message.options.runId).then(results => {
       return sendResponse(results);
     }).catch(sendResponse);
@@ -49,7 +50,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "checkWindow": {
         if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
-            checkWindow(message.options.runId, message.options.tabId, message.options.windowId, viewport, false).then((results) => {
+            checkWindow(message.options.runId, message.options.commandId, message.options.tabId, message.options.windowId, viewport, false).then((results) => {
               sendResponse(results);
             });
           });
