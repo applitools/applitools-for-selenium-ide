@@ -8,36 +8,36 @@ const promiseFactory = {
 
 const eyes = {};
 
-function makeEyes() {
+function makeEyes(batchId, appName, batchName, testName) {
   const eyesApiServerUrl = undefined;
   const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
   eyes.setApiKey(process.env.API_KEY);
   eyes.setAgentId(navigator.userAgent);
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
-  eyes.setBatch("projectname");
+  eyes.setBatch(batchName, batchId);
   eyes.commands = [];
 
-  return eyes.open("Selenium IDE", "test name").then(() => (eyes));
+  return eyes.open(appName, testName).then(() => (eyes));
 }
 
-export function hasEyes(runId) {
-  return !!eyes[runId];
+export function hasEyes(id) {
+  return !!eyes[id];
 }
 
-export function getEyes(runId) {
-  if (!eyes[runId]) {
-    return makeEyes().then(eye => {
-      eyes[runId] = eye;
+export function getEyes(id, batchId, appName, batchName, testName) {
+  if (!eyes[id]) {
+    return makeEyes(batchId, appName, batchName, testName).then(eye => {
+      eyes[id] = eye;
       return eye;
     });
   } else {
-    return Promise.resolve(eyes[runId]);
+    return Promise.resolve(eyes[id]);
   }
 }
 
-export function closeEyes(runId) {
-  const eye = eyes[runId];
-  eyes[runId] = undefined;
+export function closeEyes(id) {
+  const eye = eyes[id];
+  eyes[id] = undefined;
 
   return eye.close(false).then(results => {
     results.commands = eye.commands;
