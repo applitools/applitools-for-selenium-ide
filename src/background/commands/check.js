@@ -1,10 +1,14 @@
 import browser from "webextension-polyfill";
 import { getScreenshot } from "../utils/screenshot";
 import { getEyes, closeEyes } from "../utils/eyes";
+import ideLogger from "../utils/ide-logger";
 
 export function checkWindow(runId, testId, commandId, tabId, windowId, stepName, viewport, forceFullPageScreenshot = true, removeScrollBars = false) {
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
+      if (!eyes.didSetViewportSize) {
+        ideLogger.warn("a visual check was called without setting a viewport size, results may be inconsistent");
+      }
       eyes.commands.push(commandId);
       eyes.setViewportSize(viewport);
       getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {

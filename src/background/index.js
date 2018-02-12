@@ -48,9 +48,15 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     switch (message.command.command) {
       case "setViewportSize": {
         const [width, height] = message.command.value.split("x").map((s) => parseInt(s));
-        setViewportSize(width, height, message.options).then(() => (
-          sendResponse(true)
-        )).catch(error => (
+        setViewportSize(width, height, message.options).then(() => {
+          // remember that we set the viewport size so we won't warn about that later
+          if (hasEyes(`${message.options.runId}${message.options.testId}`)) {
+            getEyes(`${message.options.runId}${message.options.testId}`).then((eyes) => {
+              eyes.didSetViewportSize = true;
+            });
+          }
+          return sendResponse(true);
+        }).catch(error => (
           sendResponse({ error, status: "fatal" })
         ));
         return true;
