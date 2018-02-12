@@ -1,6 +1,6 @@
 import path from "path";
 import webpack from "webpack";
-//import HtmlWebpackPlugin from "html-webpack-plugin";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 import ExtractTextPlugin from "extract-text-webpack-plugin";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import autoprefixer from "autoprefixer";
@@ -12,8 +12,8 @@ export default {
   devtool: isProduction ? "source-map" : false,
   entry: {
     content: ["./content"],
-    background: ["./background"]/*,
-    app: ["react-hot-loader/patch", "./app/containers/Root"]*/
+    background: ["./background"],
+    app: ["react-hot-loader/patch", "./app/containers/Root"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -120,7 +120,7 @@ export default {
       { from: "../node_modules/eyes.images/dist/eyes-browser.min.js", to: "./"}
     ]),
     // Generates an `index.html` file with the <script> injected.
-    /*new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin({
       filename: "index.html",
       inject: true,
       template: path.resolve(__dirname, "src/app/index.html"),
@@ -137,7 +137,7 @@ export default {
         minifyCSS: true,
         minifyURLs: true
       }
-    }),*/
+    }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.

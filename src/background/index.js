@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, endTest } from "./commands/check";
 import { getEyes, hasEyes } from "./utils/eyes";
@@ -26,6 +27,7 @@ browser.browserAction.onClicked.addListener(() => {
       ]
     }
   }).then(console.log).catch(console.error);
+  openOrFocusPopup();
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
