@@ -39,5 +39,10 @@
   "background":
   {
     "scripts": ["assets/eyes-browser.min.js", "assets/background.js"]
+  },
+  "options_ui": {
+    "page": "assets/options.html",
+    "browser_style": true,
+    "chrome_style": true
   }
 }

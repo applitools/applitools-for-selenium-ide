@@ -1,0 +1,31 @@
+form {
+}
+
+form > * {
+    display: block;
+    padding: 3px 0;
+}
+
+.form-input {
+  display: flex;
+}
+
+.form-input > label {
+  font-size: 13px;
+  width: 85px;
+  display: inline-block;
+  margin: 10px 0;
+}
+
+.form-input > *:last-child {
+  flex-grow: 1;
+  margin: 5px 0;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}

@@ -13,7 +13,8 @@ export default {
   entry: {
     content: ["./content"],
     background: ["./background"],
-    app: ["react-hot-loader/patch", "./app/containers/Root"]
+    app: ["react-hot-loader/patch", "./app/containers/Root"],
+    options: ["./options/container"]
   },
   output: {
     path: path.resolve(__dirname, "build/assets"),
@@ -138,6 +139,24 @@ export default {
         minifyURLs: true
       }
     }),
+    new HtmlWebpackPlugin({
+      filename: "options.html",
+      inject: true,
+      template: path.resolve(__dirname, "src/options/options.html"),
+      chunks: ["options"],
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      }
+    }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
@@ -145,8 +164,7 @@ export default {
     new webpack.DefinePlugin({
       "process.env": {
         "NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-        "SIDE_ID": JSON.stringify(process.env.SIDE_ID),
-        "API_KEY": JSON.stringify(process.env.API_KEY)
+        "SIDE_ID": JSON.stringify(process.env.SIDE_ID)
       }
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
