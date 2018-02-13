@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import React from "react";
 import ReactDOM from "react-dom";
 import { AppContainer } from "react-hot-loader";
@@ -20,3 +21,5 @@ if (module.hot) {
     render(NextRootContainer);
   });
 }
+
+browser.runtime.onMessageExternal.addListener(() => {});
