@@ -1,7 +1,7 @@
-import browser from "webextension-polyfill";
+import { sendMessage } from "../../IO/message-port";
 
 export function log(message, type = undefined) {
-  return browser.runtime.sendMessage(process.env.SIDE_ID, {
+  return sendMessage({
     uri: "/playback/log",
     verb: "post",
     payload: {

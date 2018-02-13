@@ -1,4 +1,4 @@
-import browser from "webextension-polyfill";
+import { sendMessage } from "../../IO/message-port";
 import { getScreenshot } from "../utils/screenshot";
 import { getEyes, closeEyes } from "../utils/eyes";
 import ideLogger from "../utils/ide-logger";
@@ -25,7 +25,7 @@ export function endTest(id) {
   return closeEyes(id).then(results => {
     console.log(results);
     return Promise.all(results.commands.map((commandId, index) => (
-      browser.runtime.sendMessage(process.env.SIDE_ID, {
+      sendMessage({
         uri: "/playback/command",
         verb: "post",
         payload: {

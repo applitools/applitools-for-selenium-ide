@@ -1,11 +1,12 @@
 import browser from "webextension-polyfill";
+import { sendMessage } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, endTest } from "./commands/check";
 import { getEyes, hasEyes } from "./utils/eyes";
 
 browser.browserAction.onClicked.addListener(() => {
-  browser.runtime.sendMessage(process.env.SIDE_ID, {
+  sendMessage({
     uri: "/register",
     verb: "post",
     payload: {

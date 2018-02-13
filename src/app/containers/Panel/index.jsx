@@ -1,10 +1,10 @@
-import browser from "webextension-polyfill";
 import React from "react";
 import FlatButton from "../../components/FlatButton";
+import { sendMessage } from "../../../IO/message-port";
 
 export default class Panel extends React.Component {
   handleRecordCheckWindow() {
-    browser.runtime.sendMessage(process.env.SIDE_ID, {
+    sendMessage({
       uri: "/record/command",
       verb: "post",
       payload: {
