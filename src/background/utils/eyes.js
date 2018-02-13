@@ -11,11 +11,11 @@ const eyes = {};
 
 function makeEyes(batchId, appName, batchName, testName) {
   return new Promise((res, rej) => {
-    browser.storage.local.get(["apiKey"]).then(({ apiKey }) => {
+    browser.storage.local.get(["apiKey", "eyesServer"]).then(({ apiKey, eyesServer }) => {
       if (!apiKey) {
         return rej("No API key was provided, please set one in the options page");
       }
-      const eyesApiServerUrl = undefined;
+      const eyesApiServerUrl = eyesServer ? eyesServer : undefined;
       const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
       eyes.setApiKey(apiKey);
       eyes.setAgentId(navigator.userAgent);
