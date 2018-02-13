@@ -17,7 +17,7 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
       }).then((imageResult) => {
         return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
       }).catch(reject);
-    });
+    }).catch(reject);
   });
 }
 

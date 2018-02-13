@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 const { Eyes } = window.EyesImages;
 
 const promiseFactory = {
@@ -9,15 +10,24 @@ const promiseFactory = {
 const eyes = {};
 
 function makeEyes(batchId, appName, batchName, testName) {
-  const eyesApiServerUrl = undefined;
-  const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
-  eyes.setApiKey(process.env.API_KEY);
-  eyes.setAgentId(navigator.userAgent);
-  eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
-  eyes.setBatch(batchName, batchId);
-  eyes.commands = [];
+  return new Promise((res, rej) => {
+    browser.storage.local.get(["apiKey"]).then(({ apiKey }) => {
+      if (!apiKey) {
+        return rej("No API key was provided, please set one in the options page");
+      }
+      const eyesApiServerUrl = undefined;
+      const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
+      eyes.setApiKey(apiKey);
+      eyes.setAgentId(navigator.userAgent);
+      eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
+      eyes.setBatch(batchName, batchId);
+      eyes.commands = [];
 
-  return eyes.open(appName, testName).then(() => (eyes));
+      eyes.open(appName, testName).then(() => {
+        res(eyes);
+      });
+    });
+  });
 }
 
 export function hasEyes(id) {
@@ -25,14 +35,16 @@ export function hasEyes(id) {
 }
 
 export function getEyes(id, batchId, appName, batchName, testName) {
-  if (!eyes[id]) {
-    return makeEyes(batchId, appName, batchName, testName).then(eye => {
-      eyes[id] = eye;
-      return eye;
-    });
-  } else {
-    return Promise.resolve(eyes[id]);
-  }
+  return new Promise((res, rej) => {
+    if (!eyes[id]) {
+      makeEyes(batchId, appName, batchName, testName).then(eye => {
+        eyes[id] = eye;
+        res(eye);
+      }).catch(rej);
+    } else {
+      res(eyes[id]);
+    }
+  });
 }
 
 export function closeEyes(id) {

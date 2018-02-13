@@ -31,9 +31,10 @@ browser.browserAction.onClicked.addListener(() => {
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
-  console.log(message);
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
+      return sendResponse(true);
+    }).catch(() => {
       return sendResponse(true);
     });
     return true;
@@ -66,6 +67,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           getViewportSize(message.options.tabId).then(viewport => {
             checkWindow(message.options.runId, message.options.testId, message.options.commandId, message.options.tabId, message.options.windowId, undefined, viewport, false).then((results) => {
               sendResponse(results);
+            }).catch((error) => {
+              sendResponse(error instanceof Error ? { error: error.message } : {error});
             });
           });
           return true;
