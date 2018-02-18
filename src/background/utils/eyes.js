@@ -21,7 +21,7 @@ function makeEyes(batchId, appName, batchName, testName) {
       eyes.setAgentId(navigator.userAgent);
       eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
       eyes.setBatch(batchName, batchId);
-      eyes.commands = [];
+      decorateEyes(eyes);
 
       eyes.open(appName, testName).then(() => {
         res(eyes);
@@ -58,4 +58,16 @@ export function closeEyes(id) {
     console.error(e);
     eye.abortIfNotClosed();
   });
+}
+
+function decorateEyes(eyes) {
+  eyes.commands = [];
+  const setMatchLevel = eyes.setMatchLevel.bind(eyes);
+  eyes.setMatchLevel = (level) => {
+    if (level === "Layout") {
+      setMatchLevel("Layout2");
+    } else {
+      setMatchLevel(level);
+    }
+  };
 }

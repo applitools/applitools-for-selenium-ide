@@ -22,6 +22,10 @@ browser.browserAction.onClicked.addListener(() => {
           name: "check plugin"
         },
         {
+          id: "setMatchLevel",
+          name: "set match level"
+        },
+        {
           id: "setViewportSize",
           name: "set viewport size"
         }
@@ -48,6 +52,16 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.action === "execute") {
     switch (message.command.command) {
+      case "setMatchLevel": {
+        getEyes(`${message.options.runId}${message.options.testId}`).then((eyes) => {
+          return eyes.setMatchLevel(message.command.value);
+        }).then(() => {
+          return sendResponse(true);
+        }).catch((error) => {
+          return sendResponse(error instanceof Error ? { error: error.message } : {error});
+        });
+        return true;
+      }
       case "setViewportSize": {
         const [width, height] = message.command.value.split("x").map((s) => parseInt(s));
         setViewportSize(width, height, message.options).then(() => {
