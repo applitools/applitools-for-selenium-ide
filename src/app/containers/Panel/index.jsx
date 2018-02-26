@@ -1,6 +1,7 @@
 import React from "react";
 import FlatButton from "../../components/FlatButton";
 import { sendMessage } from "../../../IO/message-port";
+import applitools from "../../assets/images/applitools.png";
 
 export default class Panel extends React.Component {
   handleRecordCheckWindow() {
@@ -17,7 +18,13 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div>
+        <img src={applitools} style={{
+          display: "block",
+          margin: "10px"
+        }} />
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
+        <FlatButton>Verify a region</FlatButton>
+        <FlatButton>Verify an element</FlatButton>
       </div>
     );
   }

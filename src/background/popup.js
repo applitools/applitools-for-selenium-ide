@@ -14,8 +14,8 @@ export function openOrFocusPopup() {
 
 function openPage() {
   let size = {
-    height: 690,
-    width: 550
+    height: 100,
+    width: 450
   };
 
   return browser.windows.create(Object.assign({
