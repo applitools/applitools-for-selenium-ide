@@ -10,8 +10,8 @@ export default class Panel extends React.Component {
       verb: "post",
       payload: {
         command: "checkWindow",
-        target: "a target",
-        value: "some value"
+        target: "",
+        value: ""
       }
     }).then(console.log).catch(console.error);
   }
