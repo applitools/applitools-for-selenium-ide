@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 
 export function setViewportSize(width, height, playbackOptions) {
+  if (!width || !height) return Promise.reject("Invalid value. Value should be WidthxHeight (e.g. 1280x800)");
   const compensatedSize = {};
   return browser.tabs.sendMessage(playbackOptions.tabId, {
     compensateSize: true

@@ -72,9 +72,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
             });
           }
           return sendResponse(true);
-        }).catch(error => (
-          sendResponse({ error, status: "fatal" })
-        ));
+        }).catch(error => {
+          return sendResponse({ error: (error && error.message) ? error.message : error ,status: "fatal" });
+        });
         return true;
       }
       case "checkWindow": {
