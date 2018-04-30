@@ -29,7 +29,10 @@ browser.browserAction.onClicked.addListener(() => {
           id: "setViewportSize",
           name: "set viewport size"
         }
-      ]
+      ],
+      dependencies: {
+        "eyes.selenium": "0.0.78"
+      }
     }
   }).then(console.log).catch(console.error);
   openOrFocusPopup();
