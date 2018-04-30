@@ -99,18 +99,18 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   if (message.action === "emit") {
     switch (message.entity) {
       case "config": {
-        return sendResponse(`let eyes, apiKey = process.env.APPLITOOLS_API_KEY, appName = "${message.project.name}", batchId = configuration.randomSeed, batchName, _driver = driver;`);
+        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, appName = "${message.project.name}", batchId = configuration.randomSeed, batchName;`);
       }
       case "suite": {
         return sendResponse({
           beforeAll: `batchName = "${message.suite.name}";`,
           before: "eyes = new Eyes();eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);",
-          after: "driver = _driver;return eyes.close();"
+          after: "return eyes.close();"
         });
       }
       case "test": {
         return sendResponse({
-          setup: `driver = await eyes.open(_driver, appName, "${message.test.name}");`,
+          setup: `await eyes.open(driver, appName, "${message.test.name}");`,
           teardown: ""
         });
       }
