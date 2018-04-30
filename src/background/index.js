@@ -99,12 +99,12 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   if (message.action === "emit") {
     switch (message.entity) {
       case "config": {
-        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, appName = "${message.project.name}", batchId = configuration.randomSeed, batchName;`);
+        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.randomSeed, batchName;`);
       }
       case "suite": {
         return sendResponse({
           beforeAll: `batchName = "${message.suite.name}";`,
-          before: "eyes = new Eyes();eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setForceFullPageScreenshot(true);",
+          before: "eyes = new Eyes(serverUrl);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.eyes.setForceFullPageScreenshot(true);",
           after: "return eyes.close();"
         });
       }
