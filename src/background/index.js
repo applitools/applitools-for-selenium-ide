@@ -57,7 +57,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     switch (message.command.command) {
       case "setMatchLevel": {
         getEyes(`${message.options.runId}${message.options.testId}`).then((eyes) => {
-          return eyes.setMatchLevel(message.command.value);
+          return eyes.setMatchLevel(message.command.target);
         }).then(() => {
           return sendResponse(true);
         }).catch((error) => {
@@ -66,7 +66,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "setViewportSize": {
-        const [width, height] = message.command.value.split("x").map((s) => parseInt(s));
+        const [width, height] = message.command.target.split("x").map((s) => parseInt(s));
         setViewportSize(width, height, message.options).then(() => {
           // remember that we set the viewport size so we won't warn about that later
           if (hasEyes(`${message.options.runId}${message.options.testId}`)) {
@@ -83,7 +83,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "checkWindow": {
         if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
-            checkWindow(message.options.runId, message.options.testId, message.options.commandId, message.options.tabId, message.options.windowId, undefined, viewport, false).then((results) => {
+            checkWindow(message.options.runId, message.options.testId, message.options.commandId, message.options.tabId, message.options.windowId, message.command.target, viewport, false).then((results) => {
               sendResponse(results);
             }).catch((error) => {
               sendResponse(error instanceof Error ? { error: error.message } : {error});
@@ -104,7 +104,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "suite": {
         return sendResponse({
           beforeAll: `batchName = "${message.suite.name}";`,
-          before: "eyes = new Eyes();eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);",
+          before: "eyes = new Eyes();eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setForceFullPageScreenshot(true);",
           after: "return eyes.close();"
         });
       }
@@ -115,8 +115,14 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         });
       }
       case "command": {
-        if (message.command.command === "checkWindow") {
-          return sendResponse("eyes.checkWindow();");
+        const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
+        if (command === "checkWindow") {
+          return sendResponse(`eyes.checkWindow("${target}");`);
+        } else if (command === "setMatchLevel") {
+          return sendResponse(`eyes.setMatchLevel("${target === "Layout" ? "Layout2" : target}");`);
+        } else if (command === "setViewportSize") {
+          const [width, height] = target.split("x").map((s) => parseInt(s));
+          return sendResponse(`eyes.setViewportSize({width: ${width}, height: ${height}});`);
         }
       }
     }
