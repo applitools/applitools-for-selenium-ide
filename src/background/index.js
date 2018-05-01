@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import { sendMessage } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
-import { checkWindow, endTest } from "./commands/check";
+import { checkWindow, checkElement, endTest } from "./commands/check";
 import { getEyes, hasEyes } from "./utils/eyes";
 
 browser.browserAction.onClicked.addListener(() => {
@@ -83,7 +83,16 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "checkWindow": {
         if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
-            checkWindow(message.options.runId, message.options.testId, message.options.commandId, message.options.tabId, message.options.windowId, message.command.target, viewport, false).then((results) => {
+            checkWindow(
+              message.options.runId,
+              message.options.testId,
+              message.options.commandId,
+              message.options.tabId,
+              message.options.windowId,
+              message.command.target,
+              viewport,
+              false
+            ).then((results) => {
               sendResponse(results);
             }).catch((error) => {
               sendResponse(error instanceof Error ? { error: error.message } : {error});
@@ -91,8 +100,27 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           });
           return true;
         } else {
-          sendResponse({ status: "fatal", error: "This command can't be run individually, please run the test case." });
+          return sendResponse({ status: "fatal", error: "This command can't be run individually, please run the test case." });
         }
+      }
+      case "checkElement": {
+        getViewportSize(message.options.tabId).then(viewport => {
+          checkElement(
+            message.options.runId,
+            message.options.testId,
+            message.options.commandId,
+            message.options.tabId,
+            message.options.windowId,
+            message.command.target,
+            message.command.value,
+            viewport
+          ).then((results) => {
+            sendResponse(results);
+          }).catch((error) => {
+            sendResponse(error instanceof Error ? { error: error.message } : {error});
+          });
+        });
+        return true;
       }
     }
   }

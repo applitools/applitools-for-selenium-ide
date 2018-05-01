@@ -4,6 +4,10 @@ import GeometryUtils from "eyes.utils/src/GeometryUtils";
 const _MAX_SCROLL_BAR_SIZE = 50;
 const _MIN_SCREENSHOT_PART_SIZE = 10;
 
+export function isRegionInViewport(region, viewport) {
+  return (region.height <= viewport.height && region.width <= viewport.width);
+}
+
 export function getCurrentScrollPosition(tabId) {
   const left = browser.tabs.executeScript(tabId, {
     code: "var doc = document.documentElement; var resultX = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0); resultX"
@@ -351,6 +355,26 @@ export function getScreenshot(tabId, windowId, forceFullPageScreenshot, removeSc
       }).then(() => (
         resolve(imageBuffer)
       ));
+    });
+  });
+}
+
+export function getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewportSize) {
+  return new Promise((resolve) => {
+    getScreenshot(tabId, windowId, false, removeScrollBars, viewportSize).then((imageBuffer) => {
+      const image = new Image();
+
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = region.width;
+        canvas.height = region.height;
+        const ctx = canvas.getContext("2d");
+
+        ctx.drawImage(image, region.left, region.top, region.width, region.height, 0, 0, region.width, region.height);
+
+        resolve(canvas.toDataURL());
+      };
+      image.src = imageBuffer;
     });
   });
 }
