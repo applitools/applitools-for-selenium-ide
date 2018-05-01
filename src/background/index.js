@@ -104,20 +104,28 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         }
       }
       case "checkElement": {
-        getViewportSize(message.options.tabId).then(viewport => {
-          checkElement(
-            message.options.runId,
-            message.options.testId,
-            message.options.commandId,
-            message.options.tabId,
-            message.options.windowId,
-            message.command.target,
-            message.command.value,
-            viewport
-          ).then((results) => {
-            sendResponse(results);
-          }).catch((error) => {
-            sendResponse(error instanceof Error ? { error: error.message } : {error});
+        sendMessage({
+          uri: "/playback/location",
+          verb: "get",
+          payload: {
+            location: message.command.target
+          }
+        }).then((target) => {
+          getViewportSize(message.options.tabId).then(viewport => {
+            checkElement(
+              message.options.runId,
+              message.options.testId,
+              message.options.commandId,
+              message.options.tabId,
+              message.options.windowId,
+              target,
+              message.command.value,
+              viewport
+            ).then((results) => {
+              sendResponse(results);
+            }).catch((error) => {
+              sendResponse(error instanceof Error ? { error: error.message } : {error});
+            });
           });
         });
         return true;
