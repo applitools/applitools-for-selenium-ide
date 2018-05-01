@@ -1,5 +1,23 @@
 import browser from "webextension-polyfill";
 
+function getElementByXpath(path) {
+  return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+}
+
+function getElementRect(request, sender, sendResponse) {
+  if (request.getElementRect) {
+    const element = getElementByXpath(request.path);
+    const elementRects = element.getBoundingClientRect();
+    const bodyRects = document.documentElement.getBoundingClientRect();
+    sendResponse({
+      x: elementRects.x - bodyRects.x,
+      y: elementRects.y - bodyRects.y,
+      width: elementRects.width,
+      height: elementRects.height
+    });
+  }
+}
+
 function sizeMessenger(request, sender, sendResponse) {
   if (request.compensateSize) {
     const [width, height] = getInnerSize();
@@ -45,3 +63,4 @@ function getInnerSize() {
 
 
 browser.runtime.onMessage.addListener(sizeMessenger);
+browser.runtime.onMessage.addListener(getElementRect);
