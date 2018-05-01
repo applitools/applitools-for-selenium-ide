@@ -111,22 +111,26 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
             location: message.command.target
           }
         }).then((target) => {
-          getViewportSize(message.options.tabId).then(viewport => {
-            checkElement(
-              message.options.runId,
-              message.options.testId,
-              message.options.commandId,
-              message.options.tabId,
-              message.options.windowId,
-              target,
-              message.command.value,
-              viewport
-            ).then((results) => {
-              sendResponse(results);
-            }).catch((error) => {
-              sendResponse(error instanceof Error ? { error: error.message } : {error});
+          if (target.error) {
+            sendResponse({error: target.error});
+          } else {
+            getViewportSize(message.options.tabId).then(viewport => {
+              checkElement(
+                message.options.runId,
+                message.options.testId,
+                message.options.commandId,
+                message.options.tabId,
+                message.options.windowId,
+                target,
+                message.command.value,
+                viewport
+              ).then((results) => {
+                sendResponse(results);
+              }).catch((error) => {
+                sendResponse(error instanceof Error ? { error: error.message } : {error});
+              });
             });
-          });
+          }
         });
         return true;
       }
