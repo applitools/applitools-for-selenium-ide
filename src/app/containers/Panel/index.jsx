@@ -10,8 +10,20 @@ export default class Panel extends React.Component {
       verb: "post",
       payload: {
         command: "checkWindow",
-        target: "",
+        target: "a new check",
         value: ""
+      }
+    }).then(console.log).catch(console.error);
+  }
+  handleRecordCheckElement() {
+    sendMessage({
+      uri: "/record/command",
+      verb: "post",
+      payload: {
+        command: "checkElement",
+        target: "",
+        value: "a new check",
+        select: true
       }
     }).then(console.log).catch(console.error);
   }
@@ -24,7 +36,7 @@ export default class Panel extends React.Component {
         }} />
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
         <FlatButton>Verify a region</FlatButton>
-        <FlatButton>Verify an element</FlatButton>
+        <FlatButton onClick={this.handleRecordCheckElement}>Verify an element</FlatButton>
       </div>
     );
   }
