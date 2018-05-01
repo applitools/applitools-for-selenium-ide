@@ -8,6 +8,7 @@ function getElementRect(request, sender, sendResponse) {
   if (request.getElementRect) {
     const element = getElementByXpath(request.path);
     element.scrollIntoView();
+    window.scrollBy(0, -100);
     const elementRects = element.getBoundingClientRect();
     sendResponse({
       left: Math.round(elementRects.left),
