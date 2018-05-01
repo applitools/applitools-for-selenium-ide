@@ -11,8 +11,8 @@ function getElementRect(request, sender, sendResponse) {
     const elementRects = element.getBoundingClientRect();
     const bodyRects = document.documentElement.getBoundingClientRect();
     sendResponse({
-      x: elementRects.x - bodyRects.x,
-      y: elementRects.y - bodyRects.y,
+      left: elementRects.x - bodyRects.left,
+      top: elementRects.top - bodyRects.top,
       width: elementRects.width,
       height: elementRects.height
     });
