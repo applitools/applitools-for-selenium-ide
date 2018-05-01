@@ -18,8 +18,8 @@ browser.browserAction.onClicked.addListener(() => {
           name: "check window"
         },
         {
-          id: "checkPlugin",
-          name: "check plugin"
+          id: "checkElement",
+          name: "check element"
         },
         {
           id: "setMatchLevel",
@@ -104,8 +104,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "suite": {
         return sendResponse({
           beforeAll: `batchName = "${message.suite.name}";`,
-          before: "eyes = new Eyes(serverUrl);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.eyes.setForceFullPageScreenshot(true);",
-          after: "return eyes.close();"
+          before: "eyes = new Eyes(serverUrl);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setForceFullPageScreenshot(false);",
+          after: "if (eyes._isOpen) {return eyes.close();}"
         });
       }
       case "test": {
@@ -118,6 +118,17 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
         if (command === "checkWindow") {
           return sendResponse(`eyes.checkWindow("${target}");`);
+        } else if (command === "checkElement") {
+          sendMessage({
+            uri: "/export/location",
+            verb: "get",
+            payload: {
+              location: target
+            }
+          }).then((locator) => {
+            sendResponse(`eyes.checkElementBy(${locator}, undefined, "${value}");`);
+          }).catch(console.error);
+          return true;
         } else if (command === "setMatchLevel") {
           return sendResponse(`eyes.setMatchLevel("${target === "Layout" ? "Layout2" : target}");`);
         } else if (command === "setViewportSize") {
