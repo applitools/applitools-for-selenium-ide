@@ -7,6 +7,7 @@ function getElementByXpath(path) {
 function getElementRect(request, sender, sendResponse) {
   if (request.getElementRect) {
     const element = getElementByXpath(request.path);
+    element.scrollIntoView();
     const elementRects = element.getBoundingClientRect();
     const bodyRects = document.documentElement.getBoundingClientRect();
     sendResponse({
