@@ -9,12 +9,11 @@ function getElementRect(request, sender, sendResponse) {
     const element = getElementByXpath(request.path);
     element.scrollIntoView();
     const elementRects = element.getBoundingClientRect();
-    const bodyRects = document.documentElement.getBoundingClientRect();
     sendResponse({
-      left: elementRects.x - bodyRects.left,
-      top: elementRects.top - bodyRects.top,
-      width: elementRects.width,
-      height: elementRects.height
+      left: parseInt(elementRects.left),
+      top: parseInt(elementRects.top),
+      width: parseInt(elementRects.width),
+      height: parseInt(elementRects.height)
     });
   }
 }
