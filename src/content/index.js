@@ -10,10 +10,10 @@ function getElementRect(request, sender, sendResponse) {
     element.scrollIntoView();
     const elementRects = element.getBoundingClientRect();
     sendResponse({
-      left: parseInt(elementRects.left),
-      top: parseInt(elementRects.top),
-      width: parseInt(elementRects.width),
-      height: parseInt(elementRects.height)
+      left: Math.round(elementRects.left),
+      top: Math.round(elementRects.top),
+      width: Math.round(elementRects.width),
+      height: Math.round(elementRects.height)
     });
   }
 }
