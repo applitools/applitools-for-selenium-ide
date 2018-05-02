@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { sendMessage } from "../../IO/message-port";
-import { getScreenshot, getRegionScreenshot, isRegionInViewport } from "../utils/screenshot";
+import { getScreenshot, getRegionScreenshot, isRegionInViewport, scrollTo } from "../utils/screenshot";
 import { getEyes, closeEyes } from "../utils/eyes";
 import ideLogger from "../utils/ide-logger";
 
@@ -31,16 +31,24 @@ export function checkRegion(runId, testId, commandId, tabId, windowId, region, s
       }
       eyes.commands.push(commandId);
       eyes.setViewportSize(viewport);
-      if (isRegionInViewport(region, viewport)) {
-        getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
-          const image64 = image.replace("data:image/png;base64,", "");
-          return eyes.checkImage(image64, stepName);
-        }).then((imageResult) => {
-          return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
-        }).catch(reject);
+      let scrollToTopTarget = region.top - 100;
+      if (scrollToTopTarget < 0) {
+        scrollToTopTarget = 0;
       } else {
-        reject(new Error("Region is out of bounds, try setting the viewport size to a bigger one."));
+        region.top = 100;
       }
+      scrollTo(tabId, region.left, scrollToTopTarget).then(() => {
+        if (isRegionInViewport(region, viewport)) {
+          getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
+            const image64 = image.replace("data:image/png;base64,", "");
+            return eyes.checkImage(image64, stepName);
+          }).then((imageResult) => {
+            return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+          }).catch(reject);
+        } else {
+          reject(new Error("Region is out of bounds, try setting the viewport size to a bigger one."));
+        }
+      });
     }).catch(reject);
   });
 }
