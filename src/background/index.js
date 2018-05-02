@@ -4,6 +4,7 @@ import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, checkElement, endTest } from "./commands/check";
 import { getEyes, hasEyes } from "./utils/eyes";
+import { parseViewport, parseRegion } from "./utils/parsers";
 
 browser.browserAction.onClicked.addListener(() => {
   sendMessage({
@@ -70,7 +71,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "setViewportSize": {
-        const [width, height] = message.command.target.split("x").map((s) => parseInt(s));
+        const {width, height} = parseViewport(message.command.target);
         setViewportSize(width, height, message.options).then(() => {
           // remember that we set the viewport size so we won't warn about that later
           if (hasEyes(`${message.options.runId}${message.options.testId}`)) {
@@ -162,6 +163,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
         if (command === "checkWindow") {
           return sendResponse(`eyes.checkWindow("${target}");`);
+        } else if (command === "checkRegion") {
+          const { left, top, width, height } = parseRegion(target);
+          return sendResponse(`eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}");`);
         } else if (command === "checkElement") {
           sendMessage({
             uri: "/export/location",
@@ -176,7 +180,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         } else if (command === "setMatchLevel") {
           return sendResponse(`eyes.setMatchLevel("${target === "Layout" ? "Layout2" : target}");`);
         } else if (command === "setViewportSize") {
-          const [width, height] = target.split("x").map((s) => parseInt(s));
+          const {width, height} = parseViewport(target);
           return sendResponse(`eyes.setViewportSize({width: ${width}, height: ${height}});`);
         }
       }
