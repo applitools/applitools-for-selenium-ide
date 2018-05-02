@@ -5,13 +5,25 @@ const coords = {
   endY: 0
 };
 
+const mouseOffset = {
+  x: 0,
+  y: 0
+};
+
+const STATES = {
+  create: 1,
+  update: 2,
+  resize: 3
+};
+
+let state = STATES.create;
+
 export function addCanvas() {
   const container = document.createElement("div");
   container.id = "applitools-container";
   const canvas = document.createElement("div");
   canvas.id = "applitools-canvas";
-  const region = document.createElement("div");
-  region.id = "applitools-region";
+  const region = createRegion();
   setStyle(canvas, region);
   setEvents(container);
   const buttonContainer = createButtons(container);
@@ -40,26 +52,52 @@ function setStyle(canvas, region) {
   region.style.zIndex = "10001";
   region.style.backgroundColor = "rgba(94, 162, 220, 0.55)";
   region.style.border = "1px solid yellow";
-  region.style.cursor = "crosshair";
 }
 
 function setEvents(container) {
-  container.addEventListener("mousedown", (e) => {
-    e.stopPropagation();
-    if (e.target.tagName === "BUTTON") return;
+  container.addEventListener("mousedown", mousedown);
+  container.addEventListener("mouseup", mouseup);
+}
+
+function mousedown(e) {
+  const container = document.getElementById("applitools-container");
+  const canvas = document.getElementById("applitools-canvas");
+  const region = document.getElementById("applitools-region");
+  e.stopPropagation();
+  if (e.target.tagName === "BUTTON") return;
+  if (e.target === canvas) {
     updateRegion(e.pageX, e.pageY, e.pageX, e.pageY);
-    container.addEventListener("mousemove", mousemove);
-  });
-  container.addEventListener("mouseup", (e) => {
-    e.stopPropagation();
-    container.removeEventListener("mousemove", mousemove);
-  });
+    state = STATES.create;
+    region.style.cursor = "crosshair";
+  } else if (e.target === region) {
+    state = STATES.update;
+    mouseOffset.x = e.pageX;
+    mouseOffset.y = e.pageY;
+    region.style.cursor = "move";
+  } else if (e.target.parentElement === region) {
+    state = STATES.resize;
+  }
+  container.addEventListener("mousemove", mousemove);
 }
 
 function mousemove(e) {
   e.stopPropagation();
   if (e.target.tagName === "BUTTON") return;
-  updateRegion(undefined, undefined, e.pageX, e.pageY);
+  if (state === STATES.create || state === STATES.resize) {
+    updateRegion(undefined, undefined, e.pageX, e.pageY);
+  } else if (state === STATES.update) {
+    moveRegion(e.pageX, e.pageY);
+  }
+}
+
+function mouseup(e) {
+  const container = document.getElementById("applitools-container");
+  const canvas = document.getElementById("applitools-canvas");
+  const region = document.getElementById("applitools-region");
+  e.stopPropagation();
+  region.style.cursor = "move";
+  canvas.style.cursor = "crosshair";
+  container.removeEventListener("mousemove", mousemove);
 }
 
 function updateRegion(startX, startY, endX, endY) {
@@ -82,8 +120,116 @@ function updateRegion(startX, startY, endX, endY) {
   region.style.height = `${Math.abs(coords.endY - coords.startY)}px`;
 }
 
+function moveRegion(mouseX, mouseY) {
+  let dx = mouseOffset.x - mouseX;
+  let dy = mouseOffset.y - mouseY;
+  mouseOffset.x = mouseX;
+  mouseOffset.y = mouseY;
+  if (coords.startX - dx < 5 || coords.endX - dx < 5) dx = 0;
+  if (coords.startY - dy < 5 || coords.endY - dy < 5) dy = 0;
+  updateRegion(coords.startX - dx, coords.startY - dy, coords.endX - dx, coords.endY - dy);
+}
+
 function printCoords() { // eslint-disable-line no-unused-vars
   console.log(`startX: ${coords.startX}, startY: ${coords.startY}, endX: ${coords.endX}, endY: ${coords.endY}`);
+}
+
+function createRegion() {
+  const region = document.createElement("div");
+  region.id = "applitools-region";
+
+  const cornerSize = 20;
+
+  const tlc = createHotCorner(cornerSize);
+  tlc.style.top = "-5px";
+  tlc.style.left = "-5px";
+  tlc.style.cursor = "nw-resize";
+
+  tlc.addEventListener("mousedown", () => {
+    const canvas = document.getElementById("applitools-canvas");
+    const region = document.getElementById("applitools-region");
+    canvas.style.cursor = "nw-resize";
+    region.style.cursor = "nw-resize";
+    updateRegion(
+      Math.max(coords.startX, coords.endX),
+      Math.max(coords.startY, coords.endY),
+      Math.min(coords.startX, coords.endX),
+      Math.min(coords.startY, coords.endY),
+    );
+  });
+
+  region.appendChild(tlc);
+
+  const trc = createHotCorner(cornerSize);
+  trc.style.top = "-5px";
+  trc.style.right = "-5px";
+  trc.style.cursor = "ne-resize";
+
+  trc.addEventListener("mousedown", () => {
+    const canvas = document.getElementById("applitools-canvas");
+    const region = document.getElementById("applitools-region");
+    canvas.style.cursor = "ne-resize";
+    region.style.cursor = "ne-resize";
+    updateRegion(
+      Math.min(coords.startX, coords.endX),
+      Math.max(coords.startY, coords.endY),
+      Math.max(coords.startX, coords.endX),
+      Math.min(coords.startY, coords.endY),
+    );
+  });
+
+  region.appendChild(trc);
+
+  const blc = createHotCorner(cornerSize);
+  blc.style.bottom = "-5px";
+  blc.style.left = "-5px";
+  blc.style.cursor = "sw-resize";
+
+  blc.addEventListener("mousedown", () => {
+    const canvas = document.getElementById("applitools-canvas");
+    const region = document.getElementById("applitools-region");
+    canvas.style.cursor = "sw-resize";
+    region.style.cursor = "sw-resize";
+    updateRegion(
+      Math.max(coords.startX, coords.endX),
+      Math.min(coords.startY, coords.endY),
+      Math.min(coords.startX, coords.endX),
+      Math.max(coords.startY, coords.endY),
+    );
+  });
+
+  region.appendChild(blc);
+
+  const brc = createHotCorner(cornerSize);
+  brc.style.bottom = "-5px";
+  brc.style.right = "-5px";
+  brc.style.cursor = "se-resize";
+
+  brc.addEventListener("mousedown", () => {
+    const canvas = document.getElementById("applitools-canvas");
+    const region = document.getElementById("applitools-region");
+    canvas.style.cursor = "se-resize";
+    region.style.cursor = "se-resize";
+    updateRegion(
+      Math.min(coords.startX, coords.endX),
+      Math.min(coords.startY, coords.endY),
+      Math.max(coords.startX, coords.endX),
+      Math.max(coords.startY, coords.endY),
+    );
+  });
+
+  region.appendChild(brc);
+
+  return region;
+}
+
+function createHotCorner(size) {
+  const c = document.createElement("div");
+  c.style.position = "absolute";
+  c.style.height = `${size}px`;
+  c.style.width = `${size}px`;
+
+  return c;
 }
 
 function createButtons() {
