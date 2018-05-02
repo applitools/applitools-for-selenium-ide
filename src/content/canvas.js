@@ -17,8 +17,12 @@ const STATES = {
 };
 
 let state = STATES.create;
+let canvasExists = false;
 
-export function addCanvas() {
+export function addCanvas(cb) {
+  if (canvasExists) {
+    return cb(false);
+  }
   const container = document.createElement("div");
   container.id = "applitools-container";
   const canvas = document.createElement("div");
@@ -26,16 +30,18 @@ export function addCanvas() {
   const region = createRegion();
   setStyle(canvas, region);
   setEvents(container);
-  const buttonContainer = createButtons(container);
+  const buttonContainer = createButtons(cb);
   buttonContainer.style.zIndex = "10002";
   container.appendChild(buttonContainer);
   container.appendChild(canvas);
   container.appendChild(region);
   document.body.appendChild(container);
+  canvasExists = true;
 }
 
 export function removeCanvas() {
   document.body.removeChild(document.getElementById("applitools-container"));
+  canvasExists = false;
 }
 
 function setStyle(canvas, region) {
@@ -51,7 +57,7 @@ function setStyle(canvas, region) {
   region.style.position = "absolute";
   region.style.zIndex = "10001";
   region.style.backgroundColor = "rgba(94, 162, 220, 0.55)";
-  region.style.border = "1px solid yellow";
+  region.style.boxShadow = "inset 0 0 0 1px yellow";
 }
 
 function setEvents(container) {
@@ -100,6 +106,22 @@ function mouseup(e) {
   container.removeEventListener("mousemove", mousemove);
 }
 
+function calculateRectFromCoords(coords) {
+  return calculateRect(
+    {x: coords.startX, y: coords.startY},
+    {x: coords.endX, y: coords.endY}
+  );
+}
+
+function calculateRect(p1, p2) {
+  return {
+    left: Math.min(p1.x, p2.x),
+    top: Math.min(p1.y, p2.y),
+    width: Math.abs(p1.x - p2.x),
+    height: Math.abs(p1.y - p2.y)
+  };
+}
+
 function updateRegion(startX, startY, endX, endY) {
   const region = document.getElementById("applitools-region");
   if (startX) {
@@ -114,10 +136,11 @@ function updateRegion(startX, startY, endX, endY) {
   if (endY) {
     coords.endY = endY;
   }
-  region.style.left   = `${Math.min(coords.startX, coords.endX)}px`;
-  region.style.top    = `${Math.min(coords.startY, coords.endY)}px`;
-  region.style.width  = `${Math.abs(coords.endX - coords.startX)}px`;
-  region.style.height = `${Math.abs(coords.endY - coords.startY)}px`;
+  const rect = calculateRectFromCoords(coords);
+  region.style.left   = `${rect.left}px`;
+  region.style.top    = `${rect.top}px`;
+  region.style.width  = `${rect.width}px`;
+  region.style.height = `${rect.height}px`;
 }
 
 function moveRegion(mouseX, mouseY) {
@@ -232,13 +255,20 @@ function createHotCorner(size) {
   return c;
 }
 
-function createButtons() {
+function createButtons(cb) {
   const container = document.createElement("div");
   const confirm = document.createElement("button");
   confirm.innerText = "Confirm";
+  confirm.addEventListener("click", () => {
+    removeCanvas();
+    cb(calculateRectFromCoords(coords));
+  });
   const cancel = document.createElement("button");
   cancel.innerText = "Cancel";
-  cancel.addEventListener("click", removeCanvas);
+  cancel.addEventListener("click", () => {
+    removeCanvas();
+    cb(false);
+  });
 
   container.style.position = "fixed";
   container.style.top = 0;

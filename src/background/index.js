@@ -18,6 +18,10 @@ browser.browserAction.onClicked.addListener(() => {
           name: "check window"
         },
         {
+          id: "checkRegion",
+          name: "check region"
+        },
+        {
           id: "checkElement",
           name: "check element"
         },

@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import React from "react";
 import FlatButton from "../../components/FlatButton";
 import { sendMessage } from "../../../IO/message-port";
@@ -14,6 +15,33 @@ export default class Panel extends React.Component {
         value: ""
       }
     }).then(console.log).catch(console.error);
+  }
+  handleRecordCheckRegion() {
+    sendMessage({
+      uri: "/record/tab",
+      verb: "get",
+      payload: {}
+    }).then((tab) => {
+      if (!tab.error) {
+        browser.tabs.sendMessage(tab.id, {
+          drawRegion: true
+        }).then(region => {
+          if (region) {
+            sendMessage({
+              uri: "/record/command",
+              verb: "post",
+              payload: {
+                command: "checkRegion",
+                target: `left: ${region.left}, top: ${region.top}, width: ${region.width}, height: ${region.height}`,
+                value: "a new check"
+              }
+            }).then(console.log).catch(console.error);
+          }
+        });
+      } else {
+        console.error(tab.error);
+      }
+    });
   }
   handleRecordCheckElement() {
     sendMessage({
@@ -35,7 +63,7 @@ export default class Panel extends React.Component {
           margin: "10px"
         }} />
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
-        <FlatButton>Verify a region</FlatButton>
+        <FlatButton onClick={this.handleRecordCheckRegion}>Verify a region</FlatButton>
         <FlatButton onClick={this.handleRecordCheckElement}>Verify an element</FlatButton>
       </div>
     );
