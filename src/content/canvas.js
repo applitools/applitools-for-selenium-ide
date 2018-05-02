@@ -14,9 +14,16 @@ export function addCanvas() {
   region.id = "applitools-region";
   setStyle(canvas, region);
   setEvents(container);
+  const buttonContainer = createButtons(container);
+  buttonContainer.style.zIndex = "10002";
+  container.appendChild(buttonContainer);
   container.appendChild(canvas);
   container.appendChild(region);
   document.body.appendChild(container);
+}
+
+export function removeCanvas() {
+  document.body.removeChild(document.getElementById("applitools-container"));
 }
 
 function setStyle(canvas, region) {
@@ -39,6 +46,7 @@ function setStyle(canvas, region) {
 function setEvents(container) {
   container.addEventListener("mousedown", (e) => {
     e.stopPropagation();
+    if (e.target.tagName === "BUTTON") return;
     updateRegion(e.pageX, e.pageY, e.pageX, e.pageY);
     container.addEventListener("mousemove", mousemove);
   });
@@ -50,6 +58,7 @@ function setEvents(container) {
 
 function mousemove(e) {
   e.stopPropagation();
+  if (e.target.tagName === "BUTTON") return;
   updateRegion(undefined, undefined, e.pageX, e.pageY);
 }
 
@@ -75,4 +84,23 @@ function updateRegion(startX, startY, endX, endY) {
 
 function printCoords() { // eslint-disable-line no-unused-vars
   console.log(`startX: ${coords.startX}, startY: ${coords.startY}, endX: ${coords.endX}, endY: ${coords.endY}`);
+}
+
+function createButtons() {
+  const container = document.createElement("div");
+  const confirm = document.createElement("button");
+  confirm.innerText = "Confirm";
+  const cancel = document.createElement("button");
+  cancel.innerText = "Cancel";
+  cancel.addEventListener("click", removeCanvas);
+
+  container.style.position = "fixed";
+  container.style.top = 0;
+  container.style.left = 0;
+  container.style.right = 0;
+  container.style.height = "30px";
+
+  container.appendChild(cancel);
+  container.appendChild(confirm);
+  return container;
 }
