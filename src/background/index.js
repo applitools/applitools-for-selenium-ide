@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import { sendMessage } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
-import { checkWindow, checkElement, endTest } from "./commands/check";
+import { checkWindow, checkRegion, checkElement, endTest } from "./commands/check";
 import { getEyes, hasEyes } from "./utils/eyes";
 import { parseViewport, parseRegion } from "./utils/parsers";
 
@@ -108,36 +108,64 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           return sendResponse({ status: "fatal", error: "This command can't be run individually, please run the test case." });
         }
       }
-      case "checkElement": {
-        sendMessage({
-          uri: "/playback/location",
-          verb: "get",
-          payload: {
-            location: message.command.target
-          }
-        }).then((target) => {
-          if (target.error) {
-            sendResponse({error: target.error});
-          } else {
-            getViewportSize(message.options.tabId).then(viewport => {
-              checkElement(
-                message.options.runId,
-                message.options.testId,
-                message.options.commandId,
-                message.options.tabId,
-                message.options.windowId,
-                target,
-                message.command.value,
-                viewport
-              ).then((results) => {
-                sendResponse(results);
-              }).catch((error) => {
-                sendResponse(error instanceof Error ? { error: error.message } : {error});
-              });
+      case "checkRegion": {
+        if (message.options.runId) {
+          getViewportSize(message.options.tabId).then(viewport => {
+            const region = parseRegion(message.command.target);
+            checkRegion(
+              message.options.runId,
+              message.options.testId,
+              message.options.commandId,
+              message.options.tabId,
+              message.options.windowId,
+              region,
+              message.command.value,
+              viewport
+            ).then((results) => {
+              sendResponse(results);
+            }).catch((error) => {
+              sendResponse(error instanceof Error ? { error: error.message } : {error});
             });
-          }
-        });
-        return true;
+          });
+          return true;
+        } else {
+          return sendResponse({ status: "fatal", error: "This command can't be run individually, please run the test case." });
+        }
+      }
+      case "checkElement": {
+        if (message.options.runId) {
+          sendMessage({
+            uri: "/playback/location",
+            verb: "get",
+            payload: {
+              location: message.command.target
+            }
+          }).then((target) => {
+            if (target.error) {
+              sendResponse({error: target.error});
+            } else {
+              getViewportSize(message.options.tabId).then(viewport => {
+                checkElement(
+                  message.options.runId,
+                  message.options.testId,
+                  message.options.commandId,
+                  message.options.tabId,
+                  message.options.windowId,
+                  target,
+                  message.command.value,
+                  viewport
+                ).then((results) => {
+                  sendResponse(results);
+                }).catch((error) => {
+                  sendResponse(error instanceof Error ? { error: error.message } : {error});
+                });
+              });
+            }
+          });
+          return true;
+        } else {
+          return sendResponse({ status: "fatal", error: "This command can't be run individually, please run the test case." });
+        }
       }
     }
   }

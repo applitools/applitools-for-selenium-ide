@@ -22,6 +22,29 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
   });
 }
 
+export function checkRegion(runId, testId, commandId, tabId, windowId, region, stepName, viewport, removeScrollBars = false) {
+  if (!region || !region.left || !region.top || !region.width || !region.height) return Promise.reject("Invalid region. Region should be left: [number], top: [number], width: [number], height: [number]");
+  return new Promise((resolve, reject) => {
+    getEyes(`${runId}${testId}`).then(eyes => {
+      if (!eyes.didSetViewportSize) {
+        ideLogger.warn("a visual check was called without setting a viewport size, results may be inconsistent");
+      }
+      eyes.commands.push(commandId);
+      eyes.setViewportSize(viewport);
+      if (isRegionInViewport(region, viewport)) {
+        getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
+          const image64 = image.replace("data:image/png;base64,", "");
+          return eyes.checkImage(image64, stepName);
+        }).then((imageResult) => {
+          return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+        }).catch(reject);
+      } else {
+        reject(new Error("Region is out of bounds, try setting the viewport size to a bigger one."));
+      }
+    }).catch(reject);
+  });
+}
+
 export function checkElement(runId, testId, commandId, tabId, windowId, elementXPath, stepName, viewport, removeScrollBars = false) {
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
