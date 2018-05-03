@@ -94,7 +94,7 @@ export function endTest(id) {
       })
     ))).then((commandStates) => {
       console.log(commandStates);
-      return results.isPassed
+      return results.status === "Passed"
         ? { message: `All visual tests have passed,\nresults: ${results.appUrls.session}` }
         : { error: `There are visual tests failures,\nresults: ${results.appUrls.session}` };
     });
