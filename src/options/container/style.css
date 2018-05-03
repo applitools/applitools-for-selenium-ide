@@ -1,3 +1,7 @@
+body {
+    width: 500px;
+}
+
 form {
 }
 
@@ -12,7 +16,7 @@ form > * {
 
 .form-input > label {
   font-size: 13px;
-  width: 85px;
+  width: 120px;
   display: inline-block;
   margin: 10px 0;
 }
