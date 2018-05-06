@@ -5,6 +5,9 @@ import { sendMessage } from "../../../IO/message-port";
 import applitools from "../../assets/images/applitools.png";
 
 export default class Panel extends React.Component {
+  openOptionsPage() {
+    browser.runtime.openOptionsPage();
+  }
   handleRecordCheckWindow() {
     sendMessage({
       uri: "/record/command",
@@ -58,10 +61,14 @@ export default class Panel extends React.Component {
   render() {
     return (
       <div>
-        <img src={applitools} style={{
-          display: "block",
+        <div style={{
           margin: "10px"
-        }} />
+        }}>
+          <img src={applitools} />
+          <a href="#" onClick={this.openOptionsPage} style={{
+            float: "right"
+          }}>cog icon goes here</a>
+        </div>
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
         <FlatButton onClick={this.handleRecordCheckRegion}>Verify a region</FlatButton>
         <FlatButton onClick={this.handleRecordCheckElement}>Verify an element</FlatButton>
