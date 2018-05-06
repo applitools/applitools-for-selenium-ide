@@ -4,7 +4,9 @@ export function parseViewport(vp) {
 }
 
 export function parseRegion(region) {
-  const r = /left:\s*(\d*),\s*top:\s*(\d*),\s*width:\s*(\d*),\s*height:\s*(\d*)\s*/;
-  const [ input, left, top, width, height ] = region.match(r) || []; // eslint-disable-line no-unused-vars
+  const left = (region.match(/left:\s*(\d*)/) || [])[1];
+  const top = (region.match(/top:\s*(\d*)/) || [])[1];
+  const width = (region.match(/width:\s*(\d*)/) || [])[1];
+  const height = (region.match(/height:\s*(\d*)/) || [])[1];
   return { left, top, width, height };
 }
