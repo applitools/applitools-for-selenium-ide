@@ -20,11 +20,13 @@ browser.browserAction.onClicked.addListener(() => {
         },
         {
           id: "checkRegion",
-          name: "check region"
+          name: "check region",
+          type: "region"
         },
         {
           id: "checkElement",
-          name: "check element"
+          name: "check element",
+          type: "locator"
         },
         {
           id: "setMatchLevel",
