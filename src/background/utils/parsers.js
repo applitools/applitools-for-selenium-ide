@@ -4,8 +4,8 @@ export function parseViewport(vp) {
 }
 
 export function parseRegion(region) {
-  const left = (region.match(/left:\s*(\d*)/) || [])[1];
-  const top = (region.match(/top:\s*(\d*)/) || [])[1];
+  const left = (region.match(/x:\s*(\d*)/) || [])[1];
+  const top = (region.match(/y:\s*(\d*)/) || [])[1];
   const width = (region.match(/width:\s*(\d*)/) || [])[1];
   const height = (region.match(/height:\s*(\d*)/) || [])[1];
   return { left, top, width, height };

@@ -23,7 +23,7 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
 }
 
 export function checkRegion(runId, testId, commandId, tabId, windowId, region, stepName, viewport, removeScrollBars = false) {
-  if (!region || !region.left || !region.top || !region.width || !region.height) return Promise.reject("Invalid region. Region should be left: [number], top: [number], width: [number], height: [number]");
+  if (!region || !region.left || !region.top || !region.width || !region.height) return Promise.reject("Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]");
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       if (!eyes.didSetViewportSize) {
