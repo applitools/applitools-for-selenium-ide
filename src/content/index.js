@@ -1,12 +1,4 @@
 import browser from "webextension-polyfill";
-import { addCanvas } from "./canvas";
-
-function drawRegion(request, sender, sendResponse) {
-  if (request.drawRegion) {
-    addCanvas(sendResponse);
-    return true;
-  }
-}
 
 function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;

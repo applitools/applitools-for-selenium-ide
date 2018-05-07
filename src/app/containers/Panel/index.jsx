@@ -21,30 +21,15 @@ export default class Panel extends React.Component {
   }
   handleRecordCheckRegion() {
     sendMessage({
-      uri: "/record/tab",
-      verb: "get",
-      payload: {}
-    }).then((tab) => {
-      if (!tab.error) {
-        browser.tabs.sendMessage(tab.id, {
-          drawRegion: true
-        }).then(region => {
-          if (region) {
-            sendMessage({
-              uri: "/record/command",
-              verb: "post",
-              payload: {
-                command: "checkRegion",
-                target: `left: ${region.left}, top: ${region.top}, width: ${region.width}, height: ${region.height}`,
-                value: "a new check"
-              }
-            }).then(console.log).catch(console.error);
-          }
-        });
-      } else {
-        console.error(tab.error);
+      uri: "/record/command",
+      verb: "post",
+      payload: {
+        command: "checkRegion",
+        target: "",
+        value: "a new check",
+        select: true
       }
-    });
+    }).then(console.log).catch(console.error);
   }
   handleRecordCheckElement() {
     sendMessage({
