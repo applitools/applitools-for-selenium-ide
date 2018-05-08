@@ -5,6 +5,13 @@ import { sendMessage } from "../../../IO/message-port";
 import applitools from "../../assets/images/applitools.png";
 
 export default class Panel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      checked: false
+    };
+    this.onCheckChange = this.onCheckChange.bind(this);
+  }
   openOptionsPage() {
     browser.runtime.openOptionsPage();
   }
@@ -43,6 +50,15 @@ export default class Panel extends React.Component {
       }
     }).then(console.log).catch(console.error);
   }
+  onCheckChange(e) {
+    this.setState({
+      checked: e.target.checked
+    });
+    browser.runtime.sendMessage({
+      setVisualChecks: true,
+      disableVisualChecks: e.target.checked
+    });
+  }
   render() {
     return (
       <div>
@@ -50,9 +66,23 @@ export default class Panel extends React.Component {
           margin: "10px"
         }}>
           <img src={applitools} />
-          <a href="#" onClick={this.openOptionsPage} style={{
+          <div style={{
+            display: "flex",
             float: "right"
-          }}>cog icon goes here</a>
+          }}>
+            <div>
+              <input
+                type="checkbox"
+                className="checkbox"
+                id="disable-checks"
+                name="disable-checks"
+                checked={this.state.checked}
+                onChange={this.onCheckChange}
+              />
+              <label key="label" htmlFor="disable-checks">Disable visual checks</label>
+            </div>
+            <a href="#" onClick={this.openOptionsPage}>cog</a>
+          </div>
         </div>
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
         <FlatButton onClick={this.handleRecordCheckRegion}>Verify a region</FlatButton>

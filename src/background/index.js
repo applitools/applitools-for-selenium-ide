@@ -6,6 +6,8 @@ import { checkWindow, checkRegion, checkElement, endTest } from "./commands/chec
 import { getEyes, hasEyes } from "./utils/eyes";
 import { parseViewport, parseRegion } from "./utils/parsers";
 
+let disableChecks = false;
+
 browser.browserAction.onClicked.addListener(() => {
   sendMessage({
     uri: "/register",
@@ -43,6 +45,12 @@ browser.browserAction.onClicked.addListener(() => {
     }
   }).then(console.log).catch(console.error);
   openOrFocusPopup();
+});
+
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // eslint-disable-line no-unused-vars
+  if (message.setVisualChecks) {
+    disableChecks = message.disableVisualChecks;
+  }
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
@@ -88,7 +96,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "checkWindow": {
-        if (message.options.runId) {
+        if (disableChecks) {
+          return sendResponse(true);
+        } else if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
             checkWindow(
               message.options.runId,
@@ -110,7 +120,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         }
       }
       case "checkRegion": {
-        if (message.options.runId) {
+        if (disableChecks) {
+          return sendResponse(true);
+        } else if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
             const region = parseRegion(message.command.target);
             checkRegion(
@@ -134,7 +146,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         }
       }
       case "checkElement": {
-        if (message.options.runId) {
+        if (disableChecks) {
+          return sendResponse(true);
+        } else if (message.options.runId) {
           sendMessage({
             uri: "/playback/location",
             verb: "get",
