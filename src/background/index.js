@@ -62,8 +62,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           uri: "/popup/alert",
           verb: "post",
           payload: {
-            text: `Your applitools' branches are not at the default state,${branch ? " branch: " + branch : ""}${parentBranch ? " parent branch: " + parentBranch : ""}.  \n` +
-                  "Would you like to reset them?",
+            message: `Your applitools' branches are not at the default state,${branch ? " branch: " + branch : ""}${parentBranch ? " parent branch: " + parentBranch : ""}.  \n` +
+                     "Would you like to reset them?",
             confirm: "Reset branches",
             cancel: "Continue"
           }
