@@ -11,13 +11,15 @@ const eyes = {};
 
 function makeEyes(batchId, appName, batchName, testName) {
   return new Promise((res, rej) => {
-    browser.storage.local.get(["apiKey", "eyesServer"]).then(({ apiKey, eyesServer }) => {
+    browser.storage.local.get(["apiKey", "branch", "parentBranch", "eyesServer"]).then(({ apiKey, branch, parentBranch, eyesServer }) => {
       if (!apiKey) {
         return rej("No API key was provided, please set one in the options page");
       }
       const eyesApiServerUrl = eyesServer ? eyesServer : undefined;
       const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
       eyes.setApiKey(apiKey);
+      eyes.setBranchName(branch);
+      eyes.setParentBranchName(parentBranch);
       eyes.setAgentId(navigator.userAgent);
       eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
       eyes.setBatch(batchName, batchId);
