@@ -54,6 +54,29 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  if (message.event === "projectLoaded") {
+    browser.storage.local.get(["branch", "parentBranch"]).then(({ branch, parentBranch }) => {
+      if (branch || parentBranch) {
+        sendMessage({
+          uri: "/popup/alert",
+          verb: "post",
+          payload: {
+            text: `Your applitools' branches are not at the default state,${branch ? " branch: " + branch : ""}${parentBranch ? " parent branch: " + parentBranch : ""}.  \n` +
+                  "Would you like to reset them?",
+            confirm: "Reset branches",
+            cancel: "Continue"
+          }
+        }).then((shouldReset) => {
+          if (shouldReset) {
+            browser.storage.local.set({
+              branch: "",
+              parentBranch: ""
+            });
+          }
+        });
+      }
+    });
+  }
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
       return sendResponse(true);
