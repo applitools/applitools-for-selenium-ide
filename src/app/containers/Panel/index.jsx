@@ -8,9 +8,22 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mode: "normal",
       checked: false
     };
+    this.setExternalState = this.setExternalState.bind(this);
     this.onCheckChange = this.onCheckChange.bind(this);
+  }
+  componentDidMount() {
+    browser.runtime.onMessage.addListener(this.setExternalState);
+  }
+  componentWillUnmount() {
+    browser.runtime.onMessage.removeListener(this.setExternalState);
+  }
+  setExternalState(message, backgroundPage, sendResponse) { // eslint-disable-line no-unused-vars
+    if (message.state) {
+      this.setState(Object.assign({}, message.state));
+    }
   }
   openOptionsPage() {
     browser.runtime.openOptionsPage();
@@ -84,6 +97,7 @@ export default class Panel extends React.Component {
             <a href="#" onClick={this.openOptionsPage}>cog</a>
           </div>
         </div>
+        {this.state.mode}
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
         <FlatButton onClick={this.handleRecordCheckRegion}>Verify a region</FlatButton>
         <FlatButton onClick={this.handleRecordCheckElement}>Verify an element</FlatButton>

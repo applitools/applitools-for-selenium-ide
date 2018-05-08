@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import ideLogger from "./utils/ide-logger";
-import { sendMessage } from "../IO/message-port";
+import { sendMessage, startPolling } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, checkRegion, checkElement, endTest } from "./commands/check";
@@ -9,42 +9,55 @@ import { parseViewport, parseRegion } from "./utils/parsers";
 
 let disableChecks = false;
 
-browser.browserAction.onClicked.addListener(() => {
-  sendMessage({
-    uri: "/register",
-    verb: "post",
-    payload: {
-      name: "Applitools",
-      version: "1.0.0",
-      commands: [
-        {
-          id: "checkWindow",
-          name: "check window"
-        },
-        {
-          id: "checkRegion",
-          name: "check region",
-          type: "region"
-        },
-        {
-          id: "checkElement",
-          name: "check element",
-          type: "locator"
-        },
-        {
-          id: "setMatchLevel",
-          name: "set match level"
-        },
-        {
-          id: "setViewportSize",
-          name: "set viewport size"
-        }
-      ],
-      dependencies: {
-        "eyes.selenium": "0.0.78"
-      }
+startPolling({
+  name: "Applitools",
+  version: "1.0.0",
+  commands: [
+    {
+      id: "checkWindow",
+      name: "check window"
+    },
+    {
+      id: "checkRegion",
+      name: "check region",
+      type: "region"
+    },
+    {
+      id: "checkElement",
+      name: "check element",
+      type: "locator"
+    },
+    {
+      id: "setMatchLevel",
+      name: "set match level"
+    },
+    {
+      id: "setViewportSize",
+      name: "set viewport size"
     }
-  }).then(console.log).catch(console.error);
+  ],
+  dependencies: {
+    "eyes.selenium": "0.0.78"
+  }
+}, (err) => {
+  if (err) {
+    setExternalState({
+      mode: "disconnected"
+    });
+  } else {
+    setExternalState({
+      mode: "normal"
+    });
+  }
+});
+
+function setExternalState(state) {
+  browser.runtime.sendMessage({
+    state
+  }).catch(() => {});
+}
+
+browser.browserAction.onClicked.addListener(() => {
   openOrFocusPopup();
 });
 
