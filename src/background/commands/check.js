@@ -4,7 +4,7 @@ import { getScreenshot, getRegionScreenshot, isRegionInViewport, scrollTo } from
 import { getEyes, closeEyes } from "../utils/eyes";
 import ideLogger from "../utils/ide-logger";
 
-export function checkWindow(runId, testId, commandId, tabId, windowId, stepName, viewport, forceFullPageScreenshot = false, removeScrollBars = false) {
+export function checkWindow(runId, testId, commandId, tabId, windowId, stepName, viewport, forceFullPageScreenshot = true, removeScrollBars = true) {
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       if (!eyes.didSetViewportSize) {

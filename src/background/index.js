@@ -97,8 +97,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
               message.options.tabId,
               message.options.windowId,
               message.command.target,
-              viewport,
-              false
+              viewport
             ).then((results) => {
               sendResponse(results);
             }).catch((error) => {

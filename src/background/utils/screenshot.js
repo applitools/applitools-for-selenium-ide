@@ -111,11 +111,11 @@ export function setZoom(tabId, zoomFactor) {
 }
 
 export function getOverflow(tabId) {
-  browser.tabs.executeScript(tabId, { code: "document.documentElement.style.overflow" }).then((res) => (res[0]));
+  return browser.tabs.executeScript(tabId, { code: "document.documentElement.style.overflow" }).then((res) => (res[0]));
 }
 
 export function setOverflow(tabId, overflowValue) {
-  browser.tabs.executeScript(tabId, { code: `var origOF = document.documentElement.style.overflow; document.documentElement.style.overflow = "${overflowValue}"; origOF` }).then((res) => (res[0]));
+  return browser.tabs.executeScript(tabId, { code: `var origOF = document.documentElement.style.overflow; document.documentElement.style.overflow = "${overflowValue}"; origOF` }).then((res) => (res[0]));
 }
 
 export function removeScrollBars(tabId) {
@@ -307,7 +307,7 @@ export function getFullPageScreenshot(tabId, windowId, scaleRatio = 1.0, viewpor
   });
 }
 
-export function getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewportSize) {
+export function getScreenshot(tabId, windowId, forceFullPageScreenshot, shouldRemoveScrollBars, viewportSize) {
   let entirePageSize, scaleRatio, originalZoom;
   let imageBuffer;
   let originalOverflow = undefined;
@@ -322,13 +322,14 @@ export function getScreenshot(tabId, windowId, forceFullPageScreenshot, removeSc
         return Promise.resolve();
       }
     }).then(() => {
-      if (removeScrollBars) {
+      if (shouldRemoveScrollBars) {
         return removeScrollBars(tabId).then(() => (
           sleep(150)
         ));
       }
       return Promise.resolve();
     }).then((originalOverflow_) => {
+      console.log(originalOverflow_);
       originalOverflow = originalOverflow_;
       return getEntirePageSize(tabId);
     }).then((entirePageSize_) => {
