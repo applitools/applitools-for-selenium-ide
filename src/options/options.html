@@ -9,18 +9,31 @@
     <body>
         <form>
             <div class="form-input">
-                <label for="api_key">API Key</label>
-                <input type="text" id="api_key" placeholder="API Key" />
+                <label for="api_key">API key</label>
+                <input type="text" id="api_key" placeholder="API key" />
             </div>
 
             <div class="form-input">
                 <label for="eyes_server">Eyes server URL</label>
-                <input type="text" id="eyes_server" placeholder="Eyes server URL" />
+                <input type="text" id="eyes_server" placeholder="https://eyesapi.applitools.com/" />
             </div>
 
             <div class="form-input">
-                <label for="seide_id">Selenium IDE extension ID</label>
-                <input type="text" id="seide_id" placeholder="Selenium IDE ID" />
+                <label for="branch">Branch name</label>
+                <input type="text" id="branch" placeholder="default" />
+            </div>
+
+            <div class="form-input">
+                <label for="parent_branch">Parent branch name</label>
+                <input type="text" id="parent_branch" placeholder="" />
+            </div>
+
+            <a id="advanced-toggle" style="color: #3367d6;cursor: pointer;">Show advanced settings &or;</a>
+            <div id="advanced" style="display: none;">
+                <div class="form-input">
+                    <label for="seide_id">IDE extension ID</label>
+                    <input type="text" id="seide_id" placeholder="Selenium IDE ID" />
+                </div>
             </div>
 
             <div class="right">
