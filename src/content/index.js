@@ -65,4 +65,3 @@ function getInnerSize() {
 
 browser.runtime.onMessage.addListener(sizeMessenger);
 browser.runtime.onMessage.addListener(getElementRect);
-browser.runtime.onMessage.addListener(drawRegion);
