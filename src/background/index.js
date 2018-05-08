@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import ideLogger from "./utils/ide-logger";
 import { sendMessage } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
@@ -79,7 +80,21 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
-      return sendResponse(true);
+      if (disableChecks) {
+        ideLogger.log("visual checkpoints are disabled").then(() => {
+          return sendResponse(true);
+        });
+      } else {
+        browser.storage.local.get(["apiKey", "branch", "parentBranch", "eyesServer"]).then(({ branch, parentBranch, eyesServer }) => {
+          let notification = `connecting to ${eyesServer ? eyesServer : "public eyes"}`;
+          if (branch) {
+            notification += `, running using branch ${branch}${parentBranch ? " and parent branch " + parentBranch : ""}`;
+          }
+          ideLogger.log(notification).then(() => {
+            sendResponse(true);
+          });
+        });
+      }
     }).catch(() => {
       return sendResponse(true);
     });
