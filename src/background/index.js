@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import Modes from "../commons/modes";
 import ideLogger from "./utils/ide-logger";
 import { sendMessage, startPolling } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
@@ -43,11 +44,11 @@ startPolling({
 }, (err) => {
   if (err) {
     setExternalState({
-      mode: "disconnected"
+      mode: Modes.DISCONNECTED
     });
   } else {
     setExternalState({
-      mode: "normal"
+      mode: Modes.NORMAL
     });
   }
 });
@@ -77,12 +78,12 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.event === "recordingStarted") {
     setExternalState({
-      mode: "recording"
+      mode: Modes.RECORD
     });
   }
   if (message.event === "recordingStopped") {
     setExternalState({
-      mode: "normal"
+      mode: Modes.NORMAL
     });
   }
   if (message.event === "projectLoaded") {
@@ -111,7 +112,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
       setExternalState({
-        mode: "playing"
+        mode: Modes.PLAYBACK
       });
       if (disableChecks) {
         ideLogger.log("visual checkpoints are disabled").then(() => {
@@ -136,7 +137,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   if (message.event === "playbackStopped" && message.options.runId && hasEyes(`${message.options.runId}${message.options.testId}`)) {
     endTest(`${message.options.runId}${message.options.testId}`).then(results => {
       setExternalState({
-        mode: "normal"
+        mode: Modes.NORMAL
       });
       return sendResponse(results);
     }).catch(sendResponse);
