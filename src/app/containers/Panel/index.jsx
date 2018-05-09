@@ -1,5 +1,7 @@
 import browser from "webextension-polyfill";
 import React from "react";
+import Modes from "../../../commons/modes";
+import DisconnectBanner from "../../components/DisconnectBanner";
 import FlatButton from "../../components/FlatButton";
 import { sendMessage } from "../../../IO/message-port";
 import applitools from "../../assets/images/applitools.png";
@@ -8,7 +10,7 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: "normal",
+      mode: Modes.NORMAL,
       checked: false
     };
     this.setExternalState = this.setExternalState.bind(this);
@@ -97,7 +99,7 @@ export default class Panel extends React.Component {
             <a href="#" onClick={this.openOptionsPage}>cog</a>
           </div>
         </div>
-        {this.state.mode}
+        {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
         <FlatButton onClick={this.handleRecordCheckRegion}>Verify a region</FlatButton>
         <FlatButton onClick={this.handleRecordCheckElement}>Verify an element</FlatButton>
