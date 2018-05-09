@@ -2,6 +2,7 @@ import browser from "webextension-polyfill";
 import ideLogger from "./utils/ide-logger";
 import { sendMessage, startPolling } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
+import { isEyesCommand } from "./commands";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, checkRegion, checkElement, endTest } from "./commands/check";
 import { getEyes, hasEyes } from "./utils/eyes";
@@ -237,6 +238,13 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.action === "emit") {
     switch (message.entity) {
+      case "project": {
+        const { project } = message;
+        const hasEyesCommands = project.tests.reduce((commands, test) => {
+          return [...commands, ...test.commands];
+        }, []).find(({command}) => (isEyesCommand(command)));
+        return sendResponse({ canEmit: !!hasEyesCommands });
+      }
       case "config": {
         return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.randomSeed, batchName;`);
       }
