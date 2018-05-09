@@ -4,6 +4,7 @@ import Modes from "../../../commons/modes";
 import RecordToolbar from "../RecordToolbar";
 import DisconnectBanner from "../../components/DisconnectBanner";
 import applitools from "../../assets/images/applitools.png";
+import "../../styles/app.css";
 
 export default class Panel extends React.Component {
   constructor(props) {
@@ -40,16 +41,20 @@ export default class Panel extends React.Component {
   }
   render() {
     return (
-      <div>
-        <div style={{
-          margin: "5px 10px"
+      <div style={{
+        margin: "5px 10px"
+      }}>
+        <div style= {{
+          margin: "5px 0"
         }}>
           <img src={applitools} />
           <div style={{
             display: "flex",
             float: "right"
           }}>
-            <div>
+            <div style={{
+              margin: "0 5px"
+            }}>
               <input
                 type="checkbox"
                 className="checkbox"
@@ -60,9 +65,10 @@ export default class Panel extends React.Component {
               />
               <label key="label" htmlFor="disable-checks">Disable visual checks</label>
             </div>
-            <a href="#" onClick={this.openOptionsPage}>cog</a>
+            <a href="#" onClick={this.openOptionsPage}>options</a>
           </div>
         </div>
+        {this.state.mode === Modes.NORMAL && <div>Extension is idle, options will be available when recording or running tests</div>}
         {this.state.mode === Modes.RECORD && <RecordToolbar />}
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
       </div>
