@@ -111,11 +111,14 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
-      setExternalState({
-        mode: Modes.PLAYBACK
-      });
       if (disableChecks) {
         ideLogger.log("visual checkpoints are disabled").then(() => {
+          setExternalState({
+            mode: Modes.PLAYBACK,
+            playback: {
+              message: "Visual checkpoints are disable, all checks will be skipped."
+            }
+          });
           return sendResponse(true);
         });
       } else {
@@ -125,6 +128,12 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
             notification += `, running using branch ${branch}${parentBranch ? " and parent branch " + parentBranch : ""}`;
           }
           ideLogger.log(notification).then(() => {
+            setExternalState({
+              mode: Modes.PLAYBACK,
+              playback: {
+                message: `Running test ${message.options.testName} against ${eyesServer ? eyesServer : "public eyes server"}${branch ? " on branch " + branch : ""}.`
+              }
+            });
             sendResponse(true);
           });
         });
@@ -135,7 +144,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     return true;
   }
   if (message.event === "playbackStopped" && message.options.runId && hasEyes(`${message.options.runId}${message.options.testId}`)) {
-    endTest(`${message.options.runId}${message.options.testId}`).then(results => {
+    endTest(`${message.options.runId}${message.options.testId}`).catch(r => (r)).then(results => {
       setExternalState({
         mode: Modes.NORMAL
       });

@@ -69,6 +69,7 @@ export default class Panel extends React.Component {
           </div>
         </div>
         {this.state.mode === Modes.NORMAL && <div>Extension is idle, options will be available when recording or running tests</div>}
+        {this.state.mode === Modes.PLAYBACK && <div>{this.state.playback.message}</div>}
         {this.state.mode === Modes.RECORD && <RecordToolbar />}
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
       </div>
