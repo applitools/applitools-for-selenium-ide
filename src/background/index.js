@@ -110,6 +110,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
+      setExternalState({
+        mode: "playing"
+      });
       if (disableChecks) {
         ideLogger.log("visual checkpoints are disabled").then(() => {
           return sendResponse(true);
@@ -132,6 +135,9 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.event === "playbackStopped" && message.options.runId && hasEyes(`${message.options.runId}${message.options.testId}`)) {
     endTest(`${message.options.runId}${message.options.testId}`).then(results => {
+      setExternalState({
+        mode: "normal"
+      });
       return sendResponse(results);
     }).catch(sendResponse);
     return true;
