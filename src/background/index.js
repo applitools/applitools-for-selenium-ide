@@ -52,14 +52,20 @@ startPolling({
   }
 });
 
-function setExternalState(state) {
+let state = {};
+function setExternalState(newState) {
   browser.runtime.sendMessage({
-    state
+    state: Object.assign(state, newState)
   }).catch(() => {});
 }
 
 browser.browserAction.onClicked.addListener(() => {
-  openOrFocusPopup();
+  openOrFocusPopup().then(() => {
+    // some time to let the popup set up the event listener
+    setTimeout(() => {
+      setExternalState();
+    }, 300);
+  });
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // eslint-disable-line no-unused-vars
@@ -69,6 +75,16 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  if (message.event === "recordingStarted") {
+    setExternalState({
+      mode: "recording"
+    });
+  }
+  if (message.event === "recordingStopped") {
+    setExternalState({
+      mode: "normal"
+    });
+  }
   if (message.event === "projectLoaded") {
     browser.storage.local.get(["branch", "parentBranch"]).then(({ branch, parentBranch }) => {
       if (branch || parentBranch) {
