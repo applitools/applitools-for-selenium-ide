@@ -329,7 +329,6 @@ export function getScreenshot(tabId, windowId, forceFullPageScreenshot, shouldRe
       }
       return Promise.resolve();
     }).then((originalOverflow_) => {
-      console.log(originalOverflow_);
       originalOverflow = originalOverflow_;
       return getEntirePageSize(tabId);
     }).then((entirePageSize_) => {
