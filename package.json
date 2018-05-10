@@ -8,6 +8,7 @@
     "build": "webpack",
     "build:prod": "rm -rf build && env NODE_ENV=production yarn build",
     "test": "jest",
+    "test:webdriver": "selenium-side-runner tests/*.side",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx"
   },
   "jest": {
@@ -40,6 +41,7 @@
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.6",
     "react-hot-loader": "^3.0.0-beta.7",
+    "selenium-side-runner": "0.6.0",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.5.6",
