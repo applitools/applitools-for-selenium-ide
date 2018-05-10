@@ -283,8 +283,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "suite": {
         return sendResponse({
           beforeAll: `batchName = "${message.suite.name}";`,
-          before: "eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setForceFullPageScreenshot(true);",
-          after: "if (eyes._isOpen) {return eyes.close();}"
+          before: "eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);",
+          after: "if (eyes._isOpen) {await eyes.close();}"
         });
       }
       case "test": {
@@ -296,7 +296,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "command": {
         const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
         if (command === "checkWindow") {
-          return sendResponse(`eyes.checkWindow("${target}");`);
+          return sendResponse(`eyes.setForceFullPageScreenshot(true);eyes.checkWindow("${target}").then(() => {eyes.setForceFullPageScreenshot(false);});`);
         } else if (command === "checkRegion") {
           const { left, top, width, height } = parseRegion(target);
           return sendResponse(`eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}");`);
