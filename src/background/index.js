@@ -278,7 +278,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return sendResponse({ canEmit: !!hasEyesCommands });
       }
       case "config": {
-        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.randomSeed, batchName;`);
+        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.runId, batchName;`);
       }
       case "suite": {
         return sendResponse({
