@@ -67,7 +67,8 @@ export default class Panel extends React.Component {
             <a href="#" onClick={this.openOptionsPage}>options</a>
           </div>
         </div>
-        {this.state.mode === Modes.NORMAL && <div>Extension is idle, options will be available when recording or running tests</div>}
+        {this.state.mode === Modes.NORMAL && <div>Successfully connected to Selenium IDE. More options will be available when running or recording tests.</div>}
+        {this.state.mode === Modes.SETUP && <div>Your Eyes account information is not properly set up. Please go to <a href="#" onClick={this.openOptionsPage}>options</a> to configure your account details.</div>}
         {this.state.mode === Modes.PLAYBACK && <div>{this.state.playback.message}</div>}
         {this.state.mode === Modes.RECORD && <RecordToolbar />}
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}

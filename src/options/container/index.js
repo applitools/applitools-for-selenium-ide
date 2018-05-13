@@ -15,7 +15,6 @@ function restoreOptions() {
 
 function saveOptions(e) {
   e.preventDefault();
-  console.log(document.getElementById("branch").value);
   browser.storage.local.set({
     apiKey: document.getElementById("api_key").value,
     eyesServer: document.getElementById("eyes_server").value,
@@ -23,6 +22,9 @@ function saveOptions(e) {
     parentBranch: document.getElementById("parent_branch").value,
     seideId: document.getElementById("seide_id").value
   }).then(() => {
+    browser.runtime.sendMessage({
+      optionsUpdated: true
+    });
     window.close();
   });
 }

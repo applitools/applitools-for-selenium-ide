@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import Modes from "../commons/modes";
 import ideLogger from "./utils/ide-logger";
+import { verifyStoredAPIKey } from "../commons/api";
 import { sendMessage, startPolling } from "../IO/message-port";
 import { openOrFocusPopup } from "./popup";
 import { isEyesCommand } from "./commands";
@@ -47,9 +48,7 @@ startPolling({
       mode: Modes.DISCONNECTED
     });
   } else {
-    setExternalState({
-      mode: Modes.NORMAL
-    });
+    resetMode();
   }
 });
 
@@ -59,6 +58,25 @@ function setExternalState(newState) {
     state: Object.assign(state, newState)
   }).catch(() => {});
 }
+
+let areOptionsValid = true;
+function validateOptions() {
+  return verifyStoredAPIKey().then(() => (
+    areOptionsValid = true
+  )).catch(() => (
+    areOptionsValid = false
+  ));
+}
+
+function resetMode() {
+  setExternalState({
+    mode: areOptionsValid ? Modes.NORMAL : Modes.SETUP
+  });
+}
+
+validateOptions().then(() => {
+  resetMode();
+});
 
 browser.browserAction.onClicked.addListener(() => {
   openOrFocusPopup().then(() => {
@@ -73,6 +91,11 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
   if (message.setVisualChecks) {
     disableChecks = message.disableVisualChecks;
   }
+  if (message.optionsUpdated) {
+    validateOptions().then(() => {
+      resetMode();
+    });
+  }
 });
 
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
@@ -82,9 +105,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     });
   }
   if (message.event === "recordingStopped") {
-    setExternalState({
-      mode: Modes.NORMAL
-    });
+    resetMode();
   }
   if (message.event === "projectLoaded") {
     browser.storage.local.get(["branch", "parentBranch"]).then(({ branch, parentBranch }) => {
@@ -145,9 +166,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.event === "playbackStopped" && message.options.runId && hasEyes(`${message.options.runId}${message.options.testId}`)) {
     endTest(`${message.options.runId}${message.options.testId}`).catch(r => (r)).then(results => {
-      setExternalState({
-        mode: Modes.NORMAL
-      });
+      resetMode();
       return sendResponse(results);
     }).catch(sendResponse);
     return true;
