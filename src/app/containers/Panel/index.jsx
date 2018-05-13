@@ -3,7 +3,6 @@ import React from "react";
 import Modes from "../../../commons/modes";
 import RecordToolbar from "../RecordToolbar";
 import DisconnectBanner from "../../components/DisconnectBanner";
-import applitools from "../../assets/images/applitools.png";
 import "../../styles/app.css";
 
 export default class Panel extends React.Component {
@@ -45,9 +44,9 @@ export default class Panel extends React.Component {
         margin: "5px 10px"
       }}>
         <div style= {{
+          height: "30px",
           margin: "5px 0"
         }}>
-          <img src={applitools} />
           <div style={{
             display: "flex",
             float: "right"
