@@ -2,7 +2,14 @@ body {
     width: 500px;
 }
 
+a {
+    color: #3367d6;
+    cursor: pointer;
+}
+
 form {
+    min-height: 255px;
+    margin: 10px 0;
 }
 
 form > * {
@@ -27,9 +34,5 @@ form > * {
 }
 
 .right {
-    float: right;
-}
-
-.clear {
-    clear: both;
+    text-align: right;
 }
