@@ -1,0 +1,8 @@
+.record-toolbar {
+    margin: 10px 0;
+    display: flex;
+}
+
+.record-toolbar > * {
+    flex: 0% 1 1;
+}

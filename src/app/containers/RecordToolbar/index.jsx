@@ -1,6 +1,7 @@
 import React from "react";
 import FlatButton from "../../components/FlatButton";
 import { sendMessage } from "../../../IO/message-port";
+import "./style.css";
 
 export default class RecordToolbar extends React.Component {
   handleRecordCheckWindow() {
@@ -40,7 +41,7 @@ export default class RecordToolbar extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="record-toolbar">
         <FlatButton onClick={this.handleRecordCheckWindow}>Verify a window</FlatButton>
         <FlatButton onClick={this.handleRecordCheckRegion}>Verify a region</FlatButton>
         <FlatButton onClick={this.handleRecordCheckElement}>Verify an element</FlatButton>
