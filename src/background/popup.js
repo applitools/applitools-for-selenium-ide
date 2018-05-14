@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import parser from "ua-parser-js";
 
 let extensionWindow = undefined;
 
@@ -18,10 +19,17 @@ function openPage() {
     width: 470
   };
 
+  let WindowsSize = {
+    height: 150,
+    width: 525
+  };
+
+  const parsedUA = parser(window.navigator.userAgent);
+
   return browser.windows.create(Object.assign({
     url: browser.extension.getURL("assets/index.html"),
     type: "popup"
-  }, size)).then((windowInfo) => {
+  }, parsedUA.os.name === "Windows" ? WindowsSize : size)).then((windowInfo) => {
     extensionWindow = windowInfo;
     return windowInfo;
   });
