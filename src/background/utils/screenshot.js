@@ -310,7 +310,7 @@ export function getFullPageScreenshot(tabId, windowId, scaleRatio = 1.0, viewpor
 export function getScreenshot(tabId, windowId, forceFullPageScreenshot, shouldRemoveScrollBars, viewportSize) {
   let entirePageSize, scaleRatio, originalZoom;
   let imageBuffer;
-  let originalOverflow = undefined;
+  let originalOverflow;
 
   return new Promise((resolve) => {
     getZoom(tabId).then((originalZoom_) => {
@@ -323,13 +323,13 @@ export function getScreenshot(tabId, windowId, forceFullPageScreenshot, shouldRe
       }
     }).then(() => {
       if (shouldRemoveScrollBars) {
-        return removeScrollBars(tabId).then(() => (
-          sleep(150)
-        ));
+        return removeScrollBars(tabId).then((originalOverflow_) => {
+          originalOverflow = originalOverflow_ || "initial";
+          return sleep(150);
+        });
       }
       return Promise.resolve();
-    }).then((originalOverflow_) => {
-      originalOverflow = originalOverflow_;
+    }).then(() => {
       return getEntirePageSize(tabId);
     }).then((entirePageSize_) => {
       entirePageSize = entirePageSize_;
