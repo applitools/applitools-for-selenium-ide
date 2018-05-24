@@ -1,0 +1,15 @@
+.input {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+.input > label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 2px 0;
+}
+
+.input > *:last-child {
+}
