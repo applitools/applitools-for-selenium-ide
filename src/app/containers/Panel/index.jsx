@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import React from "react";
 import Modes from "../../../commons/modes";
+import Disconnect from "../Disconnect";
 import RecordToolbar from "../RecordToolbar";
 import PlaybackBanner from "../../components/PlaybackBanner";
 import DisconnectBanner from "../../components/DisconnectBanner";
@@ -44,33 +45,7 @@ export default class Panel extends React.Component {
       <div>
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
         <div className="container">
-          {this.state.mode === Modes.DISCONNECTED && <p>
-            Please make sure the Selenium IDE window is open. For more information visit <a href="https://applitools.com">https://applitools.com</a>
-          </p>}
-        </div>
-        <div style= {{
-          height: "20px",
-          margin: "5px 10px"
-        }}>
-          <div style={{
-            display: "flex",
-            float: "right"
-          }}>
-            <div style={{
-              margin: "0 5px"
-            }}>
-              <input
-                type="checkbox"
-                className="checkbox"
-                id="disable-checks"
-                name="disable-checks"
-                checked={this.state.checked}
-                onChange={this.onCheckChange}
-              />
-              <label key="label" htmlFor="disable-checks">Disable visual checks</label>
-            </div>
-            <a href="#" onClick={this.openOptionsPage}>options</a>
-          </div>
+          {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
         </div>
         {this.state.mode === Modes.NORMAL && <div>Successfully connected to Selenium IDE. More options will be available when running or recording tests.</div>}
         {this.state.mode === Modes.SETUP && <div>Your Eyes account information is not properly set up. Please go to <a href="#" onClick={this.openOptionsPage}>options</a> to configure your account details.</div>}
