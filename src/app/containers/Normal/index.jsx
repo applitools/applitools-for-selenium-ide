@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import React from "react";
 import PropTypes from "prop-types";
 import MoreInfo from "../../components/MoreInfo";
