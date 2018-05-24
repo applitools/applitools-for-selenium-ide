@@ -28,7 +28,7 @@ export default class SpinnerBanner extends React.Component {
   render() {
     return (
       <div className={classNames("banner", this.props.state)} style={this.props.style}>
-        {this.props.spin ? <span className="loader"></span> : <img width="32px" src={StatusImages[this.props.state]} />}<span>{this.props.children}</span>
+        {this.props.spin ? <span className="loader"></span> : <img width="32px" src={StatusImages[this.props.state]} style={{ marginRight: "10px" }} />}<span>{this.props.children}</span>
       </div>
     );
   }
