@@ -1,0 +1,9 @@
+.playback-info {
+    display: flex;
+    margin: 5px 10px;
+    font-size: 13px;
+}
+
+.playback-info > * {
+    flex: 0% 1 1;
+}
