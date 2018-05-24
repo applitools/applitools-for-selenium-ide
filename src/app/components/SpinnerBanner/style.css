@@ -5,6 +5,7 @@
     font-size: 14px;
     padding: 0 20px;
     border-radius: 2px 2px 0 0;
+    min-height: 75px;
 }
 
 .banner > span {
@@ -59,7 +60,7 @@
 }
 
 .banner.success {
-    background-color: #089032;
+    background-color: #40A6FF;
 }
 
 .banner.error {
