@@ -15,7 +15,8 @@ export default class Panel extends React.Component {
     super(props);
     this.state = {
       mode: Modes.NORMAL,
-      disableVisualCheckpoints: false
+      disableVisualCheckpoints: false,
+      isSubmitting: false
     };
     browser.runtime.sendMessage({
       requestExternalState: true
@@ -24,6 +25,7 @@ export default class Panel extends React.Component {
     });
     this.setExternalState = this.setExternalState.bind(this);
     this.visualCheckpointsChanged = this.visualCheckpointsChanged.bind(this);
+    this.setSubmitting = this.setSubmitting.bind(this);
   }
   componentDidMount() {
     browser.runtime.onMessage.addListener(this.setExternalState);
@@ -33,7 +35,7 @@ export default class Panel extends React.Component {
   }
   setExternalState(message, backgroundPage, sendResponse) { // eslint-disable-line no-unused-vars
     if (message.state) {
-      this.setState(Object.assign({}, message.state));
+      this.setState(Object.assign({isSubmitting: false}, message.state));
     }
   }
   visualCheckpointsChanged(value) {
@@ -45,6 +47,12 @@ export default class Panel extends React.Component {
       disableVisualChecks: value
     }).catch();
   }
+  setSubmitting() {
+    this.setState({
+      mode: Modes.SETUP,
+      isSubmitting: true
+    });
+  }
   render() {
     return (
       <div>
@@ -52,13 +60,14 @@ export default class Panel extends React.Component {
         {this.state.mode === Modes.NORMAL && (this.state.disableVisualCheckpoints
           ? <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Visual checkpoints are disabled.</SpinnerBanner>
           : <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>Successfully connected with Selenium IDE.</SpinnerBanner>)}
-        {this.state.mode === Modes.SETUP && (true
+        {this.state.mode === Modes.SETUP && (!this.state.isSubmitting
           ? <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Applitools account details are not set!</SpinnerBanner>
           : <SpinnerBanner state={SpinnerStates.ERROR}>Verifying account details...</SpinnerBanner>)}
+        {this.state.mode === Modes.INVALID && <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Unable to verify Applitools account details!</SpinnerBanner>}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL && <Normal disableVisualCheckpoints={this.state.disableVisualCheckpoints} visualCheckpointsChanged={this.visualCheckpointsChanged} />}
-          {this.state.mode === Modes.SETUP && <Setup />}
+          {(this.state.mode === Modes.SETUP || this.state.mode === Modes.INVALID) && <Setup isInvalid={this.state.mode === Modes.INVALID} />}
         </div>
         {
           this.state.mode === Modes.PLAYBACK &&

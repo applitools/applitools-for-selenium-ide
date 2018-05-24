@@ -1,4 +1,6 @@
+import browser from "webextension-polyfill";
 import React from "react";
+import PropTypes from "prop-types";
 import Link from "../../components/Link";
 import Input from "../../components/Input";
 import FlatButton from "../../components/FlatButton";
@@ -14,6 +16,9 @@ export default class Setup extends React.Component {
     this.handleServerUrlChange = this.handleServerUrlChange.bind(this);
     this.submitInfo = this.submitInfo.bind(this);
   }
+  static propTypes = {
+    isInvalid: PropTypes.bool
+  };
   handleApiKeyChange(value) {
     this.setState({ apiKey: value });
   }
@@ -21,7 +26,14 @@ export default class Setup extends React.Component {
     this.setState({ serverUrl: value });
   }
   submitInfo() {
-    console.log(this.state);
+    browser.storage.local.set({
+      apiKey: this.state.apiKey,
+      eyesServer: this.state.serverUrl
+    }).then(() => {
+      browser.runtime.sendMessage({
+        optionsUpdated: true
+      });
+    });
   }
   render() {
     return (

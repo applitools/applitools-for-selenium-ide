@@ -58,18 +58,21 @@ function setExternalState(newState) {
   }).catch(() => {});
 }
 
-let areOptionsValid = true;
+let verificationMode = Modes.NORMAL;
 function validateOptions() {
   return verifyStoredAPIKey().then(() => (
-    areOptionsValid = true
-  )).catch(() => (
-    areOptionsValid = false
-  ));
+    verificationMode = Modes.NORMAL
+  )).catch((e) => {
+    if (e.message === "API key can't be empty") {
+      return verificationMode = Modes.SETUP;
+    }
+    return verificationMode = Modes.INVALID;
+  });
 }
 
 function resetMode() {
   setExternalState({
-    mode: areOptionsValid ? Modes.NORMAL : Modes.SETUP
+    mode: verificationMode
   });
 }
 
