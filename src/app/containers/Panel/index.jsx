@@ -43,9 +43,9 @@ export default class Panel extends React.Component {
     return (
       <div>
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
-        {this.state.mode === Modes.NORMAL && this.state.disableVisualCheckpoints
+        {this.state.mode === Modes.NORMAL && (this.state.disableVisualCheckpoints
           ? <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Visual checkpoints are disabled.</SpinnerBanner>
-          : <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>Successfully connected with Selenium IDE.</SpinnerBanner>}
+          : <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>Successfully connected with Selenium IDE.</SpinnerBanner>)}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL && <Normal disableVisualCheckpoints={this.state.disableVisualCheckpoints} visualCheckpointsChanged={this.visualCheckpointsChanged} />}
