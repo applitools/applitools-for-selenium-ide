@@ -12,7 +12,8 @@
     "default_icon": {
       "52": "icons/icon_menu.png"
     },
-    "default_title": "Applitools for Selenium IDE"
+    "default_title": "Applitools for Selenium IDE",
+    "default_popup": "assets/index.html"
   },
 
   "permissions": [

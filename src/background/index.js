@@ -3,7 +3,6 @@ import Modes from "../commons/modes";
 import ideLogger from "./utils/ide-logger";
 import { verifyStoredAPIKey } from "../commons/api";
 import { sendMessage, startPolling } from "../IO/message-port";
-import { openOrFocusPopup } from "./popup";
 import { isEyesCommand } from "./commands";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, checkRegion, checkElement, endTest } from "./commands/check";
@@ -76,15 +75,6 @@ function resetMode() {
 
 validateOptions().then(() => {
   resetMode();
-});
-
-browser.browserAction.onClicked.addListener(() => {
-  openOrFocusPopup().then(() => {
-    // some time to let the popup set up the event listener
-    setTimeout(() => {
-      setExternalState();
-    }, 300);
-  });
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // eslint-disable-line no-unused-vars
