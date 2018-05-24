@@ -2,7 +2,9 @@ import browser from "webextension-polyfill";
 import React from "react";
 import Modes from "../../../commons/modes";
 import Disconnect from "../Disconnect";
+import Normal from "../Normal";
 import RecordToolbar from "../RecordToolbar";
+import SpinnerBanner, { SpinnerStates } from "../../components/SpinnerBanner";
 import PlaybackBanner from "../../components/PlaybackBanner";
 import DisconnectBanner from "../../components/DisconnectBanner";
 import "../../styles/app.css";
@@ -11,11 +13,9 @@ export default class Panel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: Modes.NORMAL,
-      checked: false
+      mode: Modes.NORMAL
     };
     this.setExternalState = this.setExternalState.bind(this);
-    this.onCheckChange = this.onCheckChange.bind(this);
   }
   componentDidMount() {
     browser.runtime.onMessage.addListener(this.setExternalState);
@@ -28,26 +28,15 @@ export default class Panel extends React.Component {
       this.setState(Object.assign({}, message.state));
     }
   }
-  openOptionsPage() {
-    browser.runtime.openOptionsPage();
-  }
-  onCheckChange(e) {
-    this.setState({
-      checked: e.target.checked
-    });
-    browser.runtime.sendMessage({
-      setVisualChecks: true,
-      disableVisualChecks: e.target.checked
-    });
-  }
   render() {
     return (
       <div>
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
+        {this.state.mode === Modes.NORMAL && <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>Successfully connected with Selenium IDE.</SpinnerBanner>}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
+          {this.state.mode === Modes.NORMAL && <Normal />}
         </div>
-        {this.state.mode === Modes.NORMAL && <div>Successfully connected to Selenium IDE. More options will be available when running or recording tests.</div>}
         {this.state.mode === Modes.SETUP && <div>Your Eyes account information is not properly set up. Please go to <a href="#" onClick={this.openOptionsPage}>options</a> to configure your account details.</div>}
         {
           this.state.mode === Modes.PLAYBACK &&

@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "../../components/Link";
+import MoreInfo from "../../components/MoreInfo";
 import sadFace from "../../assets/images/sad_face.png";
 import "./style.css";
 
@@ -10,9 +10,9 @@ export default class Disconnect extends React.Component {
         <img src={sadFace} width="200px" style={{
           margin: "20px"
         }} />
-        <p>
-          Please make sure the Selenium IDE window is open. For more information visit <Link href="https://applitools.com">https://applitools.com</Link>
-        </p>
+        <footer>
+          <p>Please make sure the Selenium IDE window is open. <MoreInfo /></p>
+        </footer>
       </div>
     );
   }
