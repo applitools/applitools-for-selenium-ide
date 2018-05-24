@@ -1,25 +1,19 @@
 import React from "react";
+import PropTypes from "prop-types";
 import MoreInfo from "../../components/MoreInfo";
 
 export default class Normal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      checked: false
-    };
-    this.onCheckChange = this.onCheckChange.bind(this);
-  }
+  static propTypes = {
+    disableVisualCheckpoints: PropTypes.bool.isRequired,
+    visualCheckpointsChanged: PropTypes.func.isRequired
+  };
   openOptionsPage() {
     browser.runtime.openOptionsPage();
   }
-  onCheckChange(e) {
-    this.setState({
-      checked: e.target.checked
-    });
-    browser.runtime.sendMessage({
-      setVisualChecks: true,
-      disableVisualChecks: e.target.checked
-    });
+  handleCheckboxChange(e) {
+    if (this.props.visualCheckpointsChanged) {
+      this.props.visualCheckpointsChanged(e.target.checked);
+    }
   }
   render() {
     return (
@@ -29,11 +23,11 @@ export default class Normal extends React.Component {
           className="checkbox"
           id="disable-checks"
           name="disable-checks"
-          checked={this.state.checked}
-          onChange={this.onCheckChange}
+          checked={this.props.disableVisualCheckpoints}
+          onChange={this.handleCheckboxChange.bind(this)}
         />
-        <label key="label" htmlFor="disable-checks">Disable visual checks</label>
-        <a href="#" onClick={this.openOptionsPage}>options</a>
+        <label key="label" htmlFor="disable-checks">Disable visual checkpoints</label>
+        <a href="#" onClick={this.openOptionsPage}>Open settings</a>
         <footer>
           <p>More options will be available when running or recording tests. <MoreInfo /></p>
         </footer>
