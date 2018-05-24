@@ -78,6 +78,9 @@ validateOptions().then(() => {
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // eslint-disable-line no-unused-vars
+  if (message.requestExternalState) {
+    return sendResponse({ state });
+  }
   if (message.setVisualChecks) {
     disableChecks = message.disableVisualChecks;
   }
