@@ -134,12 +134,6 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
       if (disableChecks) {
         ideLogger.log("visual checkpoints are disabled").then(() => {
-          setExternalState({
-            mode: Modes.PLAYBACK,
-            playback: {
-              message: "Visual checkpoints are disable, all checks will be skipped."
-            }
-          });
           return sendResponse(true);
         });
       } else {
@@ -152,7 +146,14 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
             setExternalState({
               mode: Modes.PLAYBACK,
               playback: {
-                message: `Running test ${message.options.testName} against ${eyesServer ? eyesServer : "public eyes server"}${branch ? " on branch " + branch : ""}.`
+                testName: message.options.testName,
+                startTime: (new Date()).toString(),
+                hasFailed: false,
+                batchName: message.options.suiteName || message.options.testName,
+                appName: message.options.projectName,
+                eyesServer,
+                environment: "Chrome MacOS 1280x800",
+                branch
               }
             });
             sendResponse(true);
