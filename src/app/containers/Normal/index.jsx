@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import React from "react";
 import PropTypes from "prop-types";
+import Checkbox from "../../components/Checkbox";
 import MoreInfo from "../../components/MoreInfo";
 
 export default class Normal extends React.Component {
@@ -19,16 +20,17 @@ export default class Normal extends React.Component {
   render() {
     return (
       <div>
-        <input
-          type="checkbox"
-          className="checkbox"
+        <Checkbox
           id="disable-checks"
+          className="checkbox"
           name="disable-checks"
+          label="Disable visual checkpoints"
           checked={this.props.disableVisualCheckpoints}
           onChange={this.handleCheckboxChange.bind(this)}
         />
-        <label key="label" htmlFor="disable-checks">Disable visual checkpoints</label>
-        <a href="#" onClick={this.openOptionsPage}>Open settings</a>
+        <a href="#" onClick={this.openOptionsPage} style={{
+          marginLeft: "30px"
+        }}>Open settings</a>
         <footer>
           <p>More options will be available when running or recording tests. <MoreInfo /></p>
         </footer>
