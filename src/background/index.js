@@ -97,7 +97,10 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.event === "recordingStarted") {
     setExternalState({
-      mode: Modes.RECORD
+      mode: Modes.RECORD,
+      record: {
+        testName: message.testName
+      }
     });
   }
   if (message.event === "recordingStopped") {

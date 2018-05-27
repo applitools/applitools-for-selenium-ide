@@ -4,7 +4,7 @@ import Modes from "../../../commons/modes";
 import Disconnect from "../Disconnect";
 import Normal from "../Normal";
 import Setup from "../Setup";
-import RecordToolbar from "../RecordToolbar";
+import Record from "../Record";
 import SpinnerBanner, { SpinnerStates } from "../../components/SpinnerBanner";
 import PlaybackBanner from "../../components/PlaybackBanner";
 import DisconnectBanner from "../../components/DisconnectBanner";
@@ -64,10 +64,12 @@ export default class Panel extends React.Component {
           ? <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Applitools account details are not set!</SpinnerBanner>
           : <SpinnerBanner state={SpinnerStates.ERROR}>Verifying account details...</SpinnerBanner>)}
         {this.state.mode === Modes.INVALID && <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Unable to verify Applitools account details!</SpinnerBanner>}
+        {this.state.mode === Modes.RECORD && <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Recording test: ${this.state.record.testName}`}</SpinnerBanner>}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL && <Normal disableVisualCheckpoints={this.state.disableVisualCheckpoints} visualCheckpointsChanged={this.visualCheckpointsChanged} />}
           {(this.state.mode === Modes.SETUP || this.state.mode === Modes.INVALID) && <Setup isInvalid={this.state.mode === Modes.INVALID} />}
+          {this.state.mode === Modes.RECORD && <Record />}
         </div>
         {
           this.state.mode === Modes.PLAYBACK &&
@@ -82,7 +84,6 @@ export default class Panel extends React.Component {
               branch={this.state.playback.branch}
             />
         }
-        {this.state.mode === Modes.RECORD && <RecordToolbar />}
       </div>
     );
   }

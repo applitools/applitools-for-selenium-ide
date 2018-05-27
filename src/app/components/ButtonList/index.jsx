@@ -27,7 +27,7 @@ class ListButton extends React.Component {
   };
   render() {
     return (
-      <li tabIndex="0" onClick={this.props.onClick}>
+      <li tabIndex="0" onClick={() => {this.props.onClick(this.props.name);}}>
         <button tabIndex="-1">{this.props.name}</button>
         {this.props.label && <a>{this.props.label}</a>}
       </li>
