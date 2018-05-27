@@ -10,9 +10,9 @@ export default class FormLabel extends React.Component {
   };
   render() {
     return (
-      <div>
-        <span className="bold">{this.props.label}: </span>
-        <span>{this.props.children || this.props.placeholder}</span>
+      <div className="form-label">
+        <div className="bold">{this.props.label}</div>
+        <div>{this.props.children || this.props.placeholder}</div>
       </div>
     );
   }
