@@ -5,8 +5,8 @@ import Disconnect from "../Disconnect";
 import Normal from "../Normal";
 import Setup from "../Setup";
 import Record from "../Record";
+import Playback from "../Playback";
 import SpinnerBanner, { SpinnerStates } from "../../components/SpinnerBanner";
-import PlaybackBanner from "../../components/PlaybackBanner";
 import DisconnectBanner from "../../components/DisconnectBanner";
 import "../../styles/app.css";
 
@@ -65,25 +65,26 @@ export default class Panel extends React.Component {
           : <SpinnerBanner state={SpinnerStates.ERROR}>Verifying account details...</SpinnerBanner>)}
         {this.state.mode === Modes.INVALID && <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Unable to verify Applitools account details!</SpinnerBanner>}
         {this.state.mode === Modes.RECORD && <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Recording test: ${this.state.record.testName}`}</SpinnerBanner>}
+        {this.state.mode === Modes.PLAYBACK && <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Running test: ${this.state.playback.testName}`}</SpinnerBanner>}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL && <Normal disableVisualCheckpoints={this.state.disableVisualCheckpoints} visualCheckpointsChanged={this.visualCheckpointsChanged} />}
           {(this.state.mode === Modes.SETUP || this.state.mode === Modes.INVALID) && <Setup isInvalid={this.state.mode === Modes.INVALID} />}
           {this.state.mode === Modes.RECORD && <Record />}
+          {
+            this.state.mode === Modes.PLAYBACK &&
+              <Playback
+                testName={this.state.playback.testName}
+                startTime={new Date(this.state.playback.startTime)}
+                hasFailed={this.state.playback.hasFailed}
+                batchName={this.state.playback.batchName}
+                appName={this.state.playback.appName}
+                eyesServer={this.state.playback.eyesServer}
+                environment={this.state.playback.environment}
+                branch={this.state.playback.branch}
+              />
+          }
         </div>
-        {
-          this.state.mode === Modes.PLAYBACK &&
-            <PlaybackBanner
-              testName={this.state.playback.testName}
-              startTime={new Date(this.state.playback.startTime)}
-              hasFailed={this.state.playback.hasFailed}
-              batchName={this.state.playback.batchName}
-              appName={this.state.playback.appName}
-              eyesServer={this.state.playback.eyesServer}
-              environment={this.state.playback.environment}
-              branch={this.state.playback.branch}
-            />
-        }
       </div>
     );
   }
