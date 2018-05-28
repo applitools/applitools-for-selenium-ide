@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 import Modes from "../commons/modes";
 import ideLogger from "./utils/ide-logger";
-import { verifyStoredAPIKey } from "../commons/api";
+import { getExternalState, setExternalState, resetMode, validateOptions } from "./external-state";
 import { sendMessage, startPolling } from "../IO/message-port";
 import { isEyesCommand } from "./commands";
 import { getViewportSize, setViewportSize } from "./commands/viewport";
@@ -51,38 +51,13 @@ startPolling({
   }
 });
 
-let state = {};
-function setExternalState(newState) {
-  browser.runtime.sendMessage({
-    state: Object.assign(state, newState)
-  }).catch(() => {});
-}
-
-let verificationMode = Modes.NORMAL;
-function validateOptions() {
-  return verifyStoredAPIKey().then(() => (
-    verificationMode = Modes.NORMAL
-  )).catch((e) => {
-    if (e.message === "API key can't be empty") {
-      return verificationMode = Modes.SETUP;
-    }
-    return verificationMode = Modes.INVALID;
-  });
-}
-
-function resetMode() {
-  setExternalState({
-    mode: verificationMode
-  });
-}
-
 validateOptions().then(() => {
   resetMode();
 });
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // eslint-disable-line no-unused-vars
   if (message.requestExternalState) {
-    return sendResponse({ state });
+    return sendResponse({ state: getExternalState() });
   }
   if (message.setVisualChecks) {
     disableChecks = message.disableVisualChecks;
@@ -136,28 +111,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           return sendResponse(true);
         });
       } else {
-        browser.storage.local.get(["apiKey", "branch", "parentBranch", "eyesServer"]).then(({ branch, parentBranch, eyesServer }) => {
-          let notification = `connecting to ${eyesServer ? eyesServer : "public eyes"}`;
-          if (branch) {
-            notification += `, running using branch ${branch}${parentBranch ? " and parent branch " + parentBranch : ""}`;
-          }
-          ideLogger.log(notification).then(() => {
-            setExternalState({
-              mode: Modes.PLAYBACK,
-              playback: {
-                testName: message.options.testName,
-                startTime: (new Date()).toString(),
-                hasFailed: false,
-                batchName: message.options.suiteName || message.options.testName,
-                appName: message.options.projectName,
-                eyesServer,
-                environment: "Chrome MacOS 1280x800",
-                branch
-              }
-            });
-            sendResponse(true);
-          });
-        });
+        return sendResponse(true);
       }
     }).catch(() => {
       return sendResponse(true);
