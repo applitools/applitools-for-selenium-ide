@@ -2,8 +2,8 @@ import browser from "webextension-polyfill";
 import React from "react";
 import PropTypes from "prop-types";
 import Link from "../../components/Link";
-import Input from "../../components/Input";
-import FlatButton from "../../components/FlatButton";
+import Input from "../../../commons/components/Input";
+import FlatButton from "../../../commons/components/FlatButton";
 
 export default class Setup extends React.Component {
   constructor(props) {

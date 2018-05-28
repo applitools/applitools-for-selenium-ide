@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import FormLabel from "../../components/FormLabel";
-import Timer from "../../components/Timer";
+import FormLabel from "../../../commons/components/FormLabel";
+import Timer from "../../../commons/components/Timer";
 import { DEFAULT_SERVER } from "../../../commons/api.js";
 import "./style.css";
 

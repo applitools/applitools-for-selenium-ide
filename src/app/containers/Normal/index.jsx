@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 import React from "react";
 import PropTypes from "prop-types";
-import Checkbox from "../../components/Checkbox";
+import Checkbox from "../../../commons/components/Checkbox";
 import MoreInfo from "../../components/MoreInfo";
 import Link from "../../components/Link";
 import { DEFAULT_SERVER } from "../../../commons/api.js";
