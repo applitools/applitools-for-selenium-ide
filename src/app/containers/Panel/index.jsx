@@ -39,12 +39,9 @@ export default class Panel extends React.Component {
     }
   }
   visualCheckpointsChanged(value) {
-    this.setState({
-      disableVisualCheckpoints: value
-    });
     browser.runtime.sendMessage({
       setVisualChecks: true,
-      disableVisualChecks: value
+      disableVisualCheckpoints: value
     }).catch();
   }
   setSubmitting() {

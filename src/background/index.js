@@ -9,8 +9,6 @@ import { checkWindow, checkRegion, checkElement, endTest } from "./commands/chec
 import { getEyes, hasEyes } from "./utils/eyes";
 import { parseViewport, parseRegion } from "./utils/parsers";
 
-let disableChecks = false;
-
 startPolling({
   name: "Applitools",
   version: "1.0.0",
@@ -60,7 +58,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
     return sendResponse({ state: getExternalState() });
   }
   if (message.setVisualChecks) {
-    disableChecks = message.disableVisualChecks;
+    setExternalState({
+      disableVisualCheckpoints: message.disableVisualCheckpoints
+    });
   }
   if (message.optionsUpdated) {
     validateOptions().then(() => {
@@ -106,7 +106,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   }
   if (message.event === "playbackStarted" && message.options.runId) {
     getEyes(`${message.options.runId}${message.options.testId}`, message.options.runId, message.options.projectName, message.options.suiteName, message.options.testName).then(() => {
-      if (disableChecks) {
+      if (getExternalState().disableVisualCheckpoints) {
         ideLogger.log("visual checkpoints are disabled").then(() => {
           return sendResponse(true);
         });
@@ -153,7 +153,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return true;
       }
       case "checkWindow": {
-        if (disableChecks) {
+        if (getExternalState().disableVisualCheckpoints) {
           return sendResponse(true);
         } else if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
@@ -177,7 +177,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         }
       }
       case "checkRegion": {
-        if (disableChecks) {
+        if (getExternalState().disableVisualCheckpoints) {
           return sendResponse(true);
         } else if (message.options.runId) {
           getViewportSize(message.options.tabId).then(viewport => {
@@ -203,7 +203,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         }
       }
       case "checkElement": {
-        if (disableChecks) {
+        if (getExternalState().disableVisualCheckpoints) {
           return sendResponse(true);
         } else if (message.options.runId) {
           sendMessage({
