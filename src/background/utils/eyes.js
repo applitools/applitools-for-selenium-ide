@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { parseApiServer } from "./parsers.js";
 const { Eyes } = window.EyesImages;
 
 const promiseFactory = {
@@ -15,7 +16,7 @@ function makeEyes(batchId, appName, batchName, testName) {
       if (!apiKey) {
         return rej("No API key was provided, please set one in the options page");
       }
-      const eyesApiServerUrl = eyesServer ? eyesServer : undefined;
+      const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined;
       const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
       eyes.setApiKey(apiKey);
       eyes.setBranchName(branch);

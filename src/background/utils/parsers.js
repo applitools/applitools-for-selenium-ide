@@ -18,3 +18,10 @@ export function parseEnvironment(userAgent, viewport) {
   parser.setUA(userAgent);
   return `${parser.getBrowser().name} ${parser.getOS().name} ${viewport.width}x${viewport.height}`;
 }
+
+export function parseApiServer(server) {
+  if (/^(?!.*(api)\.).*\.applitools\.com\/?$/.test(server)) {
+    return server.replace(".applitools.com", "api.applitools.com");
+  }
+  return server;
+}

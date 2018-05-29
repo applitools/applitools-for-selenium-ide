@@ -106,25 +106,23 @@ function preCheck(eyes, viewport) {
     ideLogger.warn("a visual check was called without setting a viewport size, results may be inconsistent");
   }
   if (getExternalState().mode !== Modes.PLAYBACK) {
-    return browser.storage.local.get(["apiKey", "branch", "parentBranch", "eyesServer"]).then(({ branch, parentBranch, eyesServer }) => {
-      let notification = `connecting to ${eyesServer ? eyesServer : "public eyes"}`;
-      if (branch) {
-        notification += `, running using branch ${branch}${parentBranch ? " and parent branch " + parentBranch : ""}`;
-      }
-      return ideLogger.log(notification).then(() => {
-        return setExternalState({
-          mode: Modes.PLAYBACK,
-          playback: {
-            testName: eyes._testName,
-            startTime: (new Date()).toString(),
-            hasFailed: false,
-            batchName: eyes._batch.name || eyes._testName,
-            appName: eyes._appName,
-            eyesServer,
-            environment: parseEnvironment(navigator.userAgent, viewport),
-            branch
-          }
-        });
+    let notification = `connecting to ${eyes._serverUrl}`;
+    if (eyes.getBranchName()) {
+      notification += `, running on branch ${eyes.getBranchName()}`;
+    }
+    return ideLogger.log(notification).then(() => {
+      return setExternalState({
+        mode: Modes.PLAYBACK,
+        playback: {
+          testName: eyes._testName,
+          startTime: (new Date()).toString(),
+          hasFailed: false,
+          batchName: eyes._batch.name || eyes._testName,
+          appName: eyes._appName,
+          eyesServer: eyes._serverUrl,
+          environment: parseEnvironment(navigator.userAgent, viewport),
+          branch: eyes.getBranchName()
+        }
       });
     });
   } else {
