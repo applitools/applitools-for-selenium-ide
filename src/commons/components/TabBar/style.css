@@ -1,0 +1,38 @@
+.tabbar {
+    position: relative;
+    border-bottom: 1px solid #CDCDCD;
+}
+
+.tabbar ul {
+    display: flex;
+    align-items: center;
+}
+
+.tabbar ul li {
+    display: inline-block;
+    flex: 0% 1 1;
+}
+
+.tabbar a {
+    display: block;
+    padding: 7px 10px 5px 10px;
+    text-align: center;
+    color: rgba(80, 80, 80, 0.6);
+}
+
+.tabbar a:hover {
+    color: #505050;
+}
+
+.tabbar li.active a {
+    font-weight: bold;
+    color: #505050;
+}
+
+.tabbar .underline {
+    height: 2px;
+    background-color: #40A6FF;
+    transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
+    position: absolute;
+    bottom: 0;
+}
