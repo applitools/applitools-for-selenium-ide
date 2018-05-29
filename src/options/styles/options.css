@@ -1,0 +1,16 @@
+body {
+  width: 350px;
+}
+
+form {
+  margin: 24px;
+}
+
+button[type="submit"] {
+  margin: 20px 0 0 0;
+  float: right;
+}
+
+.form-contents {
+  height: 160px;
+}

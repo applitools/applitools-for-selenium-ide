@@ -43,7 +43,7 @@
   },
   "options_ui": {
     "page": "assets/options.html",
-    "browser_style": true,
-    "chrome_style": true
+    "browser_style": false,
+    "chrome_style": false
   }
 }
