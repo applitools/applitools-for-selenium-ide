@@ -58,11 +58,17 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
     return sendResponse({ state: getExternalState() });
   }
   if (message.setVisualChecks) {
+    browser.storage.local.set({
+      disableVisualCheckpoints: message.disableVisualCheckpoints
+    });
     setExternalState({
       disableVisualCheckpoints: message.disableVisualCheckpoints
     });
   }
   if (message.optionsUpdated) {
+    browser.storage.local.get(["disableVisualCheckpoints"]).then(({disableVisualCheckpoints}) => {
+      setExternalState({ disableVisualCheckpoints });
+    });
     validateOptions().then(() => {
       resetMode();
     });
