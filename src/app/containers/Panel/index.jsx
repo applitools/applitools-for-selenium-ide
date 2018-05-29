@@ -8,6 +8,7 @@ import Record from "../Record";
 import Playback from "../Playback";
 import SpinnerBanner, { SpinnerStates } from "../../components/SpinnerBanner";
 import DisconnectBanner from "../../components/DisconnectBanner";
+import "../../../commons/styles/elements.css";
 import "../../styles/app.css";
 
 export default class Panel extends React.Component {
