@@ -9,8 +9,16 @@ const promiseFactory = {
 };
 
 const eyes = {};
+let lastResults = {
+  url: "",
+  batchId: ""
+};
 
 function makeEyes(batchId, appName, batchName, testName) {
+  if (lastResults.batchId !== batchId) {
+    lastResults.batchId = batchId;
+    lastResults.url = "";
+  }
   return new Promise((res, rej) => {
     browser.storage.local.get(["apiKey", "branch", "parentBranch", "eyesServer"]).then(({ apiKey, branch, parentBranch, eyesServer }) => {
       if (!apiKey) {
@@ -56,11 +64,16 @@ export function closeEyes(id) {
 
   return eye.close(false).then(results => {
     results.commands = eye.commands;
+    lastResults.url = results.appUrls.session;
     return results;
   }).catch((e) => {
     console.error(e);
     eye.abortIfNotClosed();
   });
+}
+
+export function getResultsUrl() {
+  return lastResults.url;
 }
 
 function decorateEyes(eyes) {
