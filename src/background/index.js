@@ -53,6 +53,14 @@ validateOptions().then(() => {
   resetMode();
 });
 
+function updateBrowserActionIcon(disableVisualCheckpoints) {
+  return browser.browserAction.setIcon({
+    path: {
+      52: disableVisualCheckpoints ? "icons/icon_menu_disabled.png" : "icons/icon_menu.png"
+    }
+  });
+}
+
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // eslint-disable-line no-unused-vars
   if (message.requestExternalState) {
     return sendResponse({ state: getExternalState() });
@@ -61,12 +69,14 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
     browser.storage.local.set({
       disableVisualCheckpoints: message.disableVisualCheckpoints
     });
+    updateBrowserActionIcon(message.disableVisualCheckpoints);
     setExternalState({
       disableVisualCheckpoints: message.disableVisualCheckpoints
     });
   }
   if (message.optionsUpdated) {
     browser.storage.local.get(["disableVisualCheckpoints"]).then(({disableVisualCheckpoints}) => {
+      updateBrowserActionIcon(disableVisualCheckpoints);
       setExternalState({ disableVisualCheckpoints });
     });
     validateOptions().then(() => {
