@@ -37,7 +37,7 @@ startPolling({
     }
   ],
   dependencies: {
-    "eyes.selenium": "0.0.78"
+    "eyes.selenium.v68patch": "0.0.68-patch4"
   }
 }, (err) => {
   if (err) {
@@ -298,8 +298,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       }
       case "test": {
         return sendResponse({
-          setup: `await eyes.open(driver, appName, "${message.test.name}");`,
-          teardown: ""
+          setup: `const _driver = driver;driver = await eyes.open(driver, appName, "${message.test.name}");`,
+          teardown: "driver = _driver;"
         });
       }
       case "command": {
