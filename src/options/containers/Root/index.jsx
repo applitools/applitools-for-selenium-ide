@@ -28,23 +28,24 @@ class Options extends React.Component {
     };
     this.tabs = Object.values(Tabs);
     this.handleTabChange = this.handleTabChange.bind(this);
-    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.saveOptions = this.saveOptions.bind(this);
     browser.storage.local.get([
       "disableVisualCheckpoints",
+      "openUrls",
       "apiKey",
       "eyesServer",
       "branch",
       "parentBranch",
       "seideId"]
-    ).then(({disableVisualCheckpoints, apiKey, eyesServer, branch, parentBranch, seideId}) => {
+    ).then(({disableVisualCheckpoints, openUrls, apiKey, eyesServer, branch, parentBranch, seideId}) => {
       this.setState({
         disableVisualCheckpoints,
-        apiKey,
-        eyesServer,
-        branch,
-        parentBranch,
-        seideId
+        openUrls,
+        apiKey: apiKey || "",
+        eyesServer: eyesServer || "",
+        branch: branch || "",
+        parentBranch: parentBranch || "",
+        seideId: seideId || ""
       });
     });
   }
@@ -53,9 +54,9 @@ class Options extends React.Component {
       tab
     });
   }
-  handleCheckboxChange(e) {
+  handleCheckboxChange(name, e) {
     this.setState({
-      disableVisualCheckpoints: e.target.checked
+      [name]: e.target.checked
     });
   }
   handleInputChange(name, value) {
@@ -66,6 +67,7 @@ class Options extends React.Component {
   saveOptions() {
     browser.storage.local.set({
       disableVisualCheckpoints: this.state.disableVisualCheckpoints,
+      openUrls: this.state.openUrls,
       apiKey: this.state.apiKey,
       eyesServer: this.state.eyesServer,
       branch: this.state.branch,
@@ -92,7 +94,15 @@ class Options extends React.Component {
                 name="disable-checks"
                 label="Disable visual checkpoints"
                 checked={this.state.disableVisualCheckpoints}
-                onChange={this.handleCheckboxChange}
+                onChange={this.handleCheckboxChange.bind(this, "disableVisualCheckpoints")}
+              />
+              <Checkbox
+                id="open-urls"
+                className="checkbox"
+                name="open-urls"
+                label="Open test manager after test runs"
+                checked={this.state.openUrls}
+                onChange={this.handleCheckboxChange.bind(this, "openUrls")}
               />
               <Input name="branch" label="branch name" placeholder="default" value={this.state.branch} onChange={this.handleInputChange.bind(this,  "branch")} />
               <Input name="parentBranch" label="parent branch name" value={this.state.parentBranch} onChange={this.handleInputChange.bind(this, "parentBranch")} />

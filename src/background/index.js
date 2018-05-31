@@ -8,6 +8,7 @@ import { getViewportSize, setViewportSize } from "./commands/viewport";
 import { checkWindow, checkRegion, checkElement, endTest } from "./commands/check";
 import { getEyes, hasEyes, getResultsUrl } from "./utils/eyes";
 import { parseViewport, parseRegion } from "./utils/parsers";
+import { setupOptions } from "./utils/options.js";
 
 startPolling({
   name: "Applitools",
@@ -49,8 +50,10 @@ startPolling({
   }
 });
 
-validateOptions().then(() => {
-  resetMode();
+setupOptions().then(() => {
+  validateOptions().then(() => {
+    resetMode();
+  });
 });
 
 function updateBrowserActionIcon(disableVisualCheckpoints) {
@@ -146,19 +149,23 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
   if (message.event === "playbackStopped" && message.options.runId && hasEyes(`${message.options.runId}${message.options.testId}`)) {
     endTest(`${message.options.runId}${message.options.testId}`).catch(r => (r)).then(results => {
       resetMode();
-      const url = getResultsUrl();
-      if (url && !message.options.suiteName) {
-        browser.tabs.create({ url });
-      }
+      browser.storage.local.get(["openUrls"]).then(({ openUrls }) => {
+        const url = getResultsUrl();
+        if (openUrls && url && !message.options.suiteName) {
+          browser.tabs.create({ url });
+        }
+      });
       return sendResponse(results);
     }).catch(sendResponse);
     return true;
   }
   if (message.event === "suitePlaybackStopped" && message.options.runId) {
-    const url = getResultsUrl();
-    if (url) {
-      browser.tabs.create({ url });
-    }
+    browser.storage.local.get(["openUrls"]).then(({ openUrls }) => {
+      const url = getResultsUrl();
+      if (openUrls && url) {
+        browser.tabs.create({ url });
+      }
+    });
     return sendResponse(true);
   }
   if (message.action === "execute") {
