@@ -67,7 +67,7 @@ export default class Panel extends React.Component {
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL && <Normal disableVisualCheckpoints={this.state.disableVisualCheckpoints} visualCheckpointsChanged={this.visualCheckpointsChanged} />}
-          {(this.state.mode === Modes.SETUP || this.state.mode === Modes.INVALID) && <Setup isInvalid={this.state.mode === Modes.INVALID} />}
+          {(this.state.mode === Modes.SETUP || this.state.mode === Modes.INVALID) && <Setup isInvalid={this.state.mode === Modes.INVALID} setSubmitMode={this.setSubmitting} />}
           {this.state.mode === Modes.RECORD && <Record />}
           {
             this.state.mode === Modes.PLAYBACK &&

@@ -17,7 +17,8 @@ export default class Setup extends React.Component {
     this.submitInfo = this.submitInfo.bind(this);
   }
   static propTypes = {
-    isInvalid: PropTypes.bool
+    isInvalid: PropTypes.bool,
+    setSubmitMode: PropTypes.func
   };
   handleApiKeyChange(value) {
     this.setState({ apiKey: value });
@@ -26,6 +27,9 @@ export default class Setup extends React.Component {
     this.setState({ serverUrl: value });
   }
   submitInfo() {
+    if (this.props.setSubmitMode) {
+      this.props.setSubmitMode();
+    }
     browser.storage.local.set({
       apiKey: this.state.apiKey,
       eyesServer: this.state.serverUrl
