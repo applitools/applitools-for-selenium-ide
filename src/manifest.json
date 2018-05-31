@@ -10,7 +10,9 @@
   },
   "browser_action": {
     "default_icon": {
-      "52": "icons/icon_menu.png"
+      "16": "icons/icon_menu16.png",
+      "32": "icons/icon_menu32.png",
+      "64": "icons/icon_menu64.png"
     },
     "default_title": "Applitools for Selenium IDE",
     "default_popup": "assets/index.html"

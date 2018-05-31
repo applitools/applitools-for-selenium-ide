@@ -55,9 +55,18 @@ validateOptions().then(() => {
 
 function updateBrowserActionIcon(disableVisualCheckpoints) {
   return browser.browserAction.setIcon({
-    path: {
-      52: disableVisualCheckpoints ? "icons/icon_menu_disabled.png" : "icons/icon_menu.png"
-    }
+    path: disableVisualCheckpoints ?
+      {
+        16: "icons/icon_menu16_disabled.png",
+        32: "icons/icon_menu32_disabled.png",
+        64: "icons/icon_menu64_disabled.png"
+      }
+      :
+      {
+        16: "icons/icon_menu16.png",
+        32: "icons/icon_menu32.png",
+        64: "icons/icon_menu64.png"
+      }
   });
 }
 
