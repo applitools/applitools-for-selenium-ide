@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import UAParser from "ua-parser-js";
 import React from "react";
 import Modes from "../../../commons/modes";
 import Disconnect from "../Disconnect";
@@ -10,6 +11,14 @@ import SpinnerBanner, { SpinnerStates } from "../../components/SpinnerBanner";
 import DisconnectBanner from "../../components/DisconnectBanner";
 import "../../../commons/styles/elements.css";
 import "../../styles/app.css";
+
+const userAgent = UAParser(window.navigator.userAgent);
+if (userAgent.browser.name === "Chrome") {
+  require("../../../commons/styles/chrome.css");
+}
+if (userAgent.os.name === "Windows") {
+  require("../../../commons/styles/windows.css");
+}
 
 export default class Panel extends React.Component {
   constructor(props) {
