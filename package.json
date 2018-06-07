@@ -7,6 +7,8 @@
     "start": "webpack-dev-server --hot",
     "build": "webpack",
     "build:prod": "rm -rf build && env NODE_ENV=production yarn build",
+    "build:prod:chrome": "env SIDE_ID=mooikfkahbdckldjjndioackbalphokd yarn build:prod && mkdir -p dist && zip -r dist/chrome.zip build",
+    "build:prod:firefox": "env SIDE_ID=a6fd85ed-e919-4a43-a5af-8da18bda539f yarn build:prod && mkdir -p dist && zip -r dist/firefox.zip build",
     "test": "jest",
     "test:webdriver": "selenium-side-runner tests/*.side",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx"
@@ -50,7 +52,7 @@
   "dependencies": {
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
-    "eyes.images": "^0.0.47",
+    "eyes.images": "0.0.50",
     "eyes.utils": "^0.0.26",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",

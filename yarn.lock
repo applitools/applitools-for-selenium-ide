@@ -2761,17 +2761,17 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
-eyes.images@^0.0.47:
-  version "0.0.47"
-  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.47.tgz#88b0b84806cb575dc971e734c38c6aba5166008d"
+eyes.images@0.0.50:
+  version "0.0.50"
+  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.50.tgz#de560e3e210fbdf43c2e31fe812424c3e40aa6eb"
   dependencies:
-    eyes.sdk "0.0.66"
+    eyes.sdk "0.0.68"
     eyes.utils "0.0.26"
     rsvp "^3.5.0"
 
-eyes.sdk@0.0.66:
-  version "0.0.66"
-  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.66.tgz#ce4b12074660bad12a889f4a78d14f09f0130690"
+eyes.sdk@0.0.68:
+  version "0.0.68"
+  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.68.tgz#ea51d90a73631b8af6dd2775342685d7324154e7"
   dependencies:
     eyes.utils "0.0.26"
     request "^2.81.0"
