@@ -312,10 +312,10 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "command": {
         const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
         if (command === "checkWindow") {
-          return sendResponse(`eyes.setForceFullPageScreenshot(true);eyes.checkWindow("${target}").then(() => {eyes.setForceFullPageScreenshot(false);});`);
+          return sendResponse(`eyes.setForceFullPageScreenshot(true);eyes.checkWindow("${target}" || (new URL(await driver.getCurrentUrl())).pathname).then(() => {eyes.setForceFullPageScreenshot(false);});`);
         } else if (command === "checkRegion") {
           const { left, top, width, height } = parseRegion(target);
-          return sendResponse(`eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}");`);
+          return sendResponse(`eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
         } else if (command === "checkElement") {
           sendMessage({
             uri: "/export/location",
@@ -324,7 +324,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
               location: target
             }
           }).then((locator) => {
-            sendResponse(`eyes.checkElementBy(${locator}, undefined, "${value}");`);
+            sendResponse(`eyes.checkElementBy(${locator}, undefined, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
           }).catch(console.error);
           return true;
         } else if (command === "setMatchLevel") {

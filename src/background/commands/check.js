@@ -11,14 +11,16 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       preCheck(eyes, viewport).then(() => {
-        eyes.commands.push(commandId);
-        eyes.setViewportSize(viewport);
-        getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {
-          const image64 = image.replace("data:image/png;base64,", "");
-          return eyes.checkImage(image64, stepName);
-        }).then((imageResult) => {
-          return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
-        }).catch(reject);
+        getTabPathname(tabId).then(pathname => {
+          eyes.commands.push(commandId);
+          eyes.setViewportSize(viewport);
+          getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {
+            const image64 = image.replace("data:image/png;base64,", "");
+            return eyes.checkImage(image64, stepName || pathname);
+          }).then((imageResult) => {
+            return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+          }).catch(reject);
+        });
       });
     }).catch(reject);
   });
@@ -29,25 +31,27 @@ export function checkRegion(runId, testId, commandId, tabId, windowId, region, s
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       preCheck(eyes, viewport).then(() => {
-        eyes.commands.push(commandId);
-        eyes.setViewportSize(viewport);
-        let scrollToTopTarget = region.top - 100;
-        if (scrollToTopTarget < 0) {
-          scrollToTopTarget = 0;
-        } else {
-          region.top = 100;
-        }
-        scrollTo(tabId, region.left, scrollToTopTarget).then(() => {
-          if (isRegionInViewport(region, viewport)) {
-            getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
-              const image64 = image.replace("data:image/png;base64,", "");
-              return eyes.checkImage(image64, stepName);
-            }).then((imageResult) => {
-              return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
-            }).catch(reject);
+        getTabPathname(tabId).then(pathname => {
+          eyes.commands.push(commandId);
+          eyes.setViewportSize(viewport);
+          let scrollToTopTarget = region.top - 100;
+          if (scrollToTopTarget < 0) {
+            scrollToTopTarget = 0;
           } else {
-            reject(new Error("Region is out of bounds, try setting the viewport size to a bigger one."));
+            region.top = 100;
           }
+          scrollTo(tabId, region.left, scrollToTopTarget).then(() => {
+            if (isRegionInViewport(region, viewport)) {
+              getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
+                const image64 = image.replace("data:image/png;base64,", "");
+                return eyes.checkImage(image64, stepName || pathname);
+              }).then((imageResult) => {
+                return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+              }).catch(reject);
+            } else {
+              reject(new Error("Region is out of bounds, try setting the viewport size to a bigger one."));
+            }
+          });
         });
       });
     }).catch(reject);
@@ -58,22 +62,24 @@ export function checkElement(runId, testId, commandId, tabId, windowId, elementX
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       preCheck(eyes, viewport).then(() => {
-        eyes.commands.push(commandId);
-        eyes.setViewportSize(viewport);
-        browser.tabs.sendMessage(tabId, {
-          getElementRect: true,
-          path: elementXPath
-        }).then((rect) => {
-          if (isRegionInViewport(rect, viewport)) {
-            getRegionScreenshot(tabId, windowId, rect, removeScrollBars, viewport).then((image) => {
-              const image64 = image.replace("data:image/png;base64,", "");
-              return eyes.checkImage(image64, stepName);
-            }).then((imageResult) => {
-              return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
-            }).catch(reject);
-          } else {
-            reject(new Error("Element is out of bounds, try setting the viewport size to a bigger one."));
-          }
+        getTabPathname(tabId).then(pathname => {
+          eyes.commands.push(commandId);
+          eyes.setViewportSize(viewport);
+          browser.tabs.sendMessage(tabId, {
+            getElementRect: true,
+            path: elementXPath
+          }).then((rect) => {
+            if (isRegionInViewport(rect, viewport)) {
+              getRegionScreenshot(tabId, windowId, rect, removeScrollBars, viewport).then((image) => {
+                const image64 = image.replace("data:image/png;base64,", "");
+                return eyes.checkImage(image64, stepName || pathname);
+              }).then((imageResult) => {
+                return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+              }).catch(reject);
+            } else {
+              reject(new Error("Element is out of bounds, try setting the viewport size to a bigger one."));
+            }
+          });
         });
       });
     }).catch(reject);
@@ -128,4 +134,8 @@ function preCheck(eyes, viewport) {
   } else {
     return Promise.resolve();
   }
+}
+
+function getTabPathname(tab) {
+  return browser.tabs.get(tab).then(data => ((new URL(data.url)).pathname));
 }
