@@ -38,7 +38,7 @@ startPolling({
     }
   ],
   dependencies: {
-    "eyes.selenium.v68patch": "0.0.68-patch4"
+    "eyes.selenium": "0.0.81"
   }
 }, (err) => {
   if (err) {
@@ -102,7 +102,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
     setExternalState({
       mode: Modes.RECORD,
       record: {
-        testName: message.testName
+        testName: message.options.testName
       }
     });
   }
