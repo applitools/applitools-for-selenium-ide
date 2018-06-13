@@ -12,7 +12,7 @@ export function log(message, type = undefined) {
 }
 
 export function warn(message) {
-  return log(message, "warning");
+  return log(message, "warn");
 }
 
 export function error(message) {
