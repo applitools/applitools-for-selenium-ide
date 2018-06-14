@@ -3,8 +3,9 @@ import ButtonList from "../../components/ButtonList";
 import { sendMessage } from "../../../IO/message-port";
 
 export default class Record extends React.Component {
-  handleCommandClick(command) {
-    const commandsPayloads = {
+  constructor(props) {
+    super(props);
+    this.commands = {
       ["Check window"]: {
         command: "checkWindow",
         target: "a new check",
@@ -27,16 +28,24 @@ export default class Record extends React.Component {
         target: "1280x800",
         value: ""
       },
+      ["Set match timeout"]: {
+        command: "setMatchTimeout",
+        target: "2000",
+        value: ""
+      },
       ["Set match level"]: {
         command: "setMatchLevel",
         target: "Strict",
         value: ""
       }
     };
+    this.handleCommandClick = this.handleCommandClick.bind(this);
+  }
+  handleCommandClick(command) {
     sendMessage({
       uri: "/record/command",
       verb: "post",
-      payload: commandsPayloads[command]
+      payload: this.commands[command]
     }).then(console.log).catch(console.error);
   }
   render() {
@@ -48,7 +57,7 @@ export default class Record extends React.Component {
           You can use the following Eyes commands in Selenium IDE or click them while recording your test:
         </p>
         <ButtonList
-          items={["Check window", "Check element", "Check region", "Set viewport size", "Set match level"]}
+          items={Object.keys(this.commands)}
           label="Add to test"
           onClick={this.handleCommandClick}
         />

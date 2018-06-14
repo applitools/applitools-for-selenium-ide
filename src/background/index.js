@@ -33,6 +33,10 @@ startPolling({
       name: "set match level"
     },
     {
+      id: "setMatchTimeout",
+      name: "set match timeout"
+    },
+    {
       id: "setViewportSize",
       name: "set viewport size"
     }
@@ -173,6 +177,16 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "setMatchLevel": {
         getEyes(`${message.options.runId}${message.options.testId}`).then((eyes) => {
           return eyes.setMatchLevel(message.command.target);
+        }).then(() => {
+          return sendResponse(true);
+        }).catch((error) => {
+          return sendResponse(error instanceof Error ? { error: error.message } : {error});
+        });
+        return true;
+      }
+      case  "setMatchTimeout": {
+        getEyes(`${message.options.runId}${message.options.testId}`).then((eyes) => {
+          return eyes.setDefaultMatchTimeout(message.command.target);
         }).then(() => {
           return sendResponse(true);
         }).catch((error) => {
@@ -329,6 +343,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           return true;
         } else if (command === "setMatchLevel") {
           return sendResponse(`eyes.setMatchLevel("${target === "Layout" ? "Layout2" : target}");`);
+        } else if (command === "setMatchTimeout") {
+          return sendResponse(`eyes.setDefaultMatchTimeout("${target}");`);
         } else if (command === "setViewportSize") {
           const {width, height} = parseViewport(target);
           return sendResponse(`eyes.setViewportSize({width: ${width}, height: ${height}});`);
