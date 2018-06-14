@@ -2,10 +2,12 @@ import browser from "webextension-polyfill";
 import Modes from "../../commons/modes";
 import { sendMessage } from "../../IO/message-port";
 import { getScreenshot, getRegionScreenshot, isRegionInViewport, scrollTo } from "../utils/screenshot";
-import { getEyes, closeEyes } from "../utils/eyes";
+import { getEyes, closeEyes, promiseFactory } from "../utils/eyes";
 import { getExternalState, setExternalState } from "../external-state";
 import { parseEnvironment } from "../utils/parsers";
 import ideLogger from "../utils/ide-logger";
+
+const imageProvider = new window.EyesImages.ImageProvider();
 
 export function checkWindow(runId, testId, commandId, tabId, windowId, stepName, viewport, forceFullPageScreenshot = true, removeScrollBars = true) {
   return new Promise((resolve, reject) => {
@@ -14,10 +16,14 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
         getTabPathname(tabId).then(pathname => {
           eyes.commands.push(commandId);
           eyes.setViewportSize(viewport);
-          getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {
-            const image64 = image.replace("data:image/png;base64,", "");
-            return eyes.checkImage(image64, stepName || pathname);
-          }).then((imageResult) => {
+          imageProvider.getScreenshot = () => {
+            return getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {
+              const image64 = image.replace("data:image/png;base64,", "");
+              return window.EyesImages.MutableImage.fromBase64(image64, promiseFactory);
+            });
+          };
+
+          eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
             return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
           }).catch(reject);
         });
@@ -42,10 +48,14 @@ export function checkRegion(runId, testId, commandId, tabId, windowId, region, s
           }
           scrollTo(tabId, region.left, scrollToTopTarget).then(() => {
             if (isRegionInViewport(region, viewport)) {
-              getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
-                const image64 = image.replace("data:image/png;base64,", "");
-                return eyes.checkImage(image64, stepName || pathname);
-              }).then((imageResult) => {
+              imageProvider.getScreenshot = () => {
+                return getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
+                  const image64 = image.replace("data:image/png;base64,", "");
+                  return window.EyesImages.MutableImage.fromBase64(image64, promiseFactory);
+                });
+              };
+
+              eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
                 return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
               }).catch(reject);
             } else {
@@ -70,10 +80,14 @@ export function checkElement(runId, testId, commandId, tabId, windowId, elementX
             path: elementXPath
           }).then((rect) => {
             if (isRegionInViewport(rect, viewport)) {
-              getRegionScreenshot(tabId, windowId, rect, removeScrollBars, viewport).then((image) => {
-                const image64 = image.replace("data:image/png;base64,", "");
-                return eyes.checkImage(image64, stepName || pathname);
-              }).then((imageResult) => {
+              imageProvider.getScreenshot = () => {
+                return getRegionScreenshot(tabId, windowId, rect, removeScrollBars, viewport).then((image) => {
+                  const image64 = image.replace("data:image/png;base64,", "");
+                  return window.EyesImages.MutableImage.fromBase64(image64, promiseFactory);
+                });
+              };
+
+              eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
                 return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
               }).catch(reject);
             } else {

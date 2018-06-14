@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import { parseApiServer } from "./parsers.js";
 const { Eyes } = window.EyesImages;
 
-const promiseFactory = {
+export const promiseFactory = {
   makePromise: (p) => (new Promise(p)),
   resolve: Promise.resolve.bind(Promise),
   reject: Promise.reject.bind(Promise)

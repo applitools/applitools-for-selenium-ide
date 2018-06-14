@@ -62,6 +62,16 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@types/node@*":
+  version "10.3.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.3.tgz#8798d9e39af2fa604f715ee6a6b19796528e46c3"
+
+"@types/png-async@*":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@types/png-async/-/png-async-0.0.28.tgz#d9b13db210f84baf93ae0af478be88edd93248f2"
+  dependencies:
+    "@types/node" "*"
+
 abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -1979,6 +1989,10 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
+dateformat@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-3.0.3.tgz#a6e37499a4d9a9cf85ef5872044d62901c9889ae"
+
 debug@2.6.9, debug@^2.1.1, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -2761,23 +2775,32 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
-eyes.images@0.0.50:
-  version "0.0.50"
-  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.50.tgz#de560e3e210fbdf43c2e31fe812424c3e40aa6eb"
+eyes.images@0.0.52:
+  version "0.0.52"
+  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.52.tgz#8503f258ba70f013a494076dda5d0e149a10b0c7"
   dependencies:
-    eyes.sdk "0.0.68"
-    eyes.utils "0.0.26"
+    eyes.sdk "0.0.71"
+    eyes.utils "0.0.29"
     rsvp "^3.5.0"
 
-eyes.sdk@0.0.68:
-  version "0.0.68"
-  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.68.tgz#ea51d90a73631b8af6dd2775342685d7324154e7"
+eyes.sdk@0.0.71:
+  version "0.0.71"
+  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.71.tgz#29b34ba4be8ce94e1b4894393e21536dd87dcc3b"
   dependencies:
-    eyes.utils "0.0.26"
-    request "^2.81.0"
-    winston "*"
+    "@types/node" "*"
+    eyes.utils "0.0.29"
+    request "^2.87.0"
 
-eyes.utils@0.0.26, eyes.utils@^0.0.26:
+eyes.utils@0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/eyes.utils/-/eyes.utils-0.0.29.tgz#ae50c0863b10705b93a54028ff2f1e1dc1a6dd97"
+  dependencies:
+    "@types/node" "*"
+    "@types/png-async" "*"
+    dateformat "^3.0.3"
+    png-async "^0.9.2"
+
+eyes.utils@^0.0.26:
   version "0.0.26"
   resolved "https://registry.yarnpkg.com/eyes.utils/-/eyes.utils-0.0.26.tgz#fdb8e7dc3ccc4341605f079d4e6026468dc8ebb9"
   dependencies:
@@ -6487,7 +6510,7 @@ request@2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
-request@^2.81.0, request@^2.83.0:
+request@^2.83.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -6510,6 +6533,31 @@ request@^2.81.0, request@^2.83.0:
     qs "~6.5.1"
     safe-buffer "^5.1.1"
     stringstream "~0.0.5"
+    tough-cookie "~2.3.3"
+    tunnel-agent "^0.6.0"
+    uuid "^3.1.0"
+
+request@^2.87.0:
+  version "2.87.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.87.0.tgz#32f00235cd08d482b4d0d68db93a829c0ed5756e"
+  dependencies:
+    aws-sign2 "~0.7.0"
+    aws4 "^1.6.0"
+    caseless "~0.12.0"
+    combined-stream "~1.0.5"
+    extend "~3.0.1"
+    forever-agent "~0.6.1"
+    form-data "~2.3.1"
+    har-validator "~5.0.3"
+    http-signature "~1.2.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.17"
+    oauth-sign "~0.8.2"
+    performance-now "^2.1.0"
+    qs "~6.5.1"
+    safe-buffer "^5.1.1"
     tough-cookie "~2.3.3"
     tunnel-agent "^0.6.0"
     uuid "^3.1.0"
@@ -7799,17 +7847,6 @@ wide-align@^1.1.0:
 window-size@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.1.0.tgz#5438cd2ea93b202efa3a19fe8887aee7c94f9c9d"
-
-winston@*:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-2.4.0.tgz#808050b93d52661ed9fb6c26b3f0c826708b0aee"
-  dependencies:
-    async "~1.0.0"
-    colors "1.0.x"
-    cycle "1.0.x"
-    eyes "0.1.x"
-    isstream "0.1.x"
-    stack-trace "0.0.x"
 
 winston@^2.4.0:
   version "2.4.2"
