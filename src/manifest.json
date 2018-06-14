@@ -6,7 +6,8 @@
   "version_name": "1.0.0",
   "homepage_url": "https://applitools.com/",
   "icons": {
-    "70": "icons/icon.png"
+    "70": "icons/icon_70.png",
+    "128": "icons/icon_128.png"
   },
   "browser_action": {
     "default_icon": {
