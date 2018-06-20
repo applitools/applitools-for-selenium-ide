@@ -15,6 +15,7 @@ export default class TabBar extends React.Component {
         index: 0
       }
     };
+    this.recalculatePadding = this.recalculatePadding.bind(this);
   }
   static propTypes = {
     tabs: PropTypes.array.isRequired,
@@ -33,15 +34,23 @@ export default class TabBar extends React.Component {
       if (this.props.tabChanged) this.props.tabChanged(tab);
     }
   }
+  recalculatePadding(node) {
+    const tabPadding = Math.round(node.getBoundingClientRect().width / this.props.tabs.length - this.props.tabWidth);
+    if (tabPadding !== this.state.tabPadding) {
+      this.setState({ tabPadding });
+    }
+  }
   render() {
+    const underlineX = this.state.activeTab.index * (this.props.tabWidth + this.state.tabPadding) + this.state.tabPadding / 2;
     return (
       <div className="tabbar">
         <ul ref={(node) => {
           if (node) {
-            const tabPadding = Math.round(node.getBoundingClientRect().width / this.props.tabs.length - this.props.tabWidth);
-            if (tabPadding !== this.state.tabPadding) {
-              this.setState({ tabPadding });
-            }
+            // Chrome resizes the frame after rendering, so we calculate twice
+            setTimeout(() => {
+              this.recalculatePadding(node);
+            }, 100);
+            this.recalculatePadding(node);
           }
         }}>
           {this.props.tabs.map((tab, index) => (
@@ -51,7 +60,7 @@ export default class TabBar extends React.Component {
           ))}
         </ul>
         <div className="underline" style={{
-          transform: `translateX(${this.state.activeTab.index * (this.props.tabWidth + this.state.tabPadding) + this.state.tabPadding / 2}px)`,
+          transform: `translateX(${underlineX}px)`,
           width: `${this.props.tabWidth}px`
         }}></div>
       </div>
