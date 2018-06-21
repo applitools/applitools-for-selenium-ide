@@ -16,29 +16,72 @@ startPolling({
   commands: [
     {
       id: "checkWindow",
-      name: "check window"
+      name: "check window",
+      docs: {
+        description: "Sets a visual checkpoint on the entire window. This will scroll throughout the page, and build a screenshot of it.",
+        target: {
+          name: "step name",
+          description: "A name to display at the test results, defaults to url."
+        }
+      }
     },
     {
       id: "checkRegion",
       name: "check region",
-      type: "region"
+      type: "region",
+      docs: {
+        description: "Sets a visual checkpoint on part of the page. This will not scroll, region has to fit inside the viewport.",
+        target: "region",
+        value: {
+          name: "step name",
+          description: "A name to display at the test results, defaults to url."
+        }
+      }
     },
     {
       id: "checkElement",
       name: "check element",
-      type: "locator"
+      type: "locator",
+      docs: {
+        description: "Sets a visual checkpoint on an element. This will not scroll, element has to fit inside the viewport.",
+        target: "locator",
+        value: {
+          name: "step name",
+          description: "A name to display at the test results, defaults to url."
+        }
+      }
     },
     {
       id: "setMatchLevel",
-      name: "set match level"
+      name: "set match level",
+      docs: {
+        description: "Sets the match level for the subsequent check points, defaults to Strict.",
+        target: {
+          name: "match level",
+          description: "The match level to set, one of: Exact, Strict, Content, Layout."
+        }
+      }
     },
     {
       id: "setMatchTimeout",
-      name: "set match timeout"
+      name: "set match timeout",
+      docs: {
+        description: "Sets the match timeout for the subsequent check points, higher timeout means more retries will be made. defaults to 2 seconds.",
+        target: {
+          name: "waitTime"
+        }
+      }
     },
     {
       id: "setViewportSize",
-      name: "set viewport size"
+      name: "set viewport size",
+      docs: {
+        description: "Resizes the browser to match the viewport size (excluding window borders).",
+        target: {
+          name: "viewport size",
+          description: "WidthxHeight (e.g. 1280x800)."
+        }
+      }
     }
   ],
   dependencies: {
