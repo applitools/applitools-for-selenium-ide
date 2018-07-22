@@ -43,10 +43,12 @@ export function checkRegion(runId, testId, commandId, tabId, windowId, region, s
           let scrollToTopTarget = region.top - 100;
           if (scrollToTopTarget < 0) {
             scrollToTopTarget = 0;
-          } else {
-            region.top = 100;
           }
-          scrollTo(tabId, region.left, scrollToTopTarget).then(() => {
+          scrollTo(tabId, region.left, scrollToTopTarget).then((rect) => {
+            if (rect.top) {
+              // scrolled successfully
+              region.top = region.top + rect.top;
+            }
             if (isRegionInViewport(region, viewport)) {
               imageProvider.getScreenshot = () => {
                 return getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
