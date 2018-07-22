@@ -369,10 +369,10 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
       case "command": {
         const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
         if (command === "checkWindow") {
-          return sendResponse(`eyes.setForceFullPageScreenshot(true);eyes.checkWindow("${target}" || (new URL(await driver.getCurrentUrl())).pathname).then(() => {eyes.setForceFullPageScreenshot(false);});`);
+          return sendResponse(`eyes.setForceFullPageScreenshot(true);await eyes.checkWindow("${target}" || (new URL(await driver.getCurrentUrl())).pathname).then(() => {eyes.setForceFullPageScreenshot(false);});`);
         } else if (command === "checkRegion") {
           const { left, top, width, height } = parseRegion(target);
-          return sendResponse(`eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
+          return sendResponse(`await eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
         } else if (command === "checkElement") {
           sendMessage({
             uri: "/export/location",
@@ -381,7 +381,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
               location: target
             }
           }).then((locator) => {
-            sendResponse(`eyes.checkElementBy(${locator}, undefined, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
+            sendResponse(`await eyes.checkElementBy(${locator}, undefined, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
           }).catch(console.error);
           return true;
         } else if (command === "setMatchLevel") {
@@ -390,7 +390,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
           return sendResponse(`eyes.setDefaultMatchTimeout("${target}");`);
         } else if (command === "setViewportSize") {
           const {width, height} = parseViewport(target);
-          return sendResponse(`eyes.setViewportSize({width: ${width}, height: ${height}});`);
+          return sendResponse(`await eyes.setViewportSize({width: ${width}, height: ${height}});`);
         }
       }
     }
