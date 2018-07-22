@@ -20,7 +20,7 @@ export function getCurrentScrollPosition(tabId) {
 }
 
 export function scrollTo(tabId, x, y) {
-  return browser.tabs.executeScript(tabId, { code: `window.scrollTo(${x},${y})` });
+  return browser.tabs.executeScript(tabId, { code: `window.scrollTo(${x},${y});document.documentElement.getBoundingClientRect()` });
 }
 
 export function getCurrentTransform(tabId) {
