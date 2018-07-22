@@ -351,12 +351,12 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return sendResponse({ canEmit: !!hasEyesCommands });
       }
       case "config": {
-        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let eyes, apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.runId, batchName;`);
+        return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.runId, batchName;`);
       }
       case "suite": {
         return sendResponse({
           beforeAll: `batchName = "${message.suite.name}";`,
-          before: "eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);",
+          before: "global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);",
           after: "if (eyes._isOpen) {await eyes.close();}"
         });
       }
