@@ -361,10 +361,14 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         });
       }
       case "test": {
-        return sendResponse({
-          setup: `const _driver = driver;driver = await eyes.open(driver, appName, "${message.test.name}");`,
-          teardown: "driver = _driver;"
-        });
+        const hasEyesCommands = message.test.commands.find((command) => (isEyesCommand(command.command)));
+        if (hasEyesCommands) {
+          return sendResponse({
+            setup: `const _driver = driver;driver = await eyes.open(driver, appName, "${message.test.name}");`,
+            teardown: "driver = _driver;"
+          });
+        }
+        break;
       }
       case "command": {
         const { command, target, value } = message.command; // eslint-disable-line no-unused-vars
