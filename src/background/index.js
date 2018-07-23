@@ -354,11 +354,18 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         return sendResponse(`const Eyes = require('eyes.selenium').Eyes;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.runId, batchName;`);
       }
       case "suite": {
-        return sendResponse({
-          beforeAll: `batchName = "${message.suite.name}";`,
-          before: "global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);",
-          after: "if (eyes._isOpen) {await eyes.close();}"
-        });
+        const { suite } = message;
+        const hasEyesCommands = suite.tests.reduce((commands, test) => {
+          return [...commands, ...test.commands];
+        }, []).find(({command}) => (isEyesCommand(command)));
+        if (hasEyesCommands) {
+          return sendResponse({
+            beforeAll: `batchName = "${message.suite.name}";`,
+            before: "global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);",
+            after: "if (eyes._isOpen) {await eyes.close();}"
+          });
+        }
+        break;
       }
       case "test": {
         const hasEyesCommands = message.test.commands.find((command) => (isEyesCommand(command.command)));
