@@ -16,7 +16,7 @@ Clicking it will show a window prompting you to open the IDE if it's not already
 
 After you've pasted in your API key click `Apply` and the window will say `Successfully connected with Selenium IDE`.
 
-_NOTE: If you want to configure the extension's behavior or visit your Eyes test dashboard, click the links provided in the extension window. See "Configuring The Extension" below for details._
+_NOTE: If you want to configure the extension's behavior or visit your Eyes test dashboard, click the links provided in the extension window. See [`Configuring The Extension`](#configuring-the-extension) for details._
 
 ## Available Commands
 
