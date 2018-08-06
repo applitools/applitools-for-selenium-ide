@@ -54,11 +54,11 @@ export default class Setup extends React.Component {
       <div>
         <form className="setup" onSubmit={(e) => { e.preventDefault(); }}>
           <p>
-            <Link href="https://applitools.com/users/register">Sign up for a free account</Link> if you don’t already have one
+            <Link href="https://applitools.com/users/register">Sign up for a free account</Link> if you don’t already have one,
+            or see <Link href="https://applitools.com/docs/topics/overview/obtain-api-key.html">How to obtain your API key</Link>
           </p>
           <Input name="apiKey" label="API key" value={this.state.apiKey} onChange={this.handleApiKeyChange} />
           <Input name="serverUrl" label="Server URL" placeholder="https://eyes.applitools.com" value={this.state.serverUrl} onChange={this.handleServerUrlChange} />
-          <Link className="secondary" href="https://applitools.com/docs/topics/overview/obtain-api-key.html">Where is my API key?</Link>
           <FlatButton type="submit" onClick={this.submitInfo} style={{
             float: "right",
             margin: "15px 0 0"
