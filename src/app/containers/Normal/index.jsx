@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Checkbox from "../../../commons/components/Checkbox";
 import MoreInfo from "../../components/MoreInfo";
-import Link from "../../components/Link";
+import Link from "../../../commons/components/Link";
 import { DEFAULT_SERVER } from "../../../commons/api.js";
 
 export default class Normal extends React.Component {

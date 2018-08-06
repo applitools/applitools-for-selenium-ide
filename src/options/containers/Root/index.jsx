@@ -5,6 +5,7 @@ import TabBar from "../../../commons/components/TabBar";
 import Input from "../../../commons/components/Input";
 import Checkbox from "../../../commons/components/Checkbox";
 import FlatButton from "../../../commons/components/FlatButton";
+import Link from "../../../commons/components/Link";
 import "../../styles/options.css";
 import "../../../commons/styles/elements.css";
 
@@ -111,6 +112,7 @@ class Options extends React.Component {
             <React.Fragment>
               <Input name="apiKey" label="api key" value={this.state.apiKey} onChange={this.handleInputChange.bind(this, "apiKey")} />
               <Input name="serverUrl" label="server url" placeholder="https://eyes.applitools.com" value={this.state.eyesServer} onChange={this.handleInputChange.bind(this, "eyesServer")} />
+              <Link className="secondary" href="https://applitools.com/docs/topics/overview/obtain-api-key.html">Where is my API key?</Link>
             </React.Fragment>}
             {this.state.tab === Tabs.ADVANCED &&
             <React.Fragment>
