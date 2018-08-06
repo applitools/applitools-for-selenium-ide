@@ -19,6 +19,17 @@ a:focus {
     outline: 0;
 }
 
+a.secondary {
+    color: #7ba3c5;
+    font-size: 0.9em;
+    text-align: right;
+    display: block;
+}
+
+a.secondary:visited {
+    color: #7ba3c5;
+}
+
 input,
 textarea {
     border: 1px #DCDCDC solid;

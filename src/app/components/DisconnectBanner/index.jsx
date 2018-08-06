@@ -7,7 +7,7 @@ export default class DiconnectBanner extends React.Component {
       <SpinnerBanner state={SpinnerStates.ERROR} style={{
         height: "75px"
       }}>
-        Trying to connect with Selenium IDE...
+        Waiting for Selenium IDE to open...
       </SpinnerBanner>
     );
   }

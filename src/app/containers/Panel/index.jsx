@@ -68,7 +68,7 @@ export default class Panel extends React.Component {
           ? <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Visual checkpoints are disabled.</SpinnerBanner>
           : <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>Successfully connected with Selenium IDE.</SpinnerBanner>)}
         {this.state.mode === Modes.SETUP && (!this.state.isSubmitting
-          ? <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Applitools account details are not set!</SpinnerBanner>
+          ? <SpinnerBanner state={SpinnerStates.SETUP} spin={false}>Fill in Applitools account details.</SpinnerBanner>
           : <SpinnerBanner state={SpinnerStates.ERROR}>Verifying account details...</SpinnerBanner>)}
         {this.state.mode === Modes.INVALID && <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>Unable to verify Applitools account details!</SpinnerBanner>}
         {this.state.mode === Modes.RECORD && <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Recording test: ${this.state.record.testName}`}</SpinnerBanner>}

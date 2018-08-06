@@ -1,9 +1,10 @@
 import browser from "webextension-polyfill";
 import React from "react";
 import PropTypes from "prop-types";
-import Link from "../../components/Link";
+import Link from "../../../commons/components/Link";
 import Input from "../../../commons/components/Input";
 import FlatButton from "../../../commons/components/FlatButton";
+import "./style.css";
 
 export default class Setup extends React.Component {
   constructor(props) {
@@ -15,6 +16,15 @@ export default class Setup extends React.Component {
     this.handleApiKeyChange = this.handleApiKeyChange.bind(this);
     this.handleServerUrlChange = this.handleServerUrlChange.bind(this);
     this.submitInfo = this.submitInfo.bind(this);
+    browser.storage.local.get([
+      "apiKey",
+      "eyesServer"
+    ]).then(({apiKey, eyesServer}) => {
+      this.setState({
+        apiKey: apiKey || this.state.apiKey,
+        eyesServer: eyesServer || this.state.serverUrl
+      });
+    });
   }
   static propTypes = {
     isInvalid: PropTypes.bool,
@@ -42,15 +52,16 @@ export default class Setup extends React.Component {
   render() {
     return (
       <div>
-        <form onSubmit={(e) => { e.preventDefault(); }}>
+        <form className="setup" onSubmit={(e) => { e.preventDefault(); }}>
           <p>
             <Link href="https://applitools.com/users/register">Sign up for a free account</Link> if you don’t already have one
           </p>
-          <Input name="apiKey" label="API key" onChange={this.handleApiKeyChange} />
-          <Input name="serverUrl" label="Server URL" placeholder="https://eyes.applitools.com" onChange={this.handleServerUrlChange} />
+          <Input name="apiKey" label="API key" value={this.state.apiKey} onChange={this.handleApiKeyChange} />
+          <Input name="serverUrl" label="Server URL" placeholder="https://eyes.applitools.com" value={this.state.serverUrl} onChange={this.handleServerUrlChange} />
+          <Link className="secondary" href="https://applitools.com/docs/topics/overview/obtain-api-key.html">Where is my API key?</Link>
           <FlatButton type="submit" onClick={this.submitInfo} style={{
             float: "right",
-            margin: "0"
+            margin: "15px 0 0"
           }}>Apply</FlatButton>
         </form>
       </div>

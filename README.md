@@ -12,7 +12,7 @@ The temporary SIDE extension ID used in local development can be found in your b
 
 After installing the plugin you will have a new icon in your navigation bar which contains the Applitools Eyes logo.
 
-Clicking it will show a window prompting you to open the IDE if it's not already open. Once the IDE is open, the Eyes extension window will prompt you for your Applitools API key which you can grab from [your Eyes Account page](https://eyesapi.applitools.com/app/test-results/).
+Clicking it will show a window prompting you to open the IDE if it's not already open. Once the IDE is open, the Eyes extension window will prompt you for your Applitools API key which you can grab from <a href="https://eyesapi.applitools.com/app/test-results/" target="_blank">your Eyes Account page</a>.
 
 After you've pasted in your API key click `Apply` and the window will say `Successfully connected with Selenium IDE`.
 
@@ -70,7 +70,7 @@ In the `Tests` tab you can:
 
 - Toggle visual checkpoints
 - Toggle automatically opening the test manager after a test runs
-- Specify a branch or a parent branch (for more details on branching see [the Eyes branching documentation](http://support.applitools.com/customer/en/portal/articles/2142886-using-multiple-branches-))
+- Specify a branch or a parent branch (for more details on branching see <a href="http://support.applitools.com/customer/en/portal/articles/2142886-using-multiple-branches-" target="_blank">the Eyes branching documentation</a>)
 
 In the `Account` tab you can change your API key and change the server URL (e.g., if you have an on-premise instance of Applitools Eyes running).
 
