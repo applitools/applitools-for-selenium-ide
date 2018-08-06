@@ -11,7 +11,7 @@ export default class Disconnect extends React.Component {
           margin: "20px"
         }} />
         <footer>
-          <p>Please make sure the Selenium IDE window is open. <MoreInfo /></p>
+          <p>Please make sure Selenium IDE is installed and opened. <MoreInfo /></p>
         </footer>
       </div>
     );

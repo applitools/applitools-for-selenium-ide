@@ -112,7 +112,7 @@ class Options extends React.Component {
             <React.Fragment>
               <Input name="apiKey" label="api key" value={this.state.apiKey} onChange={this.handleInputChange.bind(this, "apiKey")} />
               <Input name="serverUrl" label="server url" placeholder="https://eyes.applitools.com" value={this.state.eyesServer} onChange={this.handleInputChange.bind(this, "eyesServer")} />
-              <Link className="secondary" href="https://applitools.com/docs/topics/overview/obtain-api-key.html">Where is my API key?</Link>
+              <Link className="secondary" href="https://applitools.com/docs/topics/overview/obtain-api-key.html">How to obtain your API key</Link>
             </React.Fragment>}
             {this.state.tab === Tabs.ADVANCED &&
             <React.Fragment>
