@@ -15,7 +15,8 @@ export function buildSnapshot(tabId) {
             resourceContents: resources.map((resource, i) => ({
               url: resource.url,
               mimeType: resource.mimeType,
-              content: contents[i].content
+              content: contents[i].content,
+              base64Encoded: contents[i].base64Encoded
             }))
           }))
         ))
@@ -40,7 +41,7 @@ function getResources(dbg) {
 }
 
 function reduceDOMNodes(domNodes) {
-  return domNodes.map(({nodeName, nodeType, attributes, childNodeIndexes}) => ({
-    nodeName, nodeType, attributes, childNodeIndexes
+  return domNodes.map(({nodeName, nodeType, attributes, childNodeIndexes, nodeValue}) => ({
+    nodeName, nodeType, attributes, childNodeIndexes, nodeValue
   }));
 }
