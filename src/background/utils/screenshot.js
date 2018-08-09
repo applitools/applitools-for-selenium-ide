@@ -1,26 +1,48 @@
 import browser from "webextension-polyfill";
+import UAParser from "ua-parser-js";
 import Debugger from "../debugger";
+
+const parser = new UAParser(window.navigator.userAgent);
 
 export async function getScreenshot(tabId) {
   const size = await getEntirePageSize(tabId);
-  return getChromeScreenshot(tabId, {
-    clip: {
+  const browserName = parser.getBrowser().name;
+  if (isChrome(browserName)) {
+    return getChromeScreenshot(tabId, {
+      clip: {
+        x: 0,
+        y: 0,
+        width: size.width,
+        height: size.height,
+        scale: 1 / window.devicePixelRatio
+      },
+      fromSurface: true
+    });
+  } else if (isFirefox(browserName)) {
+    return getFirefoxScreenshot(tabId, {
       x: 0,
       y: 0,
       width: size.width,
-      height: size.height,
-      scale: 1 / window.devicePixelRatio
-    },
-    fromSurface: true
-  });
+      height: size.height
+    });
+  } else {
+    throw new Error("Unsupported in this browser");
+  }
 }
 
 export function getRegionScreenshot(tabId, rect) {
-  return getChromeScreenshot(tabId, {
-    clip: Object.assign({
-      scale: 1 / window.devicePixelRatio
-    }, rect)
-  });
+  const browserName = parser.getBrowser().name;
+  if (isChrome(browserName)) {
+    return getChromeScreenshot(tabId, {
+      clip: Object.assign({
+        scale: 1 / window.devicePixelRatio
+      }, rect)
+    });
+  } else if (isFirefox(browserName)) {
+    return getFirefoxScreenshot(tabId, rect);
+  } else {
+    throw new Error("Unsupported in this browser");
+  }
 }
 
 async function getChromeScreenshot(tabId, options) {
@@ -32,6 +54,13 @@ async function getChromeScreenshot(tabId, options) {
   const screenshot = await dbg.captureScreenshot(options);
   await dbg.detach();
   return screenshot;
+}
+
+async function getFirefoxScreenshot(tabId, options) {
+  return browser.tabs.sendMessage(tabId, {
+    getFirefoxScreenshot: true,
+    rect: options
+  });
 }
 
 export function getEntirePageSize(tabId) {
@@ -66,4 +95,12 @@ export function getEntirePageSize(tabId) {
 
     return ({width: totalWidth, height: totalHeight});
   });
+}
+
+function isChrome(name) {
+  return name === "Chrome";
+}
+
+function isFirefox(name) {
+  return name === "Firefox";
 }

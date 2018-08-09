@@ -1,5 +1,24 @@
 import browser from "webextension-polyfill";
 
+const BASE64_PREFIX = "data:image/png;base64,";
+
+function getFirefoxScreenshot(request, sender, sendResponse) {
+  if (request.getFirefoxScreenshot) {
+    const canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
+    const { x, y, width, height } = request.rect;
+    const ctx = canvas.getContext("2d");
+    canvas.width = width;
+    canvas.height = height;
+    ctx.scale(1, 1); // for some reason we don't need to scale ??
+
+    ctx.drawWindow(window, x, y, width, height, "#fff");
+
+    sendResponse({
+      data: canvas.toDataURL("image/png", "").substr(BASE64_PREFIX.length)
+    });
+  }
+}
+
 function getElementByXpath(path) {
   return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
@@ -63,3 +82,4 @@ function getInnerSize() {
 
 browser.runtime.onMessage.addListener(sizeMessenger);
 browser.runtime.onMessage.addListener(getElementRect);
+browser.runtime.onMessage.addListener(getFirefoxScreenshot);
