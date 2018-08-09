@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 import Modes from "../../commons/modes";
 import { sendMessage } from "../../IO/message-port";
-import { getScreenshot, getRegionScreenshot, isRegionInViewport, scrollTo } from "../utils/screenshot";
+import { getScreenshot, getRegionScreenshot } from "../utils/screenshot";
 import { getEyes, closeEyes, promiseFactory } from "../utils/eyes";
 import { getExternalState, setExternalState } from "../external-state";
 import { parseEnvironment } from "../utils/parsers";
@@ -9,7 +9,7 @@ import ideLogger from "../utils/ide-logger";
 
 const imageProvider = new window.EyesImages.ImageProvider();
 
-export function checkWindow(runId, testId, commandId, tabId, windowId, stepName, viewport, forceFullPageScreenshot = true, removeScrollBars = true) {
+export function checkWindow(runId, testId, commandId, tabId, windowId, stepName, viewport) {
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       preCheck(eyes, viewport).then(() => {
@@ -17,9 +17,8 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
           eyes.commands.push(commandId);
           eyes.setViewportSize(viewport);
           imageProvider.getScreenshot = () => {
-            return getScreenshot(tabId, windowId, forceFullPageScreenshot, removeScrollBars, viewport).then((image) => {
-              const image64 = image.replace("data:image/png;base64,", "");
-              return window.EyesImages.MutableImage.fromBase64(image64, promiseFactory);
+            return getScreenshot(tabId).then((image) => {
+              return window.EyesImages.MutableImage.fromBase64(image.data, promiseFactory);
             });
           };
 
@@ -32,45 +31,30 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
   });
 }
 
-export function checkRegion(runId, testId, commandId, tabId, windowId, region, stepName, viewport, removeScrollBars = false) {
-  if (!region || !region.left || !region.top || !region.width || !region.height) return Promise.reject("Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]");
+export function checkRegion(runId, testId, commandId, tabId, windowId, region, stepName, viewport) {
+  if (!region || !region.x || !region.y || !region.width || !region.height) return Promise.reject("Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]");
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       preCheck(eyes, viewport).then(() => {
         getTabPathname(tabId).then(pathname => {
           eyes.commands.push(commandId);
           eyes.setViewportSize(viewport);
-          let scrollToTopTarget = region.top - 100;
-          if (scrollToTopTarget < 0) {
-            scrollToTopTarget = 0;
-          }
-          scrollTo(tabId, region.left, scrollToTopTarget).then((rect) => {
-            if (rect.top) {
-              // scrolled successfully
-              region.top = region.top + rect.top;
-            }
-            if (isRegionInViewport(region, viewport)) {
-              imageProvider.getScreenshot = () => {
-                return getRegionScreenshot(tabId, windowId, region, removeScrollBars, viewport).then((image) => {
-                  const image64 = image.replace("data:image/png;base64,", "");
-                  return window.EyesImages.MutableImage.fromBase64(image64, promiseFactory);
-                });
-              };
+          imageProvider.getScreenshot = () => {
+            return getRegionScreenshot(tabId, region).then((image) => {
+              return window.EyesImages.MutableImage.fromBase64(image.data, promiseFactory);
+            });
+          };
 
-              eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
-                return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
-              }).catch(reject);
-            } else {
-              reject(new Error("Region is out of bounds, try setting the viewport size to a bigger one."));
-            }
-          });
+          eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
+            return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+          }).catch(reject);
         });
       });
     }).catch(reject);
   });
 }
 
-export function checkElement(runId, testId, commandId, tabId, windowId, elementXPath, stepName, viewport, removeScrollBars = false) {
+export function checkElement(runId, testId, commandId, tabId, windowId, elementXPath, stepName, viewport) {
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`).then(eyes => {
       preCheck(eyes, viewport).then(() => {
@@ -81,20 +65,15 @@ export function checkElement(runId, testId, commandId, tabId, windowId, elementX
             getElementRect: true,
             path: elementXPath
           }).then((rect) => {
-            if (isRegionInViewport(rect, viewport)) {
-              imageProvider.getScreenshot = () => {
-                return getRegionScreenshot(tabId, windowId, rect, removeScrollBars, viewport).then((image) => {
-                  const image64 = image.replace("data:image/png;base64,", "");
-                  return window.EyesImages.MutableImage.fromBase64(image64, promiseFactory);
-                });
-              };
+            imageProvider.getScreenshot = () => {
+              return getRegionScreenshot(tabId, rect).then((image) => {
+                return window.EyesImages.MutableImage.fromBase64(image.data, promiseFactory);
+              });
+            };
 
-              eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
-                return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
-              }).catch(reject);
-            } else {
-              reject(new Error("Element is out of bounds, try setting the viewport size to a bigger one."));
-            }
+            eyes.checkImage(imageProvider, stepName || pathname).then((imageResult) => {
+              return imageResult.asExpected ? resolve(true) : resolve({ status: "undetermined" });
+            }).catch(reject);
           });
         });
       });

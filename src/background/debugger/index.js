@@ -6,10 +6,7 @@ export default class Debugger {
     this.attach = this.attach.bind(this);
     this.detach = this.detach.bind(this);
     this.sendCommand = this.sendCommand.bind(this);
-    this.getDOMSnapshot = this.getDOMSnapshot.bind(this);
-    this.enablePageAgent = this.enablePageAgent.bind(this);
-    this.getResourceTree = this.getResourceTree.bind(this);
-    this.getResourceContent = this.getResourceContent.bind(this);
+    this.captureScreenshot = this.captureScreenshot.bind(this);
   }
   attach() {
     return new Promise(res => {
@@ -50,19 +47,7 @@ export default class Debugger {
     });
   }
 
-  getDOMSnapshot() {
-    return this.sendCommand("DOMSnapshot.getSnapshot", {computedStyleWhitelist: []});
-  }
-
-  enablePageAgent() {
-    return this.sendCommand("Page.enable", {});
-  }
-
-  getResourceTree() {
-    return this.sendCommand("Page.getResourceTree", {});
-  }
-
-  getResourceContent(frameId, url) {
-    return this.sendCommand("Page.getResourceContent", {frameId, url});
+  captureScreenshot(options = {}) {
+    return this.sendCommand("Page.captureScreenshot", options);
   }
 }
