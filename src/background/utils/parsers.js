@@ -7,11 +7,11 @@ export function parseViewport(vp) {
 }
 
 export function parseRegion(region) {
-  const left = (region.match(/x:\s*(\d*)/) || [])[1];
-  const top = (region.match(/y:\s*(\d*)/) || [])[1];
-  const width = (region.match(/width:\s*(\d*)/) || [])[1];
-  const height = (region.match(/height:\s*(\d*)/) || [])[1];
-  return { left, top, width, height };
+  const x = +(region.match(/x:\s*(\d*)/) || [])[1];
+  const y = +(region.match(/y:\s*(\d*)/) || [])[1];
+  const width = +(region.match(/width:\s*(\d*)/) || [])[1];
+  const height = +(region.match(/height:\s*(\d*)/) || [])[1];
+  return { x, y, width, height };
 }
 
 export function parseEnvironment(userAgent, viewport) {

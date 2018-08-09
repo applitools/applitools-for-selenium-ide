@@ -7,12 +7,10 @@ function getElementByXpath(path) {
 function getElementRect(request, sender, sendResponse) {
   if (request.getElementRect) {
     const element = getElementByXpath(request.path);
-    element.scrollIntoView();
-    window.scrollBy(0, -100);
     const elementRects = element.getBoundingClientRect();
     sendResponse({
-      left: Math.round(elementRects.left),
-      top: Math.round(elementRects.top),
+      x: Math.round(elementRects.left),
+      y: Math.round(elementRects.top),
       width: Math.round(elementRects.width),
       height: Math.round(elementRects.height)
     });
