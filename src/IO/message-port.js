@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { isChrome, isFirefox } from "../background/utils/userAgent";
 
 export function sendMessage(payload) {
   return getId().then(id => (
@@ -6,9 +7,22 @@ export function sendMessage(payload) {
   ));
 }
 
+function bundledId() {
+  let id = process.env.SIDE_ID;
+  if (!id) {
+    if (isChrome) {
+      id = "mooikfkahbdckldjjndioackbalphokd";
+    } else if (isFirefox) {
+      id = "{a6fd85ed-e919-4a43-a5af-8da18bda539f}";
+    }
+  }
+
+  return id;
+}
+
 function getId() {
   return browser.storage.local.get(["seideId"]).then(results => (
-    results.seideId ? results.seideId : process.env.SIDE_ID
+    results.seideId ? results.seideId : bundledId()
   ));
 }
 

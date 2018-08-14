@@ -1,13 +1,11 @@
 import browser from "webextension-polyfill";
-import UAParser from "ua-parser-js";
 import Debugger from "../debugger";
 
-const parser = new UAParser(window.navigator.userAgent);
+import { isChrome, isFirefox } from "./userAgent";
 
 export async function getScreenshot(tabId) {
   const size = await getEntirePageSize(tabId);
-  const browserName = parser.getBrowser().name;
-  if (isChrome(browserName)) {
+  if (isChrome) {
     return getChromeScreenshot(tabId, {
       clip: {
         x: 0,
@@ -18,7 +16,7 @@ export async function getScreenshot(tabId) {
       },
       fromSurface: true
     });
-  } else if (isFirefox(browserName)) {
+  } else if (isFirefox) {
     return getFirefoxScreenshot(tabId, {
       x: 0,
       y: 0,
@@ -31,14 +29,13 @@ export async function getScreenshot(tabId) {
 }
 
 export function getRegionScreenshot(tabId, rect) {
-  const browserName = parser.getBrowser().name;
-  if (isChrome(browserName)) {
+  if (isChrome) {
     return getChromeScreenshot(tabId, {
       clip: Object.assign({
         scale: 1 / window.devicePixelRatio
       }, rect)
     });
-  } else if (isFirefox(browserName)) {
+  } else if (isFirefox) {
     return getFirefoxScreenshot(tabId, rect);
   } else {
     throw new Error("Unsupported in this browser");
@@ -95,12 +92,4 @@ export function getEntirePageSize(tabId) {
 
     return ({width: totalWidth, height: totalHeight});
   });
-}
-
-function isChrome(name) {
-  return name === "Chrome";
-}
-
-function isFirefox(name) {
-  return name === "Firefox";
 }
