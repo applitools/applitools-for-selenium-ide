@@ -46,9 +46,22 @@ async function getChromeScreenshot(tabId, options) {
   const dbg = new Debugger(tabId);
   await dbg.attach();
   await dbg.sendCommand("Page.enable");
-  const { width, height } = await getEntirePageSize(tabId);
+  const { width, height } = (await dbg.sendCommand("Page.getLayoutMetrics")).contentSize;
   await dbg.sendCommand("Emulation.setVisibleSize", {width, height});
-  const screenshot = await dbg.captureScreenshot(options);
+  await dbg.sendCommand("Emulation.setDeviceMetricsOverride", {
+    mobile: false,
+    width,
+    height,
+    deviceScaleFactor: window.devicePixelRatio
+  });
+  let opt = { ...options,
+    clip: {
+      ...options.clip,
+      height: Math.min(options.clip.height, 10000),
+      width: Math.min(options.clip.width, 10000)
+    }
+  };
+  const screenshot = await dbg.captureScreenshot(opt);
   await dbg.detach();
   return screenshot;
 }
