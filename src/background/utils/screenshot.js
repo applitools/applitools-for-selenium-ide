@@ -54,6 +54,7 @@ async function getChromeScreenshot(tabId, options) {
     height,
     deviceScaleFactor: window.devicePixelRatio
   });
+  await dbg.sendCommand("Emulation.setScrollbarsHidden", { hidden: true });
   let opt = { ...options,
     clip: {
       ...options.clip,
