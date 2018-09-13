@@ -7,14 +7,14 @@ export function sendMessage(payload) {
   ));
 }
 
+export const DEFAULT_ID = isChrome ? "mooikfkahbdckldjjndioackbalphokd"
+  : isFirefox ? "{a6fd85ed-e919-4a43-a5af-8da18bda539f}"
+  : ""; // eslint-disable-line indent
+
 function bundledId() {
   let id = process.env.SIDE_ID;
   if (!id) {
-    if (isChrome) {
-      id = "mooikfkahbdckldjjndioackbalphokd";
-    } else if (isFirefox) {
-      id = "{a6fd85ed-e919-4a43-a5af-8da18bda539f}";
-    }
+    id = DEFAULT_ID;
   }
 
   return id;
