@@ -64,7 +64,7 @@ export function closeEyes(id) {
 
   return eye.close(false).then(results => {
     results.commands = eye.commands;
-    lastResults.url = results.appUrls.session;
+    lastResults.url = results.status !== "Passed" ? results.appUrls.session : undefined;
     return results;
   }).catch((e) => {
     console.error(e);
