@@ -11,6 +11,10 @@ button[type="submit"] {
   float: right;
 }
 
+p {
+  line-height: 1.4em;
+}
+
 .form-contents {
   height: 190px;
 }
