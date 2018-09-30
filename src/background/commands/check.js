@@ -103,9 +103,6 @@ export function endTest(id) {
 }
 
 function preCheck(eyes, viewport) {
-  if (!eyes.didSetViewportSize) {
-    ideLogger.warn("a visual check was called without setting a viewport size, results may be inconsistent, dismiss by using the `set viewport size` command.");
-  }
   if (getExternalState().mode !== Modes.PLAYBACK) {
     let notification = `connecting to ${eyes._serverUrl}`;
     if (eyes.getBranchName()) {

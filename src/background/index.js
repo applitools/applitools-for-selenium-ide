@@ -77,10 +77,7 @@ startPolling({
       name: "set viewport size",
       docs: {
         description: "Resizes the browser to match the viewport size (excluding window borders).",
-        target: {
-          name: "viewport size",
-          description: "WidthxHeight (e.g. 1280x800)."
-        }
+        target: "resolution"
       }
     }
   ],
