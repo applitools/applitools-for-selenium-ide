@@ -118,7 +118,7 @@ class Options extends React.Component {
             {this.state.tab === Tabs.ADVANCED &&
             <React.Fragment>
               <p>
-                Applitools for Selenium IDE connects with the Selenium IDE extension using the below extension ID. If you are using a Selenium IDE version that was not installed from the Chrome store, you must enter its extension ID which is listed in the extensions page of your browser.
+                This extension connects with the Selenium IDE extension of the ID shown below. If you are using a Selenium IDE version with a different ID (as listed in the extensions page of your browser) please set it here.
               </p>
               <Input name="seideId" label="ide extension id" placeholder={DEFAULT_ID} value={this.state.seideId} onChange={this.handleInputChange.bind(this, "seideId")} />
             </React.Fragment>}

@@ -46,7 +46,7 @@ This resizes the browser to match the viewport size (excluding window borders). 
 
 It takes a required argument of `WidthxHeight` (e.g. `1280x800`).
 
-If this command is not used in a test run a warning will be shown in the IDE's test's log output.
+_NOTE: If this command is not used prior to performing a check command a warning message will appear in the test log output in the IDE encouraging its use._
 
 ### Set Match Timeout
 
