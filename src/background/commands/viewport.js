@@ -19,9 +19,10 @@ export function setViewportSize(width, height, playbackOptions) {
 }
 
 export function getViewportSize(tabId) {
-  return browser.tabs.sendMessage(tabId, {
-    getSize: true
-  });
+  return browser.tabs.get(tabId).then(tab => ({
+    height: tab.height,
+    width: tab.width
+  }));
 }
 
 function fixInaccuracies(sizes, playbackOptions, retries = 3) {
