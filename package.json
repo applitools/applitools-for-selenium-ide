@@ -41,7 +41,7 @@
     "postcss-flexbugs-fixes": "^3.2.0",
     "postcss-loader": "^2.0.6",
     "react-hot-loader": "^3.0.0-beta.7",
-    "selenium-side-runner": "^3.2.0-beta.4",
+    "selenium-side-runner": "*",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.5.6",
