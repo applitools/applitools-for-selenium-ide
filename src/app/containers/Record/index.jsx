@@ -8,19 +8,19 @@ export default class Record extends React.Component {
     this.commands = {
       ["Check window"]: {
         command: "checkWindow",
-        target: "a new check",
+        target: "",
         value: ""
       },
       ["Check element"]: {
         command: "checkElement",
         target: "",
-        value: "a new check",
+        value: "",
         select: true
       },
       ["Check region"]: {
         command: "checkRegion",
         target: "",
-        value: "a new check",
+        value: "",
         select: true
       },
       ["Set viewport size"]: {
