@@ -63,6 +63,7 @@ async function getChromeScreenshot(tabId, options) {
     }
   };
   const screenshot = await dbg.captureScreenshot(opt);
+  await dbg.sendCommand("Emulation.clearDeviceMetricsOverride");
   await dbg.detach();
   return screenshot;
 }
