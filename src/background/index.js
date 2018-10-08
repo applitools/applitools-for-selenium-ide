@@ -144,13 +144,16 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => { // es
 browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
   if (message.event === "recordingStarted") {
     setExternalState({
-      mode: Modes.RECORD,
+      normalMode: Modes.RECORD,
       record: {
         testName: message.options.testName
       }
     });
   }
   if (message.event === "recordingStopped") {
+    setExternalState({
+      normalMode: Modes.NORMAL
+    });
     resetMode();
   }
   if (message.event === "projectLoaded") {

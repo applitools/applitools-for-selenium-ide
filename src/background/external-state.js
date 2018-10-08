@@ -2,7 +2,9 @@ import browser from "webextension-polyfill";
 import Modes from "../commons/modes";
 import { verifyStoredAPIKey } from "../commons/api";
 
-let state = {};
+let state = {
+  normalMode: Modes.NORMAL
+};
 export function getExternalState() {
   return state;
 }
@@ -27,6 +29,6 @@ export function validateOptions() {
 
 export function resetMode() {
   setExternalState({
-    mode: verificationMode
+    mode: verificationMode !== Modes.NORMAL ? verificationMode : state.normalMode
   });
 }
