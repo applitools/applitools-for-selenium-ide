@@ -11,8 +11,22 @@ export function getExternalState() {
 
 export function setExternalState(newState) {
   browser.runtime.sendMessage({
-    state: Object.assign(state, newState)
+    state: Object.assign(state, newState, {
+      mode: calculateMode(newState)
+    })
   }).catch(() => {});
+}
+
+function calculateMode(newState) {
+  if (newState.normalMode) {
+    if (state.mode === Modes.NORMAL) {
+      return newState.normalMode;
+    } else {
+      return state.mode;
+    }
+  } else {
+    return newState.mode;
+  }
 }
 
 let verificationMode = Modes.NORMAL;
