@@ -1,5 +1,6 @@
 {
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
+  "version": "1.1",
   "name": "applitools-ext",
   "url": "https://applitools.com/",
   "tests": [{
@@ -91,7 +92,6 @@
     "name": "Applitools",
     "version": "1.0.0"
   }],
-  "version": "1.0",
   "snapshot": {
     "globalConfig": {
       "snapshot": "const Eyes = require('eyes.selenium').Eyes;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"

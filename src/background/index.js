@@ -382,8 +382,8 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         if (command === "checkWindow") {
           return sendResponse(`eyes.setForceFullPageScreenshot(true);await eyes.checkWindow("${target}" || (new URL(await driver.getCurrentUrl())).pathname).then(() => {eyes.setForceFullPageScreenshot(false);});`);
         } else if (command === "checkRegion") {
-          const { left, top, width, height } = parseRegion(target);
-          return sendResponse(`await eyes.checkRegion({left:${left},top:${top},width:${width},height:${height}}, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
+          const { x, y, width, height } = parseRegion(target);
+          return sendResponse(`await eyes.checkRegion({left:${x},top:${y},width:${width},height:${height}}, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`);
         } else if (command === "checkElement") {
           sendMessage({
             uri: "/export/location",
