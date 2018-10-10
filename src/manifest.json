@@ -23,6 +23,7 @@
     "tabs",
     "activeTab",
     "webRequest",
+    "downloads",
     "contextMenus",
     "webNavigation",
     "storage",

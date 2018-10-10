@@ -18,7 +18,7 @@ export function checkWindow(runId, testId, commandId, tabId, windowId, stepName,
           eyes.setViewportSize(viewport);
           imageProvider.getScreenshot = () => {
             return getScreenshot(tabId).then((image) => {
-              return window.EyesImages.MutableImage.fromBase64(image.data, promiseFactory);
+              return new window.EyesImages.MutableImage(image.data, promiseFactory);
             });
           };
 
@@ -41,7 +41,7 @@ export function checkRegion(runId, testId, commandId, tabId, windowId, region, s
           eyes.setViewportSize(viewport);
           imageProvider.getScreenshot = () => {
             return getRegionScreenshot(tabId, region).then((image) => {
-              return window.EyesImages.MutableImage.fromBase64(image.data, promiseFactory);
+              return new window.EyesImages.MutableImage(image.data, promiseFactory);
             });
           };
 
@@ -67,7 +67,7 @@ export function checkElement(runId, testId, commandId, tabId, windowId, elementX
           }).then((rect) => {
             imageProvider.getScreenshot = () => {
               return getRegionScreenshot(tabId, rect).then((image) => {
-                return window.EyesImages.MutableImage.fromBase64(image.data, promiseFactory);
+                return new window.EyesImages.MutableImage(image.data, promiseFactory);
               });
             };
 

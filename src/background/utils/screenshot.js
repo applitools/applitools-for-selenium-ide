@@ -1,5 +1,6 @@
 import browser from "webextension-polyfill";
 import Debugger from "../debugger";
+import stitchSections from "./section-stitching";
 
 import { isChrome, isFirefox } from "./userAgent";
 
@@ -46,26 +47,33 @@ async function getChromeScreenshot(tabId, options) {
   const dbg = new Debugger(tabId);
   await dbg.attach();
   await dbg.sendCommand("Page.enable");
-  const { width, height } = (await dbg.sendCommand("Page.getLayoutMetrics")).contentSize;
-  await dbg.sendCommand("Emulation.setVisibleSize", {width, height});
-  await dbg.sendCommand("Emulation.setDeviceMetricsOverride", {
-    mobile: false,
-    width,
-    height,
-    deviceScaleFactor: window.devicePixelRatio
-  });
+  const layoutMetrics = await dbg.sendCommand("Page.getLayoutMetrics");
+  const size = {width: layoutMetrics.layoutViewport.clientWidth, height: layoutMetrics.layoutViewport.clientHeight};
   await dbg.sendCommand("Emulation.setScrollbarsHidden", { hidden: true });
-  let opt = { ...options,
-    clip: {
-      ...options.clip,
-      height: Math.min(options.clip.height, 10000),
-      width: Math.min(options.clip.width, 10000)
+  const screenshot = await stitchSections({
+    rect: options.clip,
+    maxSectionHeight: size.height - 10,
+    captureScreenshotFunc: ({ rect }) => {
+      const opt = {
+        clip: {
+          ...options.clip,
+          ...rect
+        }
+      };
+      return dbg.captureScreenshot(opt);
     }
-  };
-  const screenshot = await dbg.captureScreenshot(opt);
-  await dbg.sendCommand("Emulation.clearDeviceMetricsOverride");
+  });
   await dbg.detach();
-  return screenshot;
+  const imageBuffer = screenshot.buffer();
+  if (process.env.NODE_ENV !== "production") {
+    await browser.downloads.download({
+      filename: "debug-image.png",
+      url: `data:image/png;base64,${imageBuffer.toString("base64")}`
+    });
+  }
+  return {
+    data: imageBuffer
+  };
 }
 
 async function getFirefoxScreenshot(tabId, options) {
