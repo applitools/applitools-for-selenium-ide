@@ -58,7 +58,7 @@ startPolling({
         description: "Sets the match level for the subsequent check points, defaults to Strict.",
         target: {
           name: "match level",
-          description: "The match level to set, one of: Exact, Strict, Content, Layout."
+          description: "The match level describes the way that Eyes matches two images, or two regions of an image. For example a Strict level checks if images are visibly the same, whereas a Layout level allows different text as long as the general geometry of the area is the same. You can specify one of the following: Exact, Strict, Content, Layout."
         }
       }
     },
