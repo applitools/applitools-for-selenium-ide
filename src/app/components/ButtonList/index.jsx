@@ -32,7 +32,7 @@ class ListButton extends React.Component {
   };
   async displaySelectedNotification() {
     this.setState({ label: "✓ Added to test", selectedCommand: true });
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     this.setState({ selectedCommand: false });
     await new Promise(resolve => setTimeout(resolve, 200));
     this.setState({ label: this.props.label });
