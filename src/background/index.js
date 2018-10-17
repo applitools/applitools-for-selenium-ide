@@ -361,7 +361,7 @@ browser.runtime.onMessageExternal.addListener((message, sender, sendResponse) =>
         if (hasEyesCommands) {
           return sendResponse({
             beforeAll: `batchName = "${message.suite.name}";`,
-            before: "global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);",
+            before: "global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId(\"eyes.seleniumide.runner\");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);",
             after: "if (eyes._isOpen) {await eyes.close();}"
           });
         }

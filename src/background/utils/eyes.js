@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import { parseApiServer } from "./parsers.js";
 const { Eyes } = window.EyesImages;
+import { browserName } from "./userAgent";
 
 export const promiseFactory = {
   makePromise: (p) => (new Promise(p)),
@@ -26,10 +27,11 @@ function makeEyes(batchId, appName, batchName, testName) {
       }
       const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined;
       const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory);
+      if (process.env.NODE_ENV !== "production") eyes.setLogHandler(new window.EyesImages.ConsoleLogHandler(true));
       eyes.setApiKey(apiKey);
       eyes.setBranchName(branch);
       eyes.setParentBranchName(parentBranch);
-      eyes.setAgentId(navigator.userAgent);
+      eyes.setAgentId(`eyes.seleniumide.${browserName.toLowerCase()}`);
       eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`);
       eyes.setBatch(batchName, batchId);
       decorateEyes(eyes);
