@@ -25,21 +25,40 @@ export default class ButtonList extends React.Component {
 }
 
 class ListButton extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+    this.state = { label: props.label, selectedCommand: false }
+  }
   static propTypes = {
     name: PropTypes.string.isRequired,
     label: PropTypes.string,
     onClick: PropTypes.func.isRequired,
   }
+  async displaySelectedNotification() {
+    this.setState({ label: '✓ Added to test', selectedCommand: true })
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    this.setState({ selectedCommand: false })
+    await new Promise(resolve => setTimeout(resolve, 200))
+    this.setState({ label: this.props.label })
+  }
+  handleClick() {
+    this.props.onClick(this.props.name)
+    this.displaySelectedNotification()
+  }
   render() {
     return (
-      <li
-        tabIndex="0"
-        onClick={() => {
-          this.props.onClick(this.props.name)
-        }}
-      >
+      <li tabIndex="0" onClick={this.handleClick}>
         <button tabIndex="-1">{this.props.name}</button>
-        {this.props.label && <a>{this.props.label}</a>}
+        {this.state.label && (
+          <a
+            className={
+              this.state.selectedCommand ? 'selected-command' : undefined
+            }
+          >
+            {this.state.label}
+          </a>
+        )}
       </li>
     )
   }

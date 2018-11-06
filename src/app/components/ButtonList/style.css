@@ -52,3 +52,7 @@ ul.buttons li > a {
 ul.buttons li:hover > a {
     opacity: 1;
 }
+
+.selected-command {
+  opacity: 1 !important;
+}

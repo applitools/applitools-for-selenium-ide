@@ -5,7 +5,7 @@ export default function MoreInfo() {
   return (
     <span>
       For more information visit{' '}
-      <Link href="https://applitools.com/resources/tutorial/web/selenium-ide">
+      <Link href="https://applitools.com/tutorials/selenium-ide.html">
         https://applitools.com
       </Link>
     </span>

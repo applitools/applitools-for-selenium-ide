@@ -140,6 +140,7 @@ function updateBrowserActionIcon(disableVisualCheckpoints) {
 }
 
 browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  // eslint-disable-line no-unused-vars
   if (message.requestExternalState) {
     return sendResponse({ state: getExternalState() })
   }
@@ -465,7 +466,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
               before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);',
+                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);',
               after: 'if (eyes._isOpen) {await eyes.close();}',
             })
           }
