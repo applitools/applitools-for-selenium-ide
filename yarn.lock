@@ -3193,19 +3193,19 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-eyes.images@0.0.52:
-  version "0.0.52"
-  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.52.tgz#8503f258ba70f013a494076dda5d0e149a10b0c7"
-  integrity sha512-K/b+THooRYuJTJM3oS58cClGfL5NUSyab/1S/2VmIP9NCs3bbj3aL+Dpie1RKB2s5wsy0i+eA1Hvodb3PqNdHw==
+eyes.images@0.0.53:
+  version "0.0.53"
+  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.53.tgz#5dd07bae51568826279be9f1522a2742422c2db8"
+  integrity sha512-m0Cxjy1BuhoHhM8hnZm7KpBqU6GMObGkzRbengFwm5ct1AO1ksHsgzWshExIo6mFcRSMLTgo/d970FnowRe+cA==
   dependencies:
-    eyes.sdk "0.0.71"
+    eyes.sdk "0.0.73"
     eyes.utils "0.0.29"
     rsvp "^3.5.0"
 
-eyes.sdk@0.0.71:
-  version "0.0.71"
-  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.71.tgz#29b34ba4be8ce94e1b4894393e21536dd87dcc3b"
-  integrity sha512-ppVTgi7CnPQFzEazH913hrusWdDDQygq/cyq2t6FQz7P2eaDeNedTnwQtRNKnncIqumB/odQyxOQsUrqtzthRQ==
+eyes.sdk@0.0.73:
+  version "0.0.73"
+  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.73.tgz#b37ce7d633d220cb53b3424e557a768c62b05ad0"
+  integrity sha512-gG4ZPe/Q7fBm5r5WmoBCs+vGRQq4XTQ2nO9GYE0noPjYuXqKRnPHP7F11g5zId4tI0R53v1fhLTxgQE6qMaxow==
   dependencies:
     "@types/node" "*"
     eyes.utils "0.0.29"

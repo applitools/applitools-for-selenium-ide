@@ -50,7 +50,7 @@
   "dependencies": {
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
-    "eyes.images": "0.0.52",
+    "eyes.images": "0.0.53",
     "eyes.utils": "^0.0.26",
     "pngjs": "^3.3.3",
     "prop-types": "^15.5.10",
