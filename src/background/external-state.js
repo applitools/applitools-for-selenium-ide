@@ -1,48 +1,51 @@
-import browser from "webextension-polyfill";
-import Modes from "../commons/modes";
-import { verifyStoredAPIKey } from "../commons/api";
+import browser from 'webextension-polyfill'
+import Modes from '../commons/modes'
+import { verifyStoredAPIKey } from '../commons/api'
 
 let state = {
-  normalMode: Modes.NORMAL
-};
+  normalMode: Modes.NORMAL,
+}
 export function getExternalState() {
-  return state;
+  return state
 }
 
 export function setExternalState(newState) {
-  browser.runtime.sendMessage({
-    state: Object.assign(state, newState, {
-      mode: calculateMode(newState)
+  browser.runtime
+    .sendMessage({
+      state: Object.assign(state, newState, {
+        mode: calculateMode(newState),
+      }),
     })
-  }).catch(() => {});
+    .catch(() => {})
 }
 
 function calculateMode(newState) {
   if (newState.normalMode) {
     if (state.mode === Modes.NORMAL) {
-      return newState.normalMode;
+      return newState.normalMode
     } else {
-      return state.mode;
+      return state.mode
     }
   } else {
-    return newState.mode;
+    return newState.mode
   }
 }
 
-let verificationMode = Modes.NORMAL;
+let verificationMode = Modes.NORMAL
 export function validateOptions() {
-  return verifyStoredAPIKey().then(() => (
-    verificationMode = Modes.NORMAL
-  )).catch((e) => {
-    if (e.message === "API key can't be empty") {
-      return verificationMode = Modes.SETUP;
-    }
-    return verificationMode = Modes.INVALID;
-  });
+  return verifyStoredAPIKey()
+    .then(() => (verificationMode = Modes.NORMAL))
+    .catch(e => {
+      if (e.message === "API key can't be empty") {
+        return (verificationMode = Modes.SETUP)
+      }
+      return (verificationMode = Modes.INVALID)
+    })
 }
 
 export function resetMode() {
   setExternalState({
-    mode: verificationMode !== Modes.NORMAL ? verificationMode : state.normalMode
-  });
+    mode:
+      verificationMode !== Modes.NORMAL ? verificationMode : state.normalMode,
+  })
 }

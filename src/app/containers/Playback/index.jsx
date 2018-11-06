@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import FormLabel from "../../../commons/components/FormLabel";
-import Timer from "../../../commons/components/Timer";
-import { DEFAULT_SERVER } from "../../../commons/api.js";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import FormLabel from '../../../commons/components/FormLabel'
+import Timer from '../../../commons/components/Timer'
+import { DEFAULT_SERVER } from '../../../commons/api.js'
+import './style.css'
 
 export default class PlaybackBanner extends React.Component {
   static propTypes = {
@@ -14,18 +14,14 @@ export default class PlaybackBanner extends React.Component {
     appName: PropTypes.string,
     eyesServer: PropTypes.string,
     environment: PropTypes.string,
-    branch: PropTypes.string
-  };
+    branch: PropTypes.string,
+  }
   render() {
     return (
       <div>
         <div className="playback-info">
-          <FormLabel label="Batch name">
-            {this.props.batchName}
-          </FormLabel>
-          <FormLabel label="App name">
-            {this.props.appName}
-          </FormLabel>
+          <FormLabel label="Batch name">{this.props.batchName}</FormLabel>
+          <FormLabel label="App name">{this.props.appName}</FormLabel>
           <FormLabel label="Eyes server" placeholder={DEFAULT_SERVER}>
             {this.props.eyesServer}
           </FormLabel>
@@ -36,11 +32,11 @@ export default class PlaybackBanner extends React.Component {
             {this.props.branch}
           </FormLabel>
           <FormLabel label="Started at">
-            {`${this.props.startTime.getHours()}:${this.props.startTime.getMinutes()}`}
-            {" "}(<Timer time={this.props.startTime} />)
+            {`${this.props.startTime.getHours()}:${this.props.startTime.getMinutes()}`}{' '}
+            (<Timer time={this.props.startTime} />)
           </FormLabel>
         </div>
       </div>
-    );
+    )
   }
 }
