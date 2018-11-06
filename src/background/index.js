@@ -182,6 +182,19 @@ browser.runtime.onMessageExternal.addListener(
       })
       resetMode()
     }
+    if (message.event === 'commandRecorded') {
+      if (message.options.command === 'setWindowSize') {
+        browser.tabs.get(message.options.tabId).then(tab => {
+          sendResponse({
+            mutation: 'update',
+            command: 'setViewportSize',
+            target: `${tab.width}x${tab.height}`,
+            value: '',
+          })
+        })
+        return true
+      }
+    }
     if (message.event === 'projectLoaded') {
       browser.storage.local
         .get(['branch', 'parentBranch'])
