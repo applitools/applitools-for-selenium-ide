@@ -84,7 +84,7 @@
     "name": "hello world",
     "parallel": false,
     "timeout": 3000,
-    "tests": ["3ca13a63-0f78-4bcc-902a-70945c2b58b7", "d2f08640-cf0b-4881-9f5f-a7cda12e3604", "bf93491e-bffe-41cf-b84e-7096515c55b0"]
+    "tests": ["bf93491e-bffe-41cf-b84e-7096515c55b0"]
   }],
   "urls": ["https://en.wikipedia.org/", "https://applitools.com/"],
   "plugins": [{
@@ -94,12 +94,12 @@
   }],
   "snapshot": {
     "globalConfig": {
-      "snapshot": "const Eyes = require('eyes.selenium').Eyes;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"
+      "snapshot": "const Eyes = require('@applitools/eyes-selenium').Eyes;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"
     },
     "suites": [{
       "name": "hello world",
       "snapshot": {
-        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);});afterEach(async () => {if (eyes._isOpen) {await eyes.close();}});"
+        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId(\"eyes.seleniumide.runner\");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setLogHandler(new ConsoleLogHandler(true));});afterEach(async () => {if (eyes._isOpen) {await eyes.close();}});"
       }
     }],
     "tests": [{
@@ -135,6 +135,6 @@
     }]
   },
   "dependencies": {
-    "eyes.selenium": "0.0.81"
+    "@applitools/eyes-selenium": "4.0.2"
   }
 }
