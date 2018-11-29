@@ -2,6 +2,18 @@
 # yarn lockfile v1
 
 
+"@applitools/dom-capture@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-5.0.1.tgz#48d193d0ce1af3c2d6df183c9c8ed81915bdc388"
+  integrity sha512-GEOr5WJN1greFdWhjFm54cywrDeZYTgSGV/zq35gYpQAg1OeG2VfHsuwX9JoB8EBh/hIPI6tEZczUWYjxE8oUw==
+  dependencies:
+    "@applitools/functional-commons" "^1.0.27"
+
+"@applitools/functional-commons@^1.0.27":
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.0.27.tgz#b8a763e4ec1f5a2fadb7a8cba87b6d402f641c13"
+  integrity sha512-tQjD+CloqvFSc7b/tyPsTADSkQTfHL3S49OL0I4Mgufr1b1y95E0YDASLuM2QaMbFYxzTCtFwHXkCdZvSqEbkg==
+
 "@babel/code-frame@7.0.0-beta.36":
   version "7.0.0-beta.36"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.36.tgz#2349d7ec04b3a06945ae173280ef8579b63728e4"
@@ -7166,6 +7178,11 @@ raw-body@2.3.2:
     http-errors "1.6.2"
     iconv-lite "0.4.19"
     unpipe "1.0.0"
+
+raw-loader@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-0.5.1.tgz#0c3d0beaed8a01c966d9787bf778281252a979aa"
+  integrity sha1-DD0L6u2KAclm2Xh793goElKpeao=
 
 rc@^1.1.7:
   version "1.2.4"
