@@ -1,14 +1,14 @@
-import browser from "webextension-polyfill";
-import Modes from "../../commons/modes";
-import { sendMessage } from "../../IO/message-port";
-import { getScreenshot, getRegionScreenshot } from "../utils/screenshot";
-import { getEyes, closeEyes, promiseFactory } from "../utils/eyes";
-import { getExternalState, setExternalState } from "../external-state";
-import { parseEnvironment } from "../utils/parsers";
-import ideLogger from "../utils/ide-logger";
-import { getDomCapture } from "../dom-capture";
+import browser from 'webextension-polyfill'
+import Modes from '../../commons/modes'
+import { sendMessage } from '../../IO/message-port'
+import { getScreenshot, getRegionScreenshot } from '../utils/screenshot'
+import { getEyes, closeEyes, promiseFactory } from '../utils/eyes'
+import { getExternalState, setExternalState } from '../external-state'
+import { parseEnvironment } from '../utils/parsers'
+import ideLogger from '../utils/ide-logger'
+import { getDomCapture } from '../dom-capture'
 
-const imageProvider = new window.EyesImages.ImageProvider();
+const imageProvider = new window.EyesImages.ImageProvider()
 
 export async function checkWindow(
   runId,
@@ -24,33 +24,33 @@ export async function checkWindow(
       .then(eyes => {
         preCheck(eyes, viewport).then(() => {
           getTabPathname(tabId).then(async pathname => {
-            eyes.commands.push(commandId);
-            eyes.setViewportSize(viewport);
+            eyes.commands.push(commandId)
+            eyes.setViewportSize(viewport)
             imageProvider.getScreenshot = () => {
               return getScreenshot(tabId).then(image => {
                 return new window.EyesImages.MutableImage(
                   image.data,
                   promiseFactory
-                );
-              });
-            };
+                )
+              })
+            }
 
-            const domCap = await getDomCapture(tabId);
-            debugger;
+            const domCap = await getDomCapture(tabId)
+            debugger
 
             eyes
               .checkImage(imageProvider, stepName || pathname)
               .then(imageResult => {
                 return imageResult.asExpected
                   ? resolve(true)
-                  : resolve({ status: "undetermined" });
+                  : resolve({ status: 'undetermined' })
               })
-              .catch(reject);
-          });
-        });
+              .catch(reject)
+          })
+        })
       })
-      .catch(reject);
-  });
+      .catch(reject)
+  })
 }
 
 export function checkRegion(
@@ -65,37 +65,37 @@ export function checkRegion(
 ) {
   if (!region || !region.x || !region.y || !region.width || !region.height)
     return Promise.reject(
-      "Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]"
-    );
+      'Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]'
+    )
   return new Promise((resolve, reject) => {
     getEyes(`${runId}${testId}`)
       .then(eyes => {
         preCheck(eyes, viewport).then(() => {
           getTabPathname(tabId).then(pathname => {
-            eyes.commands.push(commandId);
-            eyes.setViewportSize(viewport);
+            eyes.commands.push(commandId)
+            eyes.setViewportSize(viewport)
             imageProvider.getScreenshot = () => {
               return getRegionScreenshot(tabId, region).then(image => {
                 return new window.EyesImages.MutableImage(
                   image.data,
                   promiseFactory
-                );
-              });
-            };
+                )
+              })
+            }
 
             eyes
               .checkImage(imageProvider, stepName || pathname)
               .then(imageResult => {
                 return imageResult.asExpected
                   ? resolve(true)
-                  : resolve({ status: "undetermined" });
+                  : resolve({ status: 'undetermined' })
               })
-              .catch(reject);
-          });
-        });
+              .catch(reject)
+          })
+        })
       })
-      .catch(reject);
-  });
+      .catch(reject)
+  })
 }
 
 export function checkElement(
@@ -113,12 +113,12 @@ export function checkElement(
       .then(eyes => {
         preCheck(eyes, viewport).then(() => {
           getTabPathname(tabId).then(pathname => {
-            eyes.commands.push(commandId);
-            eyes.setViewportSize(viewport);
+            eyes.commands.push(commandId)
+            eyes.setViewportSize(viewport)
             browser.tabs
               .sendMessage(tabId, {
                 getElementRect: true,
-                path: elementXPath
+                path: elementXPath,
               })
               .then(rect => {
                 imageProvider.getScreenshot = () => {
@@ -126,62 +126,62 @@ export function checkElement(
                     return new window.EyesImages.MutableImage(
                       image.data,
                       promiseFactory
-                    );
-                  });
-                };
+                    )
+                  })
+                }
 
                 eyes
                   .checkImage(imageProvider, stepName || pathname)
                   .then(imageResult => {
                     return imageResult.asExpected
                       ? resolve(true)
-                      : resolve({ status: "undetermined" });
+                      : resolve({ status: 'undetermined' })
                   })
-                  .catch(reject);
-              });
-          });
-        });
+                  .catch(reject)
+              })
+          })
+        })
       })
-      .catch(reject);
-  });
+      .catch(reject)
+  })
 }
 
 export function endTest(id) {
   return closeEyes(id).then(results => {
-    console.log(results);
+    console.log(results)
     return Promise.all(
       results.commands.map((commandId, index) =>
         sendMessage({
-          uri: "/playback/command",
-          verb: "post",
+          uri: '/playback/command',
+          verb: 'post',
           payload: {
             commandId,
-            state: results.stepsInfo[index].isDifferent ? "failed" : "passed"
-          }
+            state: results.stepsInfo[index].isDifferent ? 'failed' : 'passed',
+          },
         })
       )
     ).then(commandStates => {
-      console.log(commandStates);
-      return results.status === "Passed"
+      console.log(commandStates)
+      return results.status === 'Passed'
         ? {
             message: `All visual tests have passed,\nresults: ${
               results.appUrls.session
-            }`
+            }`,
           }
         : {
             error: `Diffs were found in visual tests,\nresults: ${
               results.appUrls.session
-            }`
-          };
-    });
-  });
+            }`,
+          }
+    })
+  })
 }
 
 function preCheck(eyes, viewport) {
   if (getExternalState().mode !== Modes.PLAYBACK) {
-    let notification = `connecting to ${eyes._serverUrl}`;
+    let notification = `connecting to ${eyes._serverUrl}`
     if (eyes.getBranchName()) {
-      notification += `, running on branch ${eyes.getBranchName()}`;
+      notification += `, running on branch ${eyes.getBranchName()}`
     }
     return ideLogger.log(notification).then(() => {
       return setExternalState({
@@ -194,15 +194,15 @@ function preCheck(eyes, viewport) {
           appName: eyes._appName,
           eyesServer: eyes._serverUrl,
           environment: parseEnvironment(navigator.userAgent, viewport),
-          branch: eyes.getBranchName()
-        }
-      });
-    });
+          branch: eyes.getBranchName(),
+        },
+      })
+    })
   } else {
-    return Promise.resolve();
+    return Promise.resolve()
   }
 }
 
 function getTabPathname(tab) {
-  return browser.tabs.get(tab).then(data => new URL(data.url).pathname);
+  return browser.tabs.get(tab).then(data => new URL(data.url).pathname)
 }

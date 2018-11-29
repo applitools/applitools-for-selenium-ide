@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import "./style.css";
+import React from 'react'
+import PropTypes from 'prop-types'
+import './style.css'
 
 export default class Checkbox extends React.Component {
   static propTypes = {
@@ -9,10 +9,12 @@ export default class Checkbox extends React.Component {
     label: PropTypes.string,
     width: PropTypes.number,
     checked: PropTypes.bool,
-    onChange: PropTypes.func.isRequired
-  };
+    onChange: PropTypes.func.isRequired,
+  }
   render() {
-    const checked = (this.props.checked || (this.props.hasOwnProperty("checked") && this.props.checked !== false));
+    const checked =
+      this.props.checked ||
+      (this.props.hasOwnProperty('checked') && this.props.checked !== false)
     return (
       <div className="control">
         <input
@@ -24,8 +26,11 @@ export default class Checkbox extends React.Component {
           checked={checked}
           onChange={this.props.onChange}
         />
-        <label key="label" htmlFor={this.props.id}><span>{checked ? "✓" : ""}</span><div>{this.props.label}</div></label>
+        <label key="label" htmlFor={this.props.id}>
+          <span>{checked ? '✓' : ''}</span>
+          <div>{this.props.label}</div>
+        </label>
       </div>
-    );
+    )
   }
 }
