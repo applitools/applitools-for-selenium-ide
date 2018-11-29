@@ -6,15 +6,16 @@ import { getEyes, closeEyes, promiseFactory } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
+import { getDomCapture } from '../dom-capture'
 
 const imageProvider = new window.EyesImages.ImageProvider()
 
-export function checkWindow(
+export async function checkWindow(
   runId,
   testId,
   commandId,
   tabId,
-  _windowId,
+  windowId,
   stepName,
   viewport
 ) {
@@ -22,7 +23,7 @@ export function checkWindow(
     getEyes(`${runId}${testId}`)
       .then(eyes => {
         preCheck(eyes, viewport).then(() => {
-          getTabPathname(tabId).then(pathname => {
+          getTabPathname(tabId).then(async pathname => {
             eyes.commands.push(commandId)
             eyes.setViewportSize(viewport)
             imageProvider.getScreenshot = () => {
@@ -33,6 +34,9 @@ export function checkWindow(
                 )
               })
             }
+
+            const domCap = await getDomCapture(tabId)
+            debugger
 
             eyes
               .checkImage(imageProvider, stepName || pathname)
@@ -54,7 +58,7 @@ export function checkRegion(
   testId,
   commandId,
   tabId,
-  _windowId,
+  windowId,
   region,
   stepName,
   viewport
@@ -99,7 +103,7 @@ export function checkElement(
   testId,
   commandId,
   tabId,
-  _windowId,
+  windowId,
   elementXPath,
   stepName,
   viewport
@@ -144,7 +148,7 @@ export function checkElement(
 
 export function endTest(id) {
   return closeEyes(id).then(results => {
-    console.log(results) // eslint-disable-line no-console
+    console.log(results)
     return Promise.all(
       results.commands.map((commandId, index) =>
         sendMessage({
@@ -157,7 +161,7 @@ export function endTest(id) {
         })
       )
     ).then(commandStates => {
-      console.log(commandStates) // eslint-disable-line no-console
+      console.log(commandStates)
       return results.status === 'Passed'
         ? {
             message: `All visual tests have passed,\nresults: ${

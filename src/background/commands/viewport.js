@@ -39,9 +39,9 @@ export function getViewportSize(tabId) {
 function fixInaccuracies(sizes, playbackOptions, retries = 3) {
   if (!retries)
     return Promise.reject(
-      `Can not accurately set viewport size, set as ${
-        sizes.actualSize.width
-      }px x ${sizes.actualSize.height}px`
+      `Can not accurately set viewport size, set as ${sizes.actualSize.width}x${
+        sizes.actualSize.height
+      }`
     )
   return getViewportSize(playbackOptions.tabId).then(actualSize => {
     if (
