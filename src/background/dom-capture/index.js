@@ -27,6 +27,7 @@ export async function getDomCapture(tabId) {
           code: 'window.__eyes__domCapture;',
         })
         .then(result => {
+          // eslint-disable-next-line
           console.log(
             `[${count}ms]: ${
               result && result[0] ? result : 'No DOM Capture result yet'
