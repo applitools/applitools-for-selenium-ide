@@ -36,7 +36,6 @@ export async function checkWindow(
             }
 
             const domCap = await getDomCapture(tabId)
-            debugger
 
             eyes
               .checkImage(imageProvider, stepName || pathname)
