@@ -130,18 +130,6 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@types/node@*":
-  version "10.3.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.3.3.tgz#8798d9e39af2fa604f715ee6a6b19796528e46c3"
-  integrity sha512-/gwCgiI2e9RzzZTKbl+am3vgNqOt7a9fJ/uxv4SqYKxenoEDNVU3KZEadlpusWhQI0A0dOrZ0T68JYKVjzmgdQ==
-
-"@types/png-async@*":
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/@types/png-async/-/png-async-0.0.28.tgz#d9b13db210f84baf93ae0af478be88edd93248f2"
-  integrity sha1-2bE9shD4S6+Trgr0eL6I7dkySPI=
-  dependencies:
-    "@types/node" "*"
-
 abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -3363,41 +3351,6 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
-
-eyes.images@0.0.53:
-  version "0.0.53"
-  resolved "https://registry.yarnpkg.com/eyes.images/-/eyes.images-0.0.53.tgz#5dd07bae51568826279be9f1522a2742422c2db8"
-  integrity sha512-m0Cxjy1BuhoHhM8hnZm7KpBqU6GMObGkzRbengFwm5ct1AO1ksHsgzWshExIo6mFcRSMLTgo/d970FnowRe+cA==
-  dependencies:
-    eyes.sdk "0.0.73"
-    eyes.utils "0.0.29"
-    rsvp "^3.5.0"
-
-eyes.sdk@0.0.73:
-  version "0.0.73"
-  resolved "https://registry.yarnpkg.com/eyes.sdk/-/eyes.sdk-0.0.73.tgz#b37ce7d633d220cb53b3424e557a768c62b05ad0"
-  integrity sha512-gG4ZPe/Q7fBm5r5WmoBCs+vGRQq4XTQ2nO9GYE0noPjYuXqKRnPHP7F11g5zId4tI0R53v1fhLTxgQE6qMaxow==
-  dependencies:
-    "@types/node" "*"
-    eyes.utils "0.0.29"
-    request "^2.87.0"
-
-eyes.utils@0.0.29:
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/eyes.utils/-/eyes.utils-0.0.29.tgz#ae50c0863b10705b93a54028ff2f1e1dc1a6dd97"
-  integrity sha1-rlDAhjsQcFuTpUAo/y8eHcGm3Zc=
-  dependencies:
-    "@types/node" "*"
-    "@types/png-async" "*"
-    dateformat "^3.0.3"
-    png-async "^0.9.2"
-
-eyes.utils@^0.0.26:
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/eyes.utils/-/eyes.utils-0.0.26.tgz#fdb8e7dc3ccc4341605f079d4e6026468dc8ebb9"
-  integrity sha512-Nq/NiSX3pSmscjbKyDxzYjsKwK7LDmtUdGlD50i97iAdcd+XVjeXbgZjxOcTsbHwewXuyQxtFNqZfDl6X8EWrw==
-  dependencies:
-    png-async "^0.9.2"
 
 eyes@0.1.x:
   version "0.1.8"
@@ -7806,32 +7759,6 @@ request@^2.83.0:
     tunnel-agent "^0.6.0"
     uuid "^3.1.0"
 
-request@^2.87.0:
-  version "2.87.0"
-  resolved "https://registry.yarnpkg.com/request/-/request-2.87.0.tgz#32f00235cd08d482b4d0d68db93a829c0ed5756e"
-  integrity sha512-fcogkm7Az5bsS6Sl0sibkbhcKsnyon/jV1kF3ajGmF0c8HrttdKTPRT9hieOaQHA5HEq6r8OyWOo/o781C1tNw==
-  dependencies:
-    aws-sign2 "~0.7.0"
-    aws4 "^1.6.0"
-    caseless "~0.12.0"
-    combined-stream "~1.0.5"
-    extend "~3.0.1"
-    forever-agent "~0.6.1"
-    form-data "~2.3.1"
-    har-validator "~5.0.3"
-    http-signature "~1.2.0"
-    is-typedarray "~1.0.0"
-    isstream "~0.1.2"
-    json-stringify-safe "~5.0.1"
-    mime-types "~2.1.17"
-    oauth-sign "~0.8.2"
-    performance-now "^2.1.0"
-    qs "~6.5.1"
-    safe-buffer "^5.1.1"
-    tough-cookie "~2.3.3"
-    tunnel-agent "^0.6.0"
-    uuid "^3.1.0"
-
 require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/require-directory/-/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
@@ -7921,11 +7848,6 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
   dependencies:
     hash-base "^2.0.0"
     inherits "^2.0.1"
-
-rsvp@^3.5.0:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-3.6.2.tgz#2e96491599a96cde1b515d5674a8f7a91452926a"
-  integrity sha512-OfWGQTb9vnwRjwtA2QwpG2ICclHC3pgXZO5xt8H2EfgDquO0qVdSb5T88L4qJVAEugbS56pAuV4XZM58UX8ulw==
 
 run-async@^2.2.0:
   version "2.3.0"
