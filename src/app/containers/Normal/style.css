@@ -8,3 +8,25 @@
   width: 269px;
   line-height: 21px;
 }
+
+.project-settings .input {
+  flex-direction: row;
+  margin: 11px 0;
+}
+
+.project-settings .input label {
+  font-weight: normal;
+  font-size: 14px;
+  text-transform: none;
+  color: black;
+  flex-basis: 100%;
+  padding-top: 3px;
+}
+
+.project-settings .input input {
+  height: 30px;
+  border: 1px solid #dcdcdc;
+  border-radius: 2px;
+  padding: 0;
+  text-indent: 5px;
+}

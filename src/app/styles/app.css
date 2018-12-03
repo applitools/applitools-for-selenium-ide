@@ -12,11 +12,13 @@ footer {
 }
 
 .container {
-  margin: 20px;
+  margin: 18px;
 }
 
 hr {
   height: 0;
   border: 0;
   border-top: 1px solid #cdcdcd;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }

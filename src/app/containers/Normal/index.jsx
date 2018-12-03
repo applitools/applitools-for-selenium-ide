@@ -46,7 +46,7 @@ export default class Normal extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="project-settings">
         <Checkbox
           id="disable-checks"
           className="checkbox"
@@ -59,21 +59,21 @@ export default class Normal extends React.Component {
         <h4>Project settings</h4>
         <Input
           name="branch"
-          label="branch name"
-          placeholder="default"
+          label="Branch name"
+          placeholder=""
           value={this.state.branch}
           onChange={this.handleInputChange.bind(this, 'branch')}
         />
         <Input
           name="parentBranch"
-          label="parent branch name"
+          label="Parent branch name"
           value={this.state.parentBranch}
           onChange={this.handleInputChange.bind(this, 'parentBranch')}
         />
         <hr />
         <div className="open-global-settings">
           <a href="#" onClick={this.openOptionsPage}>
-            Open settings
+            Open global settings
           </a>
           <Link
             href={
