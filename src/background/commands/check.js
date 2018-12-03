@@ -7,15 +7,17 @@ import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
 import { getDomCapture } from '../dom-capture'
+import { ImageProvider, MutableImage } from '@applitools/eyes-sdk-core'
+import { Target } from '@applitools/eyes-images'
 
-const imageProvider = new window.EyesImages.ImageProvider()
+const imageProvider = new ImageProvider()
 
 export async function checkWindow(
   runId,
   testId,
   commandId,
   tabId,
-  windowId,
+  _windowId,
   stepName,
   viewport
 ) {
@@ -26,20 +28,19 @@ export async function checkWindow(
           getTabPathname(tabId).then(async pathname => {
             eyes.commands.push(commandId)
             eyes.setViewportSize(viewport)
-            imageProvider.getScreenshot = () => {
+            imageProvider.getImage = () => {
               return getScreenshot(tabId).then(image => {
-                return new window.EyesImages.MutableImage(
-                  image.data,
-                  promiseFactory
-                )
+                return new MutableImage(image.data, promiseFactory)
               })
             }
 
             const domCap = await getDomCapture(tabId)
-            debugger
 
             eyes
-              .checkImage(imageProvider, stepName || pathname)
+              .check(
+                stepName || pathname,
+                Target.image(imageProvider).withDom(domCap)
+              )
               .then(imageResult => {
                 return imageResult.asExpected
                   ? resolve(true)
@@ -53,12 +54,12 @@ export async function checkWindow(
   })
 }
 
-export function checkRegion(
+export async function checkRegion(
   runId,
   testId,
   commandId,
   tabId,
-  windowId,
+  _windowId,
   region,
   stepName,
   viewport
@@ -71,20 +72,22 @@ export function checkRegion(
     getEyes(`${runId}${testId}`)
       .then(eyes => {
         preCheck(eyes, viewport).then(() => {
-          getTabPathname(tabId).then(pathname => {
+          getTabPathname(tabId).then(async pathname => {
             eyes.commands.push(commandId)
             eyes.setViewportSize(viewport)
-            imageProvider.getScreenshot = () => {
+            imageProvider.getImage = () => {
               return getRegionScreenshot(tabId, region).then(image => {
-                return new window.EyesImages.MutableImage(
-                  image.data,
-                  promiseFactory
-                )
+                return new MutableImage(image.data, promiseFactory)
               })
             }
 
+            const domCap = await getDomCapture(tabId)
+
             eyes
-              .checkImage(imageProvider, stepName || pathname)
+              .check(
+                stepName || pathname,
+                Target.image(imageProvider).withDom(domCap)
+              )
               .then(imageResult => {
                 return imageResult.asExpected
                   ? resolve(true)
@@ -98,12 +101,12 @@ export function checkRegion(
   })
 }
 
-export function checkElement(
+export async function checkElement(
   runId,
   testId,
   commandId,
   tabId,
-  windowId,
+  _windowId,
   elementXPath,
   stepName,
   viewport
@@ -120,18 +123,20 @@ export function checkElement(
                 getElementRect: true,
                 path: elementXPath,
               })
-              .then(rect => {
-                imageProvider.getScreenshot = () => {
+              .then(async rect => {
+                imageProvider.getImage = () => {
                   return getRegionScreenshot(tabId, rect).then(image => {
-                    return new window.EyesImages.MutableImage(
-                      image.data,
-                      promiseFactory
-                    )
+                    return new MutableImage(image.data, promiseFactory)
                   })
                 }
 
+                const domCap = await getDomCapture(tabId)
+
                 eyes
-                  .checkImage(imageProvider, stepName || pathname)
+                  .check(
+                    stepName || pathname,
+                    Target.image(imageProvider).withDom(domCap)
+                  )
                   .then(imageResult => {
                     return imageResult.asExpected
                       ? resolve(true)
@@ -179,7 +184,7 @@ export function endTest(id) {
 
 function preCheck(eyes, viewport) {
   if (getExternalState().mode !== Modes.PLAYBACK) {
-    let notification = `connecting to ${eyes._serverUrl}`
+    let notification = `connecting to ${eyes.getServerUrl()}`
     if (eyes.getBranchName()) {
       notification += `, running on branch ${eyes.getBranchName()}`
     }
