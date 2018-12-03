@@ -21,6 +21,7 @@ class Options extends React.Component {
     super(props)
     this.state = {
       tab: Tabs.TESTS,
+      disableDomCapture: false,
       disableVisualCheckpoints: false,
       branch: '',
       parentBranch: '',
@@ -33,6 +34,7 @@ class Options extends React.Component {
     this.saveOptions = this.saveOptions.bind(this)
     browser.storage.local
       .get([
+        'disableDomCapture',
         'disableVisualCheckpoints',
         'openUrls',
         'apiKey',
@@ -43,6 +45,7 @@ class Options extends React.Component {
       ])
       .then(
         ({
+          disableDomCapture,
           disableVisualCheckpoints,
           openUrls,
           apiKey,
@@ -52,6 +55,7 @@ class Options extends React.Component {
           seideId,
         }) => {
           this.setState({
+            disableDomCapture,
             disableVisualCheckpoints,
             openUrls,
             apiKey: apiKey || '',
@@ -81,6 +85,7 @@ class Options extends React.Component {
   saveOptions() {
     browser.storage.local
       .set({
+        disableDomCapture: this.state.disableDomCapture,
         disableVisualCheckpoints: this.state.disableVisualCheckpoints,
         openUrls: this.state.openUrls,
         apiKey: this.state.apiKey,
@@ -117,6 +122,17 @@ class Options extends React.Component {
                   onChange={this.handleCheckboxChange.bind(
                     this,
                     'disableVisualCheckpoints'
+                  )}
+                />
+                <Checkbox
+                  id="disable-dom-capture"
+                  className="checkbox"
+                  name="disable-dom-capture"
+                  label="Disable DOM capture"
+                  checked={this.state.disableDomCapture}
+                  onChange={this.handleCheckboxChange.bind(
+                    this,
+                    'disableDomCapture'
                   )}
                 />
                 <Checkbox

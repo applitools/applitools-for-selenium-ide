@@ -34,6 +34,7 @@ export async function checkWindow(
               })
             }
 
+            // eslint-disable-next-line
             const domCap = await getDomCapture(tabId)
 
             eyes
@@ -153,6 +154,7 @@ export async function checkElement(
 
 export function endTest(id) {
   return closeEyes(id).then(results => {
+    // eslint-disable-next-line
     console.log(results)
     return Promise.all(
       results.commands.map((commandId, index) =>
@@ -166,6 +168,7 @@ export function endTest(id) {
         })
       )
     ).then(commandStates => {
+      // eslint-disable-next-line
       console.log(commandStates)
       return results.status === 'Passed'
         ? {
