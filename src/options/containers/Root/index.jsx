@@ -21,8 +21,8 @@ class Options extends React.Component {
     super(props)
     this.state = {
       tab: Tabs.TESTS,
-      disableDomCapture: false,
-      disableVisualCheckpoints: false,
+      enableDomCapture: true,
+      enableVisualCheckpoints: true,
       branch: '',
       parentBranch: '',
       apiKey: '',
@@ -34,8 +34,8 @@ class Options extends React.Component {
     this.saveOptions = this.saveOptions.bind(this)
     browser.storage.local
       .get([
-        'disableDomCapture',
-        'disableVisualCheckpoints',
+        'enableDomCapture',
+        'enableVisualCheckpoints',
         'openUrls',
         'apiKey',
         'eyesServer',
@@ -43,16 +43,16 @@ class Options extends React.Component {
       ])
       .then(
         ({
-          disableDomCapture,
-          disableVisualCheckpoints,
+          enableDomCapture,
+          enableVisualCheckpoints,
           openUrls,
           apiKey,
           eyesServer,
           seideId,
         }) => {
           this.setState({
-            disableDomCapture,
-            disableVisualCheckpoints,
+            enableDomCapture,
+            enableVisualCheckpoints,
             openUrls,
             apiKey: apiKey || '',
             eyesServer: eyesServer || '',
@@ -79,8 +79,8 @@ class Options extends React.Component {
   saveOptions() {
     browser.storage.local
       .set({
-        disableDomCapture: this.state.disableDomCapture,
-        disableVisualCheckpoints: this.state.disableVisualCheckpoints,
+        enableDomCapture: this.state.enableDomCapture,
+        enableVisualCheckpoints: this.state.enableVisualCheckpoints,
         openUrls: this.state.openUrls,
         apiKey: this.state.apiKey,
         eyesServer: this.state.eyesServer,
@@ -108,25 +108,25 @@ class Options extends React.Component {
             {this.state.tab === Tabs.TESTS && (
               <React.Fragment>
                 <Checkbox
-                  id="disable-checks"
+                  id="enable-checks"
                   className="checkbox"
-                  name="disable-checks"
-                  label="Disable visual checkpoints"
-                  checked={this.state.disableVisualCheckpoints}
+                  name="enable-checks"
+                  label="Enable visual checkpoints"
+                  checked={this.state.enableVisualCheckpoints}
                   onChange={this.handleCheckboxChange.bind(
                     this,
-                    'disableVisualCheckpoints'
+                    'enableVisualCheckpoints'
                   )}
                 />
                 <Checkbox
-                  id="disable-dom-capture"
+                  id="enable-dom-capture"
                   className="checkbox"
-                  name="disable-dom-capture"
-                  label="Disable DOM capture"
-                  checked={this.state.disableDomCapture}
+                  name="enable-dom-capture"
+                  label="Enable DOM capture"
+                  checked={this.state.enableDomCapture}
                   onChange={this.handleCheckboxChange.bind(
                     this,
-                    'disableDomCapture'
+                    'enableDomCapture'
                   )}
                 />
                 <Checkbox

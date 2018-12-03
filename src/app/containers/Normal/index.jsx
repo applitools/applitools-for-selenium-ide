@@ -26,7 +26,7 @@ export default class Normal extends React.Component {
       })
   }
   static propTypes = {
-    disableVisualCheckpoints: PropTypes.bool.isRequired,
+    enableVisualCheckpoints: PropTypes.bool.isRequired,
     visualCheckpointsChanged: PropTypes.func.isRequired,
   }
   openOptionsPage() {
@@ -51,8 +51,8 @@ export default class Normal extends React.Component {
           id="disable-checks"
           className="checkbox"
           name="disable-checks"
-          label="Disable visual checkpoints"
-          checked={this.props.disableVisualCheckpoints}
+          label="Enable visual checkpoints"
+          checked={this.props.enableVisualCheckpoints}
           onChange={this.handleCheckboxChange.bind(this)}
         />
         <hr />

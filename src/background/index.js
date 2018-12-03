@@ -123,18 +123,18 @@ setupOptions().then(() => {
   })
 })
 
-function updateBrowserActionIcon(disableVisualCheckpoints) {
+function updateBrowserActionIcon(enableVisualCheckpoints) {
   return browser.browserAction.setIcon({
-    path: disableVisualCheckpoints
+    path: enableVisualCheckpoints
       ? {
-          16: 'icons/icon_menu16_disabled.png',
-          32: 'icons/icon_menu32_disabled.png',
-          64: 'icons/icon_menu64_disabled.png',
-        }
-      : {
           16: 'icons/icon_menu16.png',
           32: 'icons/icon_menu32.png',
           64: 'icons/icon_menu64.png',
+        }
+      : {
+          16: 'icons/icon_menu16_disabled.png',
+          32: 'icons/icon_menu32_disabled.png',
+          64: 'icons/icon_menu64_disabled.png',
         },
   })
 }
@@ -146,19 +146,19 @@ browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
   if (message.setVisualChecks) {
     browser.storage.local.set({
-      disableVisualCheckpoints: message.disableVisualCheckpoints,
+      enableVisualCheckpoints: message.enableVisualCheckpoints,
     })
-    updateBrowserActionIcon(message.disableVisualCheckpoints)
+    updateBrowserActionIcon(message.enableVisualCheckpoints)
     setExternalState({
-      disableVisualCheckpoints: message.disableVisualCheckpoints,
+      enableVisualCheckpoints: message.enableVisualCheckpoints,
     })
   }
   if (message.optionsUpdated) {
     browser.storage.local
-      .get(['disableVisualCheckpoints'])
-      .then(({ disableVisualCheckpoints }) => {
-        updateBrowserActionIcon(disableVisualCheckpoints)
-        setExternalState({ disableVisualCheckpoints })
+      .get(['enableVisualCheckpoints'])
+      .then(({ enableVisualCheckpoints }) => {
+        updateBrowserActionIcon(enableVisualCheckpoints)
+        setExternalState({ enableVisualCheckpoints })
       })
     validateOptions().then(() => {
       resetMode()
@@ -233,7 +233,7 @@ browser.runtime.onMessageExternal.addListener(
         message.options.testName
       )
         .then(() => {
-          if (getExternalState().disableVisualCheckpoints) {
+          if (getExternalState().enableVisualCheckpoints) {
             ideLogger.log('visual checkpoints are disabled').then(() => {
               return sendResponse(true)
             })
@@ -332,7 +332,7 @@ browser.runtime.onMessageExternal.addListener(
           return true
         }
         case 'checkWindow': {
-          if (getExternalState().disableVisualCheckpoints) {
+          if (getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -366,7 +366,7 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case 'checkRegion': {
-          if (getExternalState().disableVisualCheckpoints) {
+          if (getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -402,7 +402,7 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case 'checkElement': {
-          if (getExternalState().disableVisualCheckpoints) {
+          if (getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
             sendMessage({

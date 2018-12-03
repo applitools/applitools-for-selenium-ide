@@ -25,7 +25,7 @@ export default class Panel extends React.Component {
     super(props)
     this.state = {
       mode: Modes.NORMAL,
-      disableVisualCheckpoints: false,
+      enableVisualCheckpoints: true,
       isSubmitting: false,
     }
     browser.runtime
@@ -55,7 +55,7 @@ export default class Panel extends React.Component {
     browser.runtime
       .sendMessage({
         setVisualChecks: true,
-        disableVisualCheckpoints: value,
+        enableVisualCheckpoints: value,
       })
       .catch()
   }
@@ -70,13 +70,13 @@ export default class Panel extends React.Component {
       <div>
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
         {this.state.mode === Modes.NORMAL &&
-          (this.state.disableVisualCheckpoints ? (
-            <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>
-              Visual checkpoints are disabled.
-            </SpinnerBanner>
-          ) : (
+          (this.state.enableVisualCheckpoints ? (
             <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>
               Successfully connected with Selenium IDE.
+            </SpinnerBanner>
+          ) : (
+            <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>
+              Visual checkpoints are disabled.
             </SpinnerBanner>
           ))}
         {this.state.mode === Modes.SETUP &&
@@ -108,7 +108,7 @@ export default class Panel extends React.Component {
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL && (
             <Normal
-              disableVisualCheckpoints={this.state.disableVisualCheckpoints}
+              enableVisualCheckpoints={this.state.enableVisualCheckpoints}
               visualCheckpointsChanged={this.visualCheckpointsChanged}
             />
           )}
