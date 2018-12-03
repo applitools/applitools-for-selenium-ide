@@ -39,8 +39,6 @@ class Options extends React.Component {
         'openUrls',
         'apiKey',
         'eyesServer',
-        'branch',
-        'parentBranch',
         'seideId',
       ])
       .then(
@@ -50,8 +48,6 @@ class Options extends React.Component {
           openUrls,
           apiKey,
           eyesServer,
-          branch,
-          parentBranch,
           seideId,
         }) => {
           this.setState({
@@ -60,8 +56,6 @@ class Options extends React.Component {
             openUrls,
             apiKey: apiKey || '',
             eyesServer: eyesServer || '',
-            branch: branch || '',
-            parentBranch: parentBranch || '',
             seideId: seideId || '',
           })
         }
@@ -142,19 +136,6 @@ class Options extends React.Component {
                   label="Open test manager after test runs"
                   checked={this.state.openUrls}
                   onChange={this.handleCheckboxChange.bind(this, 'openUrls')}
-                />
-                <Input
-                  name="branch"
-                  label="branch name"
-                  placeholder="default"
-                  value={this.state.branch}
-                  onChange={this.handleInputChange.bind(this, 'branch')}
-                />
-                <Input
-                  name="parentBranch"
-                  label="parent branch name"
-                  value={this.state.parentBranch}
-                  onChange={this.handleInputChange.bind(this, 'parentBranch')}
                 />
               </React.Fragment>
             )}
