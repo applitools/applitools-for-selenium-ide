@@ -7,6 +7,7 @@ import MoreInfo from '../../components/MoreInfo'
 import Link from '../../../commons/components/Link'
 import { DEFAULT_SERVER } from '../../../commons/api.js'
 import './style.css'
+import AddButton from '../../assets/images/ic_add.svg'
 
 export default class Normal extends React.Component {
   constructor(props) {
@@ -81,6 +82,21 @@ export default class Normal extends React.Component {
           checked={this.state.enableVisualGrid}
           onChange={this.handleCheckboxChange.bind(this, 'enableVisualGrid')}
         />
+        {this.state.enableVisualGrid && (
+          <div className="add-outer">
+            <div
+              className="add-inner"
+              style={{
+                mask: `url(${AddButton})`,
+                maskSize: '25px',
+                maskPosition: 'center',
+                WebkitMaskImage: `url(${AddButton})`,
+                WebkitMaskSize: '25px',
+                WebkitMaskPosition: 'center',
+              }}
+            />
+          </div>
+        )}
         <hr />
         <div className="open-global-settings">
           <a href="#" onClick={this.openOptionsPage}>
