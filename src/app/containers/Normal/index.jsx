@@ -14,14 +14,16 @@ export default class Normal extends React.Component {
     this.state = {
       branch: '',
       parentBranch: '',
+      enableVisualGrid: true,
     }
     browser.storage.local
-      .get(['eyesServer', 'branch', 'parentBranch'])
-      .then(({ eyesServer, branch, parentBranch }) => {
+      .get(['eyesServer', 'branch', 'parentBranch', 'enableVisualGrid'])
+      .then(({ eyesServer, branch, parentBranch, enableVisualGrid }) => {
         this.setState({
           eyesServer,
           branch: branch || '',
           parentBranch: parentBranch || '',
+          enableVisualGrid: enableVisualGrid,
         })
       })
   }
@@ -32,10 +34,11 @@ export default class Normal extends React.Component {
   openOptionsPage() {
     browser.runtime.openOptionsPage()
   }
-  handleCheckboxChange(e) {
-    if (this.props.visualCheckpointsChanged) {
+  handleCheckboxChange(name, e) {
+    if (name === 'enableVisualGrid')
+      this.handleInputChange('enableVisualGrid', e.target.checked)
+    else if (this.props.visualCheckpointsChanged)
       this.props.visualCheckpointsChanged(e.target.checked)
-    }
   }
   handleInputChange(name, value) {
     browser.storage.local.set({ [name]: value }).then(() => {
@@ -48,12 +51,12 @@ export default class Normal extends React.Component {
     return (
       <div className="project-settings">
         <Checkbox
-          id="disable-checks"
+          id="enable-checks"
           className="checkbox"
-          name="disable-checks"
+          name="enable-checks"
           label="Enable visual checkpoints"
           checked={this.props.enableVisualCheckpoints}
-          onChange={this.handleCheckboxChange.bind(this)}
+          onChange={this.handleCheckboxChange.bind(this, undefined)}
         />
         <hr />
         <h4>Project settings</h4>
@@ -69,6 +72,14 @@ export default class Normal extends React.Component {
           label="Parent branch name"
           value={this.state.parentBranch}
           onChange={this.handleInputChange.bind(this, 'parentBranch')}
+        />
+        <Checkbox
+          id="enable-visual-grid"
+          className="checkbox"
+          name="enable-visual-grid"
+          label="Execute using visual grid"
+          checked={this.state.enableVisualGrid}
+          onChange={this.handleCheckboxChange.bind(this, 'enableVisualGrid')}
         />
         <hr />
         <div className="open-global-settings">
