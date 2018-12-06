@@ -1,0 +1,28 @@
+.close {
+  background-color: #d6ecf7;
+}
+
+.close {
+  float: left;
+  margin-left: 1px;
+}
+
+.close.outer {
+  width: 16px;
+  height: 16px;
+}
+
+.close.inner {
+  background-color: #767676;
+  width: 14px;
+  height: 16px;
+  padding-right: 1px;
+}
+
+.close.outer:hover {
+  background-color: #318ede;
+}
+
+.close.outer:hover .close.inner {
+  background-color: #ffffff;
+}

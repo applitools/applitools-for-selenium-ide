@@ -1,0 +1,35 @@
+.visual-grid-options {
+  padding-bottom: 30px;
+}
+
+.visual-grid-options .option-header {
+  padding-top: 15px;
+  padding-bottom: 28px;
+}
+
+.visual-grid-options .option-header .title {
+  float: left;
+  padding-right: 5px;
+}
+
+.visual-grid-options .option-header .add {
+  float: left;
+}
+
+.visual-grid-options .option {
+  height: 16px;
+  float: left;
+  padding-right: 9px;
+}
+
+.visual-grid-options .option-text {
+  background-color: #d6ecf7;
+  float: left;
+  font-size: 12px;
+  line-height: 12px;
+  color: #454545;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 1px;
+  padding-bottom: 3px;
+}

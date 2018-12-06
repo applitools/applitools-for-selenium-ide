@@ -30,25 +30,3 @@
   padding: 0;
   text-indent: 5px;
 }
-
-.project-settings .add-outer {
-  border: 1px solid #A2A2A2;
-  border-radius: 2px;
-  width: 15px;
-  height: 15px;
-}
-
-.project-settings .add-inner {
-  background-color: #767676;
-  width: 15px;
-  height: 15px;
-}
-
-.project-settings .add-outer:hover {
-  border: 1px solid transparent;
-  background-color: #318EDE;
-}
-
-.project-settings .add-outer:hover .add-inner {
-  background-color: #FFFFFF;
-}
