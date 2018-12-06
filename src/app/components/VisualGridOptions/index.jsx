@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Checkbox from '../../../commons/components/Checkbox'
 import AddButton from '../ActionButtons/AddButton'
 import CloseButton from '../ActionButtons/CloseButton'
+import CheckList from '../../../commons/components/CheckList'
 import './style.css'
 
 export default class VisualGridOptions extends React.Component {
@@ -37,77 +37,60 @@ export default class VisualGridOptions extends React.Component {
         <div className="option-header">
           <div className="title">Browser</div>
           <AddButton>
-            {this.browsers.map(function(browserName) {
-              return (
-                <React.Fragment key={browserName}>
-                  <Checkbox
-                    id={browserName}
-                    label={browserName}
-                    isChecked={this.props.optionSelected.bind(
-                      this,
-                      'selectedBrowsers',
-                      browserName
-                    )}
-                    onChange={this.props.handleOptionChange.bind(
-                      this,
-                      'selectedBrowsers',
-                      browserName
-                    )}
-                  />
-                </React.Fragment>
-              )
-            }, this)}
+            <CheckList
+              type="selectedBrowsers"
+              items={this.browsers}
+              optionSelected={this.props.optionSelected.bind(this)}
+              handleOptionChange={this.props.handleOptionChange.bind(this)}
+            />
           </AddButton>
         </div>
-        {this.props.selectedBrowsers.map(function(browserName) {
-          return (
-            <div className="option" key={browserName}>
-              <div className="option-text">{browserName}</div>
-              <CloseButton
-                onClick={this.props.deleteOption.bind(
-                  this,
-                  'selectedBrowsers',
-                  browserName
-                )}
-              />
-            </div>
-          )
-        }, this)}
+        <SelectedOptions
+          type="selectedBrowsers"
+          items={this.props.selectedBrowsers}
+          deleteOption={this.props.deleteOption.bind(this)}
+        />
         <br />
         <div className="option-header">
           <div className="title">Viewport size</div>
           <AddButton>
-            {this.viewportSizes.map(function(viewportSize) {
-              return (
-                <React.Fragment key={viewportSize}>
-                  <Checkbox
-                    id={viewportSize}
-                    label={viewportSize}
-                    isChecked={this.props.optionSelected.bind(
-                      this,
-                      'selectedViewportSizes',
-                      viewportSize
-                    )}
-                    onChange={this.props.handleOptionChange.bind(
-                      this,
-                      'selectedViewportSizes',
-                      viewportSize
-                    )}
-                  />
-                </React.Fragment>
-              )
-            }, this)}
+            <CheckList
+              type="selectedViewportSizes"
+              items={this.viewportSizes}
+              optionSelected={this.props.optionSelected.bind(this)}
+              handleOptionChange={this.props.handleOptionChange.bind(this)}
+            />
           </AddButton>
         </div>
-        {this.props.selectedViewportSizes.map(function(viewportSize) {
+        <SelectedOptions
+          type="selectedViewportSizes"
+          items={this.props.selectedViewportSizes}
+          deleteOption={this.props.deleteOption.bind(this)}
+        />
+      </div>
+    )
+  }
+}
+
+class SelectedOptions extends React.Component {
+  static propTypes = {
+    type: PropTypes.string.isRequire,
+    items: PropTypes.array.isRequired,
+    deleteOption: PropTypes.func.isRequired,
+  }
+
+  render() {
+    return (
+      <div className="selected-options">
+        {this.props.items.map(function(item) {
           return (
-            <div className="option" key={viewportSize}>
-              <div className="option-text">{viewportSize}</div>
+            <div className="option" key={item}>
+              <div className="option-text">{item}</div>
               <CloseButton
                 onClick={this.props.deleteOption.bind(
                   this,
-                  'selectedViewportSizes',
-                  viewportSize
+                  this.props.type,
+                  item
                 )}
               />
             </div>

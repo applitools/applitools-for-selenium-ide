@@ -4,6 +4,18 @@ import ReactModal from 'react-modal'
 import PlusSymbol from '../../../assets/images/ic_add.svg'
 import './style.css'
 
+const customStyles = {
+  content: {
+    top: 'auto',
+    left: 'auto',
+    right: '60px',
+    bottom: '0%',
+    marginRight: '-50%',
+    width: '160px',
+    transform: 'translate(-50%, -50%)',
+  },
+}
+
 export default class AddButton extends React.Component {
   constructor(props) {
     super(props)
@@ -32,6 +44,7 @@ export default class AddButton extends React.Component {
           onRequestClose={this.closeModal}
           shouldCloseOnOverlayClick={true}
           ariaHideApp={false}
+          style={customStyles}
         >
           {this.props.children}
         </ReactModal>
