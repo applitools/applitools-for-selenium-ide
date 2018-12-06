@@ -74,7 +74,7 @@ export default class VisualGridOptions extends React.Component {
 
 class SelectedOptions extends React.Component {
   static propTypes = {
-    type: PropTypes.string.isRequire,
+    type: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     deleteOption: PropTypes.func.isRequired,
   }
