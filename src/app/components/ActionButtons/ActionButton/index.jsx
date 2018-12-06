@@ -9,15 +9,24 @@ export default class ActionButton extends React.Component {
     position: PropTypes.string.isRequired,
     imgPath: PropTypes.string.isRequired,
     onClick: PropTypes.func,
+    isSelected: PropTypes.bool,
   }
   render() {
     return (
       <div
-        className={classNames(this.props.type, 'outer')}
+        className={classNames(
+          this.props.type,
+          'outer',
+          this.props.isSelected ? 'selected' : undefined
+        )}
         onClick={this.props.onClick}
       >
         <div
-          className={classNames(this.props.type, 'inner')}
+          className={classNames(
+            this.props.type,
+            'inner',
+            this.props.isSelected ? 'selected' : undefined
+          )}
           style={{
             mask: `url(${this.props.imgPath})`,
             maskSize: this.props.size,

@@ -24,10 +24,10 @@ export default class AddButton extends React.Component {
     this.closeModal = this.closeModal.bind(this)
   }
   openModal() {
-    this.setState({ modalIsOpen: true })
+    this.setState({ modalIsOpen: true, isSelected: true })
   }
   closeModal() {
-    this.setState({ modalIsOpen: false })
+    this.setState({ modalIsOpen: false, isSelected: false })
   }
   render() {
     return (
@@ -38,6 +38,7 @@ export default class AddButton extends React.Component {
           position="center"
           imgPath={PlusSymbol}
           onClick={this.openModal}
+          isSelected={this.state.isSelected}
         />
         <ReactModal
           isOpen={this.state.modalIsOpen}
