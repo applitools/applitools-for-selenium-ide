@@ -34,7 +34,12 @@ export default class VisualGridOptions extends React.Component {
   render() {
     return (
       <div className="visual-grid-options">
-        <div className="option-header">
+        <div
+          className="option-header"
+          style={{
+            paddingBottom: this.props.selectedBrowsers ? '28px' : undefined,
+          }}
+        >
           <div className="title">Browser</div>
           <AddButton>
             <CheckList
@@ -50,8 +55,14 @@ export default class VisualGridOptions extends React.Component {
           items={this.props.selectedBrowsers}
           deleteOption={this.props.deleteOption.bind(this)}
         />
-        <br />
-        <div className="option-header">
+        <div
+          className="option-header"
+          style={{
+            paddingBottom: this.props.selectedViewportSizes
+              ? '28px'
+              : undefined,
+          }}
+        >
           <div className="title">Viewport size</div>
           <AddButton>
             <CheckList
@@ -78,10 +89,27 @@ class SelectedOptions extends React.Component {
     items: PropTypes.array.isRequired,
     deleteOption: PropTypes.func.isRequired,
   }
-
+  constructor(props) {
+    super(props)
+    this.calculateSpacing = this.calculateSpacing.bind(this)
+  }
+  calculateSpacing(value) {
+    const delimiter = this.props.type === 'selectedBrowsers' ? 3 : 2
+    let count = 0
+    for (let i = 0; i < this.props.items.length; i++) {
+      if (i % delimiter === 0) count += value
+    }
+    return count
+  }
   render() {
     return (
-      <div className="selected-options">
+      <div
+        className="selected-options"
+        style={{
+          height: `${this.calculateSpacing(15)}px`,
+          paddingBottom: `${this.calculateSpacing(5)}px`,
+        }}
+      >
         {this.props.items.map(function(item) {
           return (
             <div className="option" key={item}>

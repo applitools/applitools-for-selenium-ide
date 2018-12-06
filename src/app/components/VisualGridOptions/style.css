@@ -1,15 +1,8 @@
 .visual-grid-options {
-  padding-bottom: 30px;
-}
-
-.visual-grid-options .selected-options {
-  padding-bottom: 10px;
-  height: 100%;
 }
 
 .visual-grid-options .option-header {
   padding-top: 15px;
-  padding-bottom: 28px;
 }
 
 .visual-grid-options .option-header .title {
