@@ -60,6 +60,7 @@
     "raw-loader": "^0.5.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-modal": "^3.6.1",
     "ua-parser-js": "^0.7.18",
     "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5"
   }
