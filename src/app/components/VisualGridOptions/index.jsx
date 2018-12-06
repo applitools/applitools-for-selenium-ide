@@ -89,27 +89,9 @@ class SelectedOptions extends React.Component {
     items: PropTypes.array.isRequired,
     deleteOption: PropTypes.func.isRequired,
   }
-  constructor(props) {
-    super(props)
-    this.calculateSpacing = this.calculateSpacing.bind(this)
-  }
-  calculateSpacing(value) {
-    const delimiter = this.props.type === 'selectedBrowsers' ? 3 : 2
-    let count = 0
-    for (let i = 0; i < this.props.items.length; i++) {
-      if (i % delimiter === 0) count += value
-    }
-    return count
-  }
   render() {
     return (
-      <div
-        className="selected-options"
-        style={{
-          height: `${this.calculateSpacing(15)}px`,
-          paddingBottom: `${this.calculateSpacing(5)}px`,
-        }}
-      >
+      <div className="selected-options">
         {this.props.items.map(function(item) {
           return (
             <div className="option" key={item}>

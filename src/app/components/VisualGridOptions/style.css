@@ -1,6 +1,3 @@
-.visual-grid-options {
-}
-
 .visual-grid-options .option-header {
   padding-top: 15px;
 }
@@ -14,9 +11,14 @@
   float: left;
 }
 
+.visual-grid-options .selected-options {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .visual-grid-options .option {
   height: 16px;
-  float: left;
   padding-right: 9px;
   padding-bottom: 5px;
 }
