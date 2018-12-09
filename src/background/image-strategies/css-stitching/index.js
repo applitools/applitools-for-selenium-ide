@@ -31,6 +31,20 @@ export function buildCheckWindowFullFunction(eyes, tabId, devicePixelRatio) {
     )
 }
 
+export function buildCheckRegionFunction(eyes, tabId, devicePixelRatio, rect) {
+  const fullPageCapture = initFullPageCapture(
+    eyes._logger,
+    tabId,
+    devicePixelRatio
+  )
+  return () =>
+    fullPageCapture.getStitchedRegion(
+      Region.EMPTY,
+      new Region(rect.x, rect.y, rect.width, rect.height),
+      new CSSTranslatePositionProvider(eyes._logger, tabId)
+    )
+}
+
 function initFullPageCapture(logger, tabId, devicePixelRatio) {
   return new FullPageCaptureAlgorithm(
     logger,

@@ -1,15 +1,17 @@
 import browser from 'webextension-polyfill'
 import Modes from '../../commons/modes'
 import { sendMessage } from '../../IO/message-port'
-import { getRegionScreenshot } from '../utils/screenshot'
-import { getEyes, closeEyes, promiseFactory } from '../utils/eyes'
+import { getEyes, closeEyes } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
 import { getDomCapture } from '../dom-capture'
-import { ImageProvider, MutableImage } from '@applitools/eyes-sdk-core'
+import { ImageProvider } from '@applitools/eyes-sdk-core'
 import { Target } from '@applitools/eyes-images'
-import { buildCheckWindowFullFunction } from '../image-strategies/css-stitching'
+import {
+  buildCheckWindowFullFunction,
+  buildCheckRegionFunction,
+} from '../image-strategies/css-stitching'
 
 const imageProvider = new ImageProvider()
 
@@ -23,26 +25,14 @@ export async function checkWindow(
   viewport
 ) {
   const eyes = await getEyes(`${runId}${testId}`)
-  await preCheck(eyes, viewport)
-  eyes.commands.push(commandId)
-  eyes.setViewportSize(viewport)
-  imageProvider.getImage = buildCheckWindowFullFunction(
+  return await check(
     eyes,
+    commandId,
     tabId,
-    window.devicePixelRatio
+    stepName,
+    viewport,
+    buildCheckWindowFullFunction(eyes, tabId, window.devicePixelRatio)
   )
-  const domCap = await getDomCapture(tabId)
-
-  let pathname
-  if (!stepName) {
-    pathname = await getTabPathname(tabId)
-  }
-
-  const imageResult = await eyes.check(
-    stepName || pathname,
-    Target.image(imageProvider).withDom(domCap)
-  )
-  return imageResult ? true : { status: 'undetermined' }
 }
 
 export async function checkRegion(
@@ -56,40 +46,18 @@ export async function checkRegion(
   viewport
 ) {
   if (!region || !region.x || !region.y || !region.width || !region.height)
-    return Promise.reject(
+    throw new Error(
       'Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]'
     )
-  return new Promise((resolve, reject) => {
-    getEyes(`${runId}${testId}`)
-      .then(eyes => {
-        preCheck(eyes, viewport).then(() => {
-          getTabPathname(tabId).then(async pathname => {
-            eyes.commands.push(commandId)
-            eyes.setViewportSize(viewport)
-            imageProvider.getImage = () => {
-              return getRegionScreenshot(tabId, region).then(image => {
-                return new MutableImage(image.data, promiseFactory)
-              })
-            }
-
-            const domCap = await getDomCapture(tabId)
-
-            eyes
-              .check(
-                stepName || pathname,
-                Target.image(imageProvider).withDom(domCap)
-              )
-              .then(imageResult => {
-                return imageResult.asExpected
-                  ? resolve(true)
-                  : resolve({ status: 'undetermined' })
-              })
-              .catch(reject)
-          })
-        })
-      })
-      .catch(reject)
-  })
+  const eyes = await getEyes(`${runId}${testId}`)
+  return await check(
+    eyes,
+    commandId,
+    tabId,
+    stepName,
+    viewport,
+    buildCheckRegionFunction(eyes, tabId, window.devicePixelRatio, region)
+  )
 }
 
 export async function checkElement(
@@ -102,44 +70,46 @@ export async function checkElement(
   stepName,
   viewport
 ) {
-  return new Promise((resolve, reject) => {
-    getEyes(`${runId}${testId}`)
-      .then(eyes => {
-        preCheck(eyes, viewport).then(() => {
-          getTabPathname(tabId).then(pathname => {
-            eyes.commands.push(commandId)
-            eyes.setViewportSize(viewport)
-            browser.tabs
-              .sendMessage(tabId, {
-                getElementRect: true,
-                path: elementXPath,
-              })
-              .then(async rect => {
-                imageProvider.getImage = () => {
-                  return getRegionScreenshot(tabId, rect).then(image => {
-                    return new MutableImage(image.data, promiseFactory)
-                  })
-                }
-
-                const domCap = await getDomCapture(tabId)
-
-                eyes
-                  .check(
-                    stepName || pathname,
-                    Target.image(imageProvider).withDom(domCap)
-                  )
-                  .then(imageResult => {
-                    return imageResult.asExpected
-                      ? resolve(true)
-                      : resolve({ status: 'undetermined' })
-                  })
-                  .catch(reject)
-              })
-          })
-        })
-      })
-      .catch(reject)
+  const eyes = await getEyes(`${runId}${testId}`)
+  const rect = await browser.tabs.sendMessage(tabId, {
+    getElementRect: true,
+    path: elementXPath,
   })
+  return await check(
+    eyes,
+    commandId,
+    tabId,
+    stepName,
+    viewport,
+    buildCheckRegionFunction(eyes, tabId, window.devicePixelRatio, rect)
+  )
+}
+
+async function check(
+  eyes,
+  commandId,
+  tabId,
+  stepName,
+  viewport,
+  checkFunction
+) {
+  await preCheck(eyes, viewport)
+  eyes.commands.push(commandId)
+  eyes.setViewportSize(viewport)
+
+  imageProvider.getImage = checkFunction
+  const domCap = await getDomCapture(tabId)
+
+  let pathname
+  if (!stepName) {
+    pathname = await getTabPathname(tabId)
+  }
+
+  const imageResult = await eyes.check(
+    stepName || pathname,
+    Target.image(imageProvider).withDom(domCap)
+  )
+  return imageResult ? true : { status: 'undetermined' }
 }
 
 export function endTest(id) {
