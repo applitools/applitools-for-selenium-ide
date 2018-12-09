@@ -9,17 +9,17 @@
   dependencies:
     "@applitools/functional-commons" "^1.0.27"
 
-"@applitools/eyes-images@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-images/-/eyes-images-4.4.0.tgz#4be6a7b4559ba17ec1b3236b8864b9429fbf052c"
-  integrity sha512-Q/XApIDCuNEdkk7ArlA1ZbM9JoAa88GYl6IufH48dHp2WoiAk2/pjIpwW97PuPng1CFuGSW2YisEgGS/qowlBw==
+"@applitools/eyes-images@^4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-images/-/eyes-images-4.5.2.tgz#10f971325a1336e6f3957a711e1b22bd3fd87627"
+  integrity sha512-UHpK+p2W5ALWTt169SA/A9+8S3zEEJp4bhNLz/OnhY/9ayH+0zddq7W2Ru3Zjauki/SY45YBBNSd4lek51Ly5w==
   dependencies:
-    "@applitools/eyes-sdk-core" "^4.4.0"
+    "@applitools/eyes-sdk-core" "^4.5.2"
 
-"@applitools/eyes-sdk-core@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-4.4.0.tgz#a09430fde3461d26fd2ad8c486d87a2ea05d8a70"
-  integrity sha512-uIqPosjjT5TfLVXL8mNZOFlYT0l8MmVBjb3gVHZE2oAFhmQGhmSqCLzgY1H/3paZFCPUO1tO2WvOjSK+lx/Q2A==
+"@applitools/eyes-sdk-core@^4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-4.5.2.tgz#680269194c326156665b1e01a8161240b4f6b4f6"
+  integrity sha512-+OADMHkaSEFxVyKOxSYfF/xtzcGzkU2Duy+b+36mMPz5VqrT1ItYIYtalE51/AqLHb4AMB5UCwbyvFR4CsaUww==
   dependencies:
     axios "^0.18.0"
     dateformat "^3.0.3"

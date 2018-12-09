@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill'
 import Modes from '../../commons/modes'
 import { sendMessage } from '../../IO/message-port'
-import { getScreenshot, getRegionScreenshot } from '../utils/screenshot'
+import { getRegionScreenshot } from '../utils/screenshot'
 import { getEyes, closeEyes, promiseFactory } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
@@ -9,6 +9,7 @@ import ideLogger from '../utils/ide-logger'
 import { getDomCapture } from '../dom-capture'
 import { ImageProvider, MutableImage } from '@applitools/eyes-sdk-core'
 import { Target } from '@applitools/eyes-images'
+import { buildCheckWindowFullFunction } from '../image-strategies/css-stitching'
 
 const imageProvider = new ImageProvider()
 
@@ -21,38 +22,27 @@ export async function checkWindow(
   stepName,
   viewport
 ) {
-  return new Promise((resolve, reject) => {
-    getEyes(`${runId}${testId}`)
-      .then(eyes => {
-        preCheck(eyes, viewport).then(() => {
-          getTabPathname(tabId).then(async pathname => {
-            eyes.commands.push(commandId)
-            eyes.setViewportSize(viewport)
-            imageProvider.getImage = () => {
-              return getScreenshot(tabId).then(image => {
-                return new MutableImage(image.data, promiseFactory)
-              })
-            }
+  const eyes = await getEyes(`${runId}${testId}`)
+  await preCheck(eyes, viewport)
+  eyes.commands.push(commandId)
+  eyes.setViewportSize(viewport)
+  imageProvider.getImage = buildCheckWindowFullFunction(
+    eyes,
+    tabId,
+    window.devicePixelRatio
+  )
+  const domCap = await getDomCapture(tabId)
 
-            // eslint-disable-next-line
-            const domCap = await getDomCapture(tabId)
+  let pathname
+  if (!stepName) {
+    pathname = await getTabPathname(tabId)
+  }
 
-            eyes
-              .check(
-                stepName || pathname,
-                Target.image(imageProvider).withDom(domCap)
-              )
-              .then(imageResult => {
-                return imageResult.asExpected
-                  ? resolve(true)
-                  : resolve({ status: 'undetermined' })
-              })
-              .catch(reject)
-          })
-        })
-      })
-      .catch(reject)
-  })
+  const imageResult = await eyes.check(
+    stepName || pathname,
+    Target.image(imageProvider).withDom(domCap)
+  )
+  return imageResult ? true : { status: 'undetermined' }
 }
 
 export async function checkRegion(
@@ -163,22 +153,22 @@ export function endTest(id) {
           verb: 'post',
           payload: {
             commandId,
-            state: results.stepsInfo[index].isDifferent ? 'failed' : 'passed',
+            state: results._stepsInfo[index]._isDifferent ? 'failed' : 'passed',
           },
         })
       )
     ).then(commandStates => {
       // eslint-disable-next-line
       console.log(commandStates)
-      return results.status === 'Passed'
+      return results._status === 'Passed'
         ? {
             message: `All visual tests have passed,\nresults: ${
-              results.appUrls.session
+              results._appUrls._session
             }`,
           }
         : {
             error: `Diffs were found in visual tests,\nresults: ${
-              results.appUrls.session
+              results._appUrls._session
             }`,
           }
     })

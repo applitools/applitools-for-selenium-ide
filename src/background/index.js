@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import './image-strategies/css-stitching/polyfills'
 import Modes from '../commons/modes'
 import ideLogger from './utils/ide-logger'
 import {

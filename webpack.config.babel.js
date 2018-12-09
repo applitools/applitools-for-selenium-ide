@@ -45,7 +45,10 @@ export default {
           // Process JS with Babel.
           {
             test: /\.(jsx?)$/,
-            include: [path.resolve(__dirname, 'src')],
+            include: [
+              path.resolve(__dirname, 'src'),
+              /\/node_modules\/@applitools\/eyes-sdk-core/,
+            ],
             use: [
               {
                 loader: 'babel-loader',

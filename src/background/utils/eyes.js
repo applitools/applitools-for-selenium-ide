@@ -4,8 +4,6 @@ import { Eyes } from '@applitools/eyes-images'
 import { ConsoleLogHandler } from '@applitools/eyes-sdk-core'
 import { browserName } from './userAgent'
 
-process.hrtime = require('browser-process-hrtime')
-
 export const promiseFactory = {
   makePromise: p => new Promise(p),
   resolve: Promise.resolve.bind(Promise),
@@ -83,8 +81,8 @@ export function closeEyes(id) {
       // checking the length because we might not necessarily have checkpoints
       lastResults.url =
         results.commands.length &&
-        (results.status !== 'Passed' || results.isNew)
-          ? results.appUrls.session
+        (results._status !== 'Passed' || results._isNew)
+          ? results._appUrls._session
           : undefined
       return results
     })
