@@ -4,12 +4,6 @@ import { Eyes } from '@applitools/eyes-images'
 import { ConsoleLogHandler } from '@applitools/eyes-sdk-core'
 import { browserName } from './userAgent'
 
-export const promiseFactory = {
-  makePromise: p => new Promise(p),
-  resolve: Promise.resolve.bind(Promise),
-  reject: Promise.reject.bind(Promise),
-}
-
 const eyes = {}
 let lastResults = {
   url: '',
@@ -33,7 +27,7 @@ function makeEyes(batchId, appName, batchName, testName) {
         const eyesApiServerUrl = eyesServer
           ? parseApiServer(eyesServer)
           : undefined
-        const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory)
+        const eyes = new Eyes(eyesApiServerUrl)
         if (process.env.NODE_ENV !== 'production')
           eyes.setLogHandler(new ConsoleLogHandler(true))
         eyes.setApiKey(apiKey)
