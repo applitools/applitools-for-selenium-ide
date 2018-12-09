@@ -45,8 +45,6 @@ export default class CSSTranslatePositionProvider extends PositionProvider {
   }
 
   async restoreState(state) {
-    console.log(state)
-    debugger
     await this.setTransform(state.getTransform())
     this._logger.verbose('Transform (position) restored.')
     this._lastSetPosition = state.getPosition()
