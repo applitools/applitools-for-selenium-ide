@@ -104,7 +104,7 @@ startPolling(
       },
     ],
     dependencies: {
-      '@applitools/eyes-selenium': '4.0.2',
+      '@applitools/eyes-selenium': '4.3.2',
     },
   },
   err => {
@@ -464,7 +464,7 @@ browser.runtime.onMessageExternal.addListener(
         }
         case 'config': {
           return sendResponse(
-            `const Eyes = require('@applitools/eyes-selenium').Eyes;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
+            `const Eyes = require('@applitools/eyes-selenium').Eyes;global.Target = require('@applitools/eyes-selenium').Target;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
               message.project.name
             }", batchId = configuration.runId, batchName;`
           )
@@ -480,7 +480,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
               before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setLogHandler(new ConsoleLogHandler(true));',
+                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");eyes.setSendDom(configuration.params.domUploadDisabled ? false : true);if (configuration.params.logsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
               after: 'if (eyes._isOpen) {await eyes.close();}',
             })
           }
@@ -504,7 +504,7 @@ browser.runtime.onMessageExternal.addListener(
           const { command, target, value } = message.command // eslint-disable-line no-unused-vars
           if (command === 'checkWindow') {
             return sendResponse(
-              `eyes.setForceFullPageScreenshot(true);await eyes.checkWindow("${target}" || (new URL(await driver.getCurrentUrl())).pathname).then(() => {eyes.setForceFullPageScreenshot(false);});`
+              `await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));`
             )
           } else if (command === 'checkRegion') {
             const { x, y, width, height } = parseRegion(target)
@@ -533,7 +533,7 @@ browser.runtime.onMessageExternal.addListener(
               }");`
             )
           } else if (command === 'setMatchTimeout') {
-            return sendResponse(`eyes.setDefaultMatchTimeout("${target}");`)
+            return sendResponse(`eyes.setMatchTimeout(${target});`)
           } else if (command === 'setViewportSize') {
             const { width, height } = parseViewport(target)
             return sendResponse(
