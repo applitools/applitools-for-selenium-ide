@@ -1,0 +1,11 @@
+patch-package
+--- a/node_modules/@applitools/eyes-sdk-core/lib/utils/GeneralUtils.js
++++ b/node_modules/@applitools/eyes-sdk-core/lib/utils/GeneralUtils.js
+@@ -1,6 +1,6 @@
+ 'use strict';
+ 
+-const merge = require('deepmerge');
++const merge = require('deepmerge').default;
+ const dateFormat = require('dateformat');
+ 
+ const { TypeUtils } = require('./TypeUtils');
