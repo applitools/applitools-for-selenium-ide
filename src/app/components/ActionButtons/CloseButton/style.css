@@ -10,6 +10,7 @@
 .close.outer {
   width: 16px;
   height: 16px;
+  cursor: pointer;
 }
 
 .close.inner {
@@ -20,9 +21,5 @@
 }
 
 .close.outer:hover {
-  background-color: #318ede;
-}
-
-.close.outer:hover .close.inner {
-  background-color: #ffffff;
+  background-color: #b2dbf0;
 }

@@ -34,50 +34,54 @@ export default class VisualGridOptions extends React.Component {
   render() {
     return (
       <div className="visual-grid-options">
-        <div
-          className="option-header"
-          style={{
-            paddingBottom: this.props.selectedBrowsers ? '28px' : undefined,
-          }}
-        >
-          <div className="title">Browser</div>
-          <AddButton>
-            <CheckList
-              type="selectedBrowsers"
-              items={this.browsers}
-              optionSelected={this.props.optionSelected.bind(this)}
-              handleOptionChange={this.props.handleOptionChange.bind(this)}
-            />
-          </AddButton>
+        <div className="category">
+          <div
+            className="option-header"
+            style={{
+              paddingBottom: this.props.selectedBrowsers ? '28px' : undefined,
+            }}
+          >
+            <div className="title">Browser</div>
+            <AddButton>
+              <CheckList
+                type="selectedBrowsers"
+                items={this.browsers}
+                optionSelected={this.props.optionSelected.bind(this)}
+                handleOptionChange={this.props.handleOptionChange.bind(this)}
+              />
+            </AddButton>
+          </div>
+          <SelectedOptions
+            type="selectedBrowsers"
+            items={this.props.selectedBrowsers}
+            deleteOption={this.props.deleteOption.bind(this)}
+          />
         </div>
-        <SelectedOptions
-          type="selectedBrowsers"
-          items={this.props.selectedBrowsers}
-          deleteOption={this.props.deleteOption.bind(this)}
-        />
-        <div
-          className="option-header"
-          style={{
-            paddingBottom: this.props.selectedViewportSizes
-              ? '28px'
-              : undefined,
-          }}
-        >
-          <div className="title">Viewport size</div>
-          <AddButton>
-            <CheckList
-              type="selectedViewportSizes"
-              items={this.viewportSizes}
-              optionSelected={this.props.optionSelected.bind(this)}
-              handleOptionChange={this.props.handleOptionChange.bind(this)}
-            />
-          </AddButton>
+        <div className="category">
+          <div
+            className="option-header"
+            style={{
+              paddingBottom: this.props.selectedViewportSizes
+                ? '28px'
+                : undefined,
+            }}
+          >
+            <div className="title">Viewport size</div>
+            <AddButton>
+              <CheckList
+                type="selectedViewportSizes"
+                items={this.viewportSizes}
+                optionSelected={this.props.optionSelected.bind(this)}
+                handleOptionChange={this.props.handleOptionChange.bind(this)}
+              />
+            </AddButton>
+          </div>
+          <SelectedOptions
+            type="selectedViewportSizes"
+            items={this.props.selectedViewportSizes}
+            deleteOption={this.props.deleteOption.bind(this)}
+          />
         </div>
-        <SelectedOptions
-          type="selectedViewportSizes"
-          items={this.props.selectedViewportSizes}
-          deleteOption={this.props.deleteOption.bind(this)}
-        />
       </div>
     )
   }

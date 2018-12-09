@@ -34,3 +34,7 @@
 .ReactModal__Overlay--after-open {
   background-color: transparent !important;
 }
+
+.control {
+  padding-top: 5px;
+}
