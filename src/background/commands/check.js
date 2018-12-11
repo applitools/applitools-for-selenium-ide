@@ -105,9 +105,10 @@ async function check(
     pathname = await getTabPathname(tabId)
   }
 
+  const target = Target.image(imageProvider)
   const imageResult = await eyes.check(
     stepName || pathname,
-    Target.image(imageProvider).withDom(domCap)
+    domCap ? target.withDom(domCap) : target
   )
   return imageResult ? true : { status: 'undetermined' }
 }
