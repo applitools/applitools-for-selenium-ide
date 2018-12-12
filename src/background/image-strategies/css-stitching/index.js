@@ -8,10 +8,10 @@ import {
   EyesSimpleScreenshotFactory,
   Region,
 } from '@applitools/eyes-sdk-core'
-
 import ScrollPositionProvider from './ScrollPositionProvider'
 import CSSTranslatePositionProvider from './CSSTranslatePositionProvider'
 import WebExtensionImageProvider from './WebExtensionImageProvider'
+import { hideCaret, hideScrollbars } from './polish'
 
 const REGION_POSITION_COMPENSATION = undefined
 const DEFAULT_WAIT_BEFORE_SCREENSHOTS = 100 // Milliseconds
@@ -23,12 +23,13 @@ export function buildCheckWindowFullFunction(eyes, tabId, devicePixelRatio) {
     tabId,
     devicePixelRatio
   )
-  return () =>
+  return buildCheckFunction(tabId, () =>
     fullPageCapture.getStitchedRegion(
       Region.EMPTY,
       null,
       new CSSTranslatePositionProvider(eyes._logger, tabId)
     )
+  )
 }
 
 export function buildCheckRegionFunction(eyes, tabId, devicePixelRatio, rect) {
@@ -37,12 +38,34 @@ export function buildCheckRegionFunction(eyes, tabId, devicePixelRatio, rect) {
     tabId,
     devicePixelRatio
   )
-  return () =>
+  return buildCheckFunction(tabId, () =>
     fullPageCapture.getStitchedRegion(
       Region.EMPTY,
       new Region(rect.x, rect.y, rect.width, rect.height),
       new CSSTranslatePositionProvider(eyes._logger, tabId)
     )
+  )
+}
+
+function buildCheckFunction(tabId, fn) {
+  return async () => {
+    const restoreCaret = await hideCaret(tabId)
+    const restoreScrollbars = await hideScrollbars(tabId)
+
+    let result
+    try {
+      result = fn()
+    } catch (e) {
+      await restoreCaret()
+      await restoreScrollbars()
+
+      throw e
+    }
+
+    await restoreCaret()
+    await restoreScrollbars()
+    return result
+  }
 }
 
 function initFullPageCapture(logger, tabId, devicePixelRatio) {
