@@ -17,6 +17,7 @@ export default class VisualGrid extends React.Component {
       selectedBrowsers: [],
       selectedViewportSizes: [],
     }
+    browser.storage.local.remove('selectedViewportSizes')
     browser.storage.local
       .get(['selectedBrowsers', 'selectedViewportSizes'])
       .then(({ selectedBrowsers, selectedViewportSizes }) => {
@@ -25,7 +26,7 @@ export default class VisualGrid extends React.Component {
           selectedViewportSizes: selectedViewportSizes || [],
         })
       })
-    this._removeOption = this._removeOption.bind(this)
+    this.removeOption = this.removeOption.bind(this)
   }
 
   handleOptionChange(type, name, e) {
@@ -36,24 +37,24 @@ export default class VisualGrid extends React.Component {
           this.setState(result)
         })
       }
-    } else this._removeOption(type, name)
+    } else this.removeOption(type, name)
   }
 
   handleSelectedBrowserChange(name, e) {
     return this.handleOptionChange('selectedBrowsers', name, e)
   }
 
-  handleSelectedViewportChange(name, e) {
-    if (e === true) e = { target: { checked: true } }
-    return this.handleOptionChange('selectedViewportSizes', name, e)
-  }
+  //handleSelectedViewportChange(name, e) {
+  //  if (e === true) e = { target: { checked: true } }
+  //  return this.handleOptionChange('selectedViewportSizes', name, e)
+  //}
 
   isBrowserSelected(name) {
     return this.isOptionSelected('selectedBrowsers', name)
   }
 
-  isViewportSelected(dimension) {
-    return this.isOptionSelected('selectedViewportSizes', dimension)
+  isViewportSelected(dimensions) {
+    return this.isOptionSelected('selectedViewportSizes', dimensions)
   }
 
   isOptionSelected(type, name) {
@@ -72,24 +73,30 @@ export default class VisualGrid extends React.Component {
     this._setModal(type, false)
   }
 
-  _removeOption(type, value) {
-    const result = {
-      [type]: this.state[type].filter(option => option !== value),
-    }
-    browser.storage.local.set(result)
-    this.setState(result)
+  removeOption(type, value) {
+    const result = this.state[type].filter(option => option !== value)
+    this.save(type, result)
   }
 
   removeBrowser(value) {
-    return this._removeOption('selectedBrowsers', value)
+    return this.removeOption('selectedBrowsers', value)
   }
 
   removeSelectedViewport(value) {
-    return this._removeOption('selectedViewportSizes', value)
+    return this.removeOption('selectedViewportSizes', value)
   }
 
-  updatedSelectedViewportSizesFromCollection(collection) {
-    this.setState({ ['selectedViewportSizes']: collection })
+  saveBrowsers(browsers) {
+    this.save('selectedBrowsers', browsers)
+  }
+
+  saveViewports(viewports) {
+    this.save('selectedViewportSizes', viewports)
+  }
+
+  save(type, collection) {
+    this.setState({ [type]: collection })
+    browser.storage.local.set({ [type]: collection })
   }
 
   render() {
@@ -136,8 +143,8 @@ export default class VisualGrid extends React.Component {
             <VisualGridViewports
               modalIsOpen={this.state.modal.viewports}
               modalClose={this.modalClose.bind(this, 'viewports')}
-              isOptionSelected={this.isViewportSelected.bind(this)}
-              handleOptionChange={this.handleSelectedViewportChange.bind(this)}
+              selectedOptions={this.state.selectedViewportSizes}
+              onSubmit={this.saveViewports.bind(this)}
             />
           </div>
           <VisualGridSelectedOptions

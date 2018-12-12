@@ -39,9 +39,6 @@ export default class CustomViewportSize extends React.Component {
     )
   }
   render() {
-    const selected =
-      this.props.selected ||
-      (this.props.hasOwnProperty('isSelected') && this.props.isSelected())
     return (
       <div className="add-custom-viewport-size">
         <Checkbox
@@ -49,7 +46,7 @@ export default class CustomViewportSize extends React.Component {
           className="checkbox"
           name="enable-custom-viewport"
           label=""
-          checked={selected}
+          checked={this.props.selected}
           onChange={this.onSelect.bind(this)}
         />
         <Input

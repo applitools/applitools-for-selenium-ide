@@ -17,7 +17,7 @@ export default class CheckList extends React.Component {
               <Checkbox
                 id={item}
                 label={item}
-                isChecked={this.props.optionSelected.bind(this, item)}
+                checked={this.props.optionSelected(item)}
                 onChange={this.props.handleOptionChange.bind(this, item)}
               />
             </React.Fragment>

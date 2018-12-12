@@ -10,10 +10,10 @@ import uuidv4 from 'uuid/v4'
 
 export default class VisualGridViewports extends React.Component {
   static propTypes = {
-    isOptionSelected: PropTypes.func.isRequired,
-    handleOptionChange: PropTypes.func.isRequired,
+    selectedOptions: PropTypes.array.isRequired,
     modalIsOpen: PropTypes.bool.isRequired,
     modalClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -27,17 +27,21 @@ export default class VisualGridViewports extends React.Component {
     ]
     this.state = {
       customViewportSizes: [],
+      selectedViewportSizes: [...this.props.selectedOptions],
     }
     browser.storage.local
       .get(['customViewportSizes'])
       .then(({ customViewportSizes }) => {
-        console.log(customViewportSizes)
         this.setState({
           customViewportSizes: customViewportSizes || [],
         })
       })
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedOptions !== this.props.selectedOptions)
+      this.setState({ selectedViewportSizes: [...this.props.selectedOptions] })
+  }
   addCustomViewportSize() {
     this.setState({
       ['customViewportSizes']: [
@@ -57,46 +61,54 @@ export default class VisualGridViewports extends React.Component {
     this.setState(result)
   }
 
-  isInCustomViewportSizes(input) {
-    return !!this.state.customViewportSizes.filter(
-      viewport =>
-        input.width === viewport.width && input.height === viewport.height
+  handleOptionChange(dimensions, event) {
+    const isEnabled = typeof event === 'boolean' ? event : event.target.checked
+    if (isEnabled) {
+      if (!this.isOptionSelected(dimensions)) {
+        this.setState({
+          ['selectedViewportSizes']: [
+            ...this.state.selectedViewportSizes,
+            dimensions,
+          ],
+        })
+      }
+    } else {
+      this.setState({
+        ['selectedViewportSizes']: this.state.selectedViewportSizes.filter(
+          option => option !== dimensions
+        ),
+      })
+    }
+  }
+
+  isOptionSelected(dimensions) {
+    return !!this.state.selectedViewportSizes.filter(
+      option => option === dimensions
     )[0]
   }
 
-  isSelectedViewportSize(viewport) {
-    if (viewport.width && viewport.height)
-      return this.props.isOptionSelected(`${viewport.width}x${viewport.height}`)
-    else return false
+  generateDimensions(viewport, width, height) {
+    if (viewport) return `${viewport.width}x${viewport.height}`
+    else return `${width}x${height}`
   }
 
   onViewportChange(id, width = '', height = '', selected = false) {
     this.setState({
-      ['customViewportSizes']: this.state['customViewportSizes'].map(
+      ['customViewportSizes']: this.state.customViewportSizes.map(
         viewport =>
           viewport.id === id ? { id, width, height, selected } : viewport
       ),
     })
+    if (width.length && height.length) {
+      this.handleOptionChange(
+        this.generateDimensions(undefined, width, height),
+        selected
+      )
+    }
   }
 
   onViewportSubmit() {
-    var that = this
-    this.state.customViewportSizes.forEach(function(viewport) {
-      if (!(viewport.width && viewport.height)) return
-      const dimensions = `${viewport.width}x${viewport.height}`
-      if (!that.isInCustomViewportSizes) {
-        const result = {
-          ['customViewportSizes']: [
-            ...that.state.customViewportSizes,
-            { ...viewport },
-          ],
-        }
-        browser.storage.local.set(result).then(() => {
-          this.setState({ result })
-        })
-      }
-      that.props.handleOptionChange(dimensions, viewport.selected)
-    })
+    this.props.onSubmit(this.state.selectedViewportSizes)
     this.props.modalClose()
   }
 
@@ -108,8 +120,8 @@ export default class VisualGridViewports extends React.Component {
       >
         <CheckList
           items={this.viewportSizes}
-          optionSelected={this.props.isOptionSelected.bind(this)}
-          handleOptionChange={this.props.handleOptionChange.bind(this)}
+          optionSelected={this.isOptionSelected.bind(this)}
+          handleOptionChange={this.handleOptionChange.bind(this)}
         />
         <hr />
         <div className="custom-viewport-sizes">
@@ -124,10 +136,11 @@ export default class VisualGridViewports extends React.Component {
                 id={viewport.id}
                 width={viewport.width}
                 height={viewport.height}
-                selected={viewport.selected}
+                selected={this.isOptionSelected(
+                  this.generateDimensions(viewport)
+                )}
                 onViewportChange={this.onViewportChange.bind(this)}
                 deleteOption={this.deleteCustomViewport.bind(this)}
-                isOptionSelected={this.props.isOptionSelected.bind(this)}
               />
             )
           }, this)}
