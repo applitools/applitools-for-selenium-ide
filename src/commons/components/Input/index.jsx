@@ -5,7 +5,7 @@ import './style.css'
 export default class Input extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     children: PropTypes.element,
     onChange: PropTypes.func,
   }
@@ -20,7 +20,9 @@ export default class Input extends React.Component {
     })
     return (
       <div className="input">
-        <label htmlFor={this.props.name}>{this.props.label}</label>
+        {this.props.label && (
+          <label htmlFor={this.props.name}>{this.props.label}</label>
+        )}
         {this.props.children ? this.props.children : <input {...props} />}
       </div>
     )

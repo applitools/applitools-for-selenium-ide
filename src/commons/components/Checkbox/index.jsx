@@ -20,7 +20,6 @@ export default class Checkbox extends React.Component {
     return (
       <div className="control">
         <input
-          key="checkbox"
           type="checkbox"
           className="checkbox"
           id={this.props.id}

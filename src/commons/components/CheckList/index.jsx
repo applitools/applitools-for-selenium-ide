@@ -4,7 +4,6 @@ import Checkbox from '../../../commons/components/Checkbox'
 
 export default class CheckList extends React.Component {
   static propTypes = {
-    type: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
     optionSelected: PropTypes.func.isRequired,
     handleOptionChange: PropTypes.func.isRequired,
@@ -18,16 +17,8 @@ export default class CheckList extends React.Component {
               <Checkbox
                 id={item}
                 label={item}
-                isChecked={this.props.optionSelected.bind(
-                  this,
-                  this.props.type,
-                  item
-                )}
-                onChange={this.props.handleOptionChange.bind(
-                  this,
-                  this.props.type,
-                  item
-                )}
+                isChecked={this.props.optionSelected.bind(this, item)}
+                onChange={this.props.handleOptionChange.bind(this, item)}
               />
             </React.Fragment>
           )

@@ -38,3 +38,26 @@
 .visual-grid-options .category {
   padding-left: 27px;
 }
+
+.add-custom-viewport-size {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: no-wrap;
+  align-items: flex-end;
+}
+
+.add-custom-viewport-size .input {
+  margin: 0;
+  width: 30%;
+}
+
+.add-custom-viewport-size .btn {
+  padding: 8px 4px;
+  margin: 0px 5px;
+}
+
+.add-custom-viewport-size .dimension-separator {
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: 8px;
+}

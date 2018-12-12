@@ -6,7 +6,7 @@ import Input from '../../../commons/components/Input'
 import MoreInfo from '../../components/MoreInfo'
 import Link from '../../../commons/components/Link'
 import { DEFAULT_SERVER } from '../../../commons/api.js'
-import VisualGridOptions from '../../components/VisualGridOptions'
+import VisualGrid from '../../components/VisualGrid'
 import './style.css'
 
 export default class Normal extends React.Component {
@@ -15,39 +15,18 @@ export default class Normal extends React.Component {
     this.state = {
       branch: '',
       parentBranch: '',
-      enableVisualGrid: true,
-      selectedBrowsers: [],
-      selectedViewportSizes: [],
+      enableVisualGrid: false,
     }
     browser.storage.local
-      .get([
-        'eyesServer',
-        'branch',
-        'parentBranch',
-        'enableVisualGrid',
-        'selectedBrowsers',
-        'selectedViewportSizes',
-      ])
-      .then(
-        ({
+      .get(['eyesServer', 'branch', 'parentBranch', 'enableVisualGrid'])
+      .then(({ eyesServer, branch, parentBranch, enableVisualGrid }) => {
+        this.setState({
           eyesServer,
-          branch,
-          parentBranch,
-          enableVisualGrid,
-          selectedBrowsers,
-          selectedViewportSizes,
-        }) => {
-          this.setState({
-            eyesServer,
-            branch: branch || '',
-            parentBranch: parentBranch || '',
-            enableVisualGrid: enableVisualGrid,
-            selectedBrowsers: selectedBrowsers || [],
-            selectedViewportSizes: selectedViewportSizes || [],
-          })
-        }
-      )
-    this.deleteOption = this.deleteOption.bind(this)
+          branch: branch || '',
+          parentBranch: parentBranch || '',
+          enableVisualGrid: enableVisualGrid || false,
+        })
+      })
   }
   static propTypes = {
     enableVisualCheckpoints: PropTypes.bool.isRequired,
@@ -68,21 +47,6 @@ export default class Normal extends React.Component {
         [name]: value,
       })
     })
-  }
-  handleOptionChange(type, name, e) {
-    if (e.target.checked)
-      this.handleInputChange(type, [...this.state[type], name])
-    else this.deleteOption(type, name)
-  }
-  deleteOption(type, name) {
-    const result = {
-      [type]: this.state[type].filter(option => option !== name),
-    }
-    browser.storage.local.set(result)
-    this.setState(result)
-  }
-  optionSelected(type, name) {
-    return !!this.state[type].filter(option => option === name)[0]
   }
   render() {
     return (
@@ -118,15 +82,7 @@ export default class Normal extends React.Component {
           checked={this.state.enableVisualGrid}
           onChange={this.handleCheckboxChange.bind(this, 'enableVisualGrid')}
         />
-        {this.state.enableVisualGrid && (
-          <VisualGridOptions
-            selectedBrowsers={this.state.selectedBrowsers}
-            selectedViewportSizes={this.state.selectedViewportSizes}
-            optionSelected={this.optionSelected.bind(this)}
-            handleOptionChange={this.handleOptionChange.bind(this)}
-            deleteOption={this.deleteOption.bind(this)}
-          />
-        )}
+        {this.state.enableVisualGrid && <VisualGrid />}
         <hr />
         <div className="open-global-settings">
           <a href="#" onClick={this.openOptionsPage}>
