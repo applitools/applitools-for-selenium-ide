@@ -1,0 +1,17 @@
+.custom-viewport-sizes .header {
+  padding-bottom: 30px;
+}
+
+.custom-viewport-sizes .header .title {
+  float: left;
+  padding-right: 5px;
+}
+
+.custom-viewport-sizes .header .add {
+  float: left;
+}
+
+.btn.confirm {
+  float: right;
+  margin: 15px -5px;
+}

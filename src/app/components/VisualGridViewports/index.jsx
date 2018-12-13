@@ -7,6 +7,7 @@ import AddButton from '../ActionButtons/AddButton'
 import FlatButton from '../../../commons/components/FlatButton'
 import CheckList from '../../../commons/components/CheckList'
 import uuidv4 from 'uuid/v4'
+import './style.css'
 
 export default class VisualGridViewports extends React.Component {
   static propTypes = {
@@ -126,7 +127,7 @@ export default class VisualGridViewports extends React.Component {
         <hr />
         <div className="custom-viewport-sizes">
           <div className="header">
-            <h4>Custom</h4>
+            <div className="title">Custom</div>
             <AddButton onClick={this.addCustomViewportSize.bind(this)} />
           </div>
           {this.state.customViewportSizes.map(function(viewport) {
@@ -146,12 +147,9 @@ export default class VisualGridViewports extends React.Component {
           }, this)}
         </div>
         <FlatButton
+          className="confirm"
           type="submit"
           onClick={this.onViewportSubmit.bind(this)}
-          style={{
-            float: 'right',
-            margin: '15px 0 0',
-          }}
         >
           Confirm
         </FlatButton>
