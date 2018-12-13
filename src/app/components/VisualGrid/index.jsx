@@ -11,7 +11,7 @@ export default class VisualGrid extends React.Component {
     super(props)
     this.state = {
       modal: {
-        browsers: true,
+        browsers: false,
         viewports: false,
       },
       selectedBrowsers: [],
