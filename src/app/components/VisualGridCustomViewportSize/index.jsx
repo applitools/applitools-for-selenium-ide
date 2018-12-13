@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '../../../commons/components/Checkbox'
 import Input from '../../../commons/components/Input'
-import CloseButton from '../ActionButtons/CloseButton'
+import DeleteButton from '../ActionButtons/DeleteButton'
 import './style.css'
 
 export default class CustomViewportSize extends React.Component {
@@ -63,7 +63,7 @@ export default class CustomViewportSize extends React.Component {
           value={this.props.height}
           onChange={this.onHeightChange.bind(this)}
         />
-        <CloseButton
+        <DeleteButton
           onClick={this.props.deleteOption.bind(this, this.props.id)}
         />
       </div>

@@ -119,8 +119,20 @@ export default class VisualGridViewports extends React.Component {
   }
 
   render() {
+    const customStyles = {
+      content: {
+        top: 'auto',
+        left: 'auto',
+        right: '-26%',
+        bottom: '-25%',
+        width: '175px',
+        height: '370px',
+        transform: 'translate(-50%, -50%)',
+      },
+    }
     return (
       <Modal
+        customStyles={customStyles}
         modalIsOpen={this.props.modalIsOpen}
         onRequestClose={this.close.bind(this)}
       >
@@ -135,21 +147,23 @@ export default class VisualGridViewports extends React.Component {
             <div className="title">Custom</div>
             <AddButton onClick={this.addCustomViewportSize.bind(this)} />
           </div>
-          {this.state.customViewportSizes.map(function(viewport) {
-            return (
-              <CustomViewportSize
-                key={viewport.id}
-                id={viewport.id}
-                width={viewport.width}
-                height={viewport.height}
-                selected={this.isOptionSelected(
-                  this.generateDimensions(viewport)
-                )}
-                onViewportChange={this.onViewportChange.bind(this)}
-                deleteOption={this.deleteCustomViewport.bind(this)}
-              />
-            )
-          }, this)}
+          <div className="collection">
+            {this.state.customViewportSizes.map(function(viewport) {
+              return (
+                <CustomViewportSize
+                  key={viewport.id}
+                  id={viewport.id}
+                  width={viewport.width}
+                  height={viewport.height}
+                  selected={this.isOptionSelected(
+                    this.generateDimensions(viewport)
+                  )}
+                  onViewportChange={this.onViewportChange.bind(this)}
+                  deleteOption={this.deleteCustomViewport.bind(this)}
+                />
+              )
+            }, this)}
+          </div>
         </div>
         <FlatButton
           className="confirm"

@@ -11,8 +11,8 @@ export default class VisualGrid extends React.Component {
     super(props)
     this.state = {
       modal: {
-        browsers: false,
-        viewports: true,
+        browsers: true,
+        viewports: false,
       },
       selectedBrowsers: [],
       selectedViewportSizes: [],
@@ -117,8 +117,8 @@ export default class VisualGrid extends React.Component {
             <VisualGridBrowsers
               modalIsOpen={this.state.modal.browsers}
               modalClose={this.modalClose.bind(this, 'browsers')}
-              optionSelected={this.isBrowserSelected.bind(this)}
-              handleOptionChange={this.handleSelectedBrowserChange.bind(this)}
+              selectedOptions={this.state.selectedBrowsers}
+              onSubmit={this.saveBrowsers.bind(this)}
             />
           </div>
           <VisualGridSelectedOptions

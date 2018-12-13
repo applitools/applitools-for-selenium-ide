@@ -1,3 +1,8 @@
+.custom-viewport-sizes .collection {
+  max-height: 100px;
+  overflow-y: scroll;
+}
+
 .custom-viewport-size {
   display: flex;
   flex-direction: row;
@@ -11,7 +16,8 @@
 
 .custom-viewport-size .input {
   margin: 0;
-  width: 30%;
+  width: 31%;
+  line-height: 0;
 }
 
 .custom-viewport-size .close.outer {
@@ -25,9 +31,9 @@
 }
 
 .custom-viewport-size .close .inner {
-  width: 24px;
-  height: 24px;
-  mask-size: 24px !important;
+  width: 20px;
+  height: 20px;
+  mask-size: 20px !important;
 }
 
 .custom-viewport-size .dimension-separator {
