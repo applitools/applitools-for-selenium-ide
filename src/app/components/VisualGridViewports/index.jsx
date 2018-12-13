@@ -40,9 +40,22 @@ export default class VisualGridViewports extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.selectedOptions !== this.props.selectedOptions)
+    // NOTE:
+    // Refreshing the state since it is passed throught props and can be altered
+    // in the parent component. Also because when the user closes the window
+    // we toss the state, but selections from the parent component need to
+    // persist into this window.
+    //
+    // TODO: Look into moving everything in the modal into its own component,
+    // to leveraging unmounting/mounting that will leverage the constructor
+    // without the need for tracking the update lifecycle like we're doing here
+    if (
+      prevProps.selectedOptions !== this.props.selectedOptions ||
+      (!prevProps.modalIsOpen && this.props.modalIsOpen)
+    )
       this.setState({ selectedViewportSizes: [...this.props.selectedOptions] })
   }
+
   addCustomViewportSize() {
     this.setState({
       ['customViewportSizes']: [
