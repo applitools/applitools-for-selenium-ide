@@ -52,6 +52,11 @@ export default class VisualGridViewports extends React.Component {
     })
   }
 
+  close() {
+    this.setState({ ['selectedViewportSizes']: [] })
+    this.props.modalClose()
+  }
+
   deleteCustomViewport(id) {
     const result = {
       ['customViewportSizes']: this.state.customViewportSizes.filter(
@@ -117,7 +122,7 @@ export default class VisualGridViewports extends React.Component {
     return (
       <Modal
         modalIsOpen={this.props.modalIsOpen}
-        onRequestClose={this.props.modalClose}
+        onRequestClose={this.close.bind(this)}
       >
         <CheckList
           items={this.viewportSizes}

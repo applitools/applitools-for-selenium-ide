@@ -2,7 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '../../../commons/components/Checkbox'
 import Input from '../../../commons/components/Input'
-import FlatButton from '../../../commons/components/FlatButton'
+import CloseButton from '../ActionButtons/CloseButton'
+import './style.css'
 
 export default class CustomViewportSize extends React.Component {
   static propTypes = {
@@ -40,7 +41,7 @@ export default class CustomViewportSize extends React.Component {
   }
   render() {
     return (
-      <div className="add-custom-viewport-size">
+      <div className="custom-viewport-size">
         <Checkbox
           id={this.props.id}
           className="checkbox"
@@ -62,12 +63,9 @@ export default class CustomViewportSize extends React.Component {
           value={this.props.height}
           onChange={this.onHeightChange.bind(this)}
         />
-        <FlatButton
-          type="submit"
+        <CloseButton
           onClick={this.props.deleteOption.bind(this, this.props.id)}
-        >
-          -
-        </FlatButton>
+        />
       </div>
     )
   }
