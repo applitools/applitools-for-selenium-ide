@@ -21,6 +21,11 @@ export default class VisualGridBrowsers extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedOptions !== this.props.selectedOptions)
+      this.setState({ selectedBrowsers: [...this.props.selectedOptions] })
+  }
+
   close() {
     this.setState({ ['selectedBrowsers']: [] })
     this.props.modalClose()
