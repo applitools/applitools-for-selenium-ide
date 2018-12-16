@@ -150,12 +150,12 @@ export default class VisualGridViewports extends React.Component {
   render() {
     const customStyles = {
       content: {
-        top: 'auto',
+        top: '325px',
         left: 'auto',
-        right: '-26%',
-        bottom: '-25%',
+        right: '-90px',
+        bottom: 'auto',
         width: '175px',
-        height: '370px',
+        maxHeight: '370px',
         transform: 'translate(-50%, -50%)',
       },
     }

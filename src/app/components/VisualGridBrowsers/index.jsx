@@ -86,18 +86,20 @@ export default class VisualGridBrowsers extends React.Component {
         modalIsOpen={this.props.modalIsOpen}
         onRequestClose={this.close.bind(this)}
       >
-        <CheckList
-          items={this.browsers}
-          optionSelected={this.isOptionSelected.bind(this)}
-          handleOptionChange={this.handleOptionChange.bind(this)}
-        />
-        <FlatButton
-          className="confirm"
-          type="submit"
-          onClick={this.onBrowserSubmit.bind(this)}
-        >
-          Confirm
-        </FlatButton>
+        <div className="browsers">
+          <CheckList
+            items={this.browsers}
+            optionSelected={this.isOptionSelected.bind(this)}
+            handleOptionChange={this.handleOptionChange.bind(this)}
+          />
+          <FlatButton
+            className="confirm"
+            type="submit"
+            onClick={this.onBrowserSubmit.bind(this)}
+          >
+            Confirm
+          </FlatButton>
+        </div>
       </Modal>
     )
   }

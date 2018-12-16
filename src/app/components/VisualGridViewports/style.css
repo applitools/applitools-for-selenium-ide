@@ -13,5 +13,6 @@
 
 .btn.confirm {
   float: right;
-  margin: 15px 24px;
+  margin-top: 10px;
+  margin-right: 24px;
 }
