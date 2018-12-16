@@ -20,6 +20,7 @@ export default class Normal extends React.Component {
     this.state = {
       eyesServer: '',
     }
+    //browser.storage.local.remove('projectSettings')
     this.setProjectSettings()
     this.setProjectSettings = this.setProjectSettings.bind(this)
   }
@@ -67,6 +68,7 @@ export default class Normal extends React.Component {
                 enableVisualGrid: true,
                 selectedBrowsers: [],
                 selectedViewportSizes: [],
+                customViewportSizes: [],
               }
         this.setState({ eyesServer, projectSettings: settings })
       })

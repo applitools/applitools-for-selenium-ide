@@ -23,9 +23,9 @@ export default class VisualGridBrowsers extends React.Component {
 
   componentDidUpdate(prevProps) {
     // NOTE:
-    // Refreshing the state since it is passed throught props and can be altered
+    // Refreshing the state since it is passed throught props and is altered
     // in the parent component. Also because when the user closes the window
-    // we toss the state, but selections from the parent component need to
+    // we discard the state, but selections from the parent component need to
     // persist into this window.
     //
     // TODO: Look into moving everything in the modal into its own component,

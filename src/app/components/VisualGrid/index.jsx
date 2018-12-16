@@ -61,8 +61,10 @@ export default class VisualGrid extends React.Component {
     this.save('selectedBrowsers', browsers)
   }
 
-  saveViewports(viewports) {
-    this.save('selectedViewportSizes', viewports)
+  saveViewports(selectedViewports, customViewports) {
+    console.log(arguments)
+    this.save('selectedViewportSizes', selectedViewports)
+    this.save('customViewportSizes', customViewports)
   }
 
   save(type, collection) {
@@ -138,6 +140,9 @@ export default class VisualGrid extends React.Component {
               modalClose={this.modalClose.bind(this, 'viewports')}
               selectedOptions={this.state.projectSettings.selectedViewportSizes}
               onSubmit={this.saveViewports.bind(this)}
+              customViewportSizes={
+                this.state.projectSettings.customViewportSizes
+              }
             />
           </div>
           <VisualGridSelectedOptions

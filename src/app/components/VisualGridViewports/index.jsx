@@ -11,6 +11,7 @@ import './style.css'
 
 export default class VisualGridViewports extends React.Component {
   static propTypes = {
+    customViewportSizes: PropTypes.array.isRequired,
     selectedOptions: PropTypes.array.isRequired,
     modalIsOpen: PropTypes.bool.isRequired,
     modalClose: PropTypes.func.isRequired,
@@ -27,7 +28,7 @@ export default class VisualGridViewports extends React.Component {
       '720x1280',
     ]
     this.state = {
-      customViewportSizes: [],
+      customViewportSizes: [...this.props.customViewportSizes],
       selectedViewportSizes: [...this.props.selectedOptions],
     }
     browser.storage.local
@@ -41,9 +42,9 @@ export default class VisualGridViewports extends React.Component {
 
   componentDidUpdate(prevProps) {
     // NOTE:
-    // Refreshing the state since it is passed throught props and can be altered
+    // Refreshing the state since it is passed throught props and is altered
     // in the parent component. Also because when the user closes the window
-    // we toss the state, but selections from the parent component need to
+    // we discard the state, but selections from the parent component need to
     // persist into this window.
     //
     // TODO: Look into moving everything in the modal into its own component,
@@ -51,9 +52,13 @@ export default class VisualGridViewports extends React.Component {
     // without the need for tracking the update lifecycle like we're doing here
     if (
       prevProps.selectedOptions !== this.props.selectedOptions ||
-      (!prevProps.modalIsOpen && this.props.modalIsOpen)
+      (!prevProps.modalIsOpen && this.props.modalIsOpen) ||
+      prevProps.customViewportSizes !== this.props.customViewportSizes
     )
-      this.setState({ selectedViewportSizes: [...this.props.selectedOptions] })
+      this.setState({
+        selectedViewportSizes: [...this.props.selectedOptions],
+        customViewportSizes: [...this.props.customViewportSizes],
+      })
   }
 
   addCustomViewportSize() {
@@ -127,7 +132,10 @@ export default class VisualGridViewports extends React.Component {
   }
 
   onViewportSubmit() {
-    this.props.onSubmit(this.state.selectedViewportSizes)
+    this.props.onSubmit(
+      this.state.selectedViewportSizes,
+      this.state.customViewportSizes
+    )
     this.props.modalClose()
   }
 
