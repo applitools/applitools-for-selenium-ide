@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import React from 'react'
+import PropTypes from 'prop-types'
 import AddButton from '../ActionButtons/AddButton'
 import VisualGridSelectedOptions from '../VisualGridSelectedOptions'
 import VisualGridBrowsers from '../VisualGridBrowsers'
@@ -7,6 +8,11 @@ import VisualGridViewports from '../VisualGridViewports'
 import './style.css'
 
 export default class VisualGrid extends React.Component {
+  static propTypes = {
+    projectId: PropTypes.string.isRequired,
+    projectSettings: PropTypes.object.isRequired,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -14,18 +20,14 @@ export default class VisualGrid extends React.Component {
         browsers: false,
         viewports: false,
       },
-      selectedBrowsers: [],
-      selectedViewportSizes: [],
+      projectSettings: { ...props.projectSettings },
     }
-    browser.storage.local
-      .get(['selectedBrowsers', 'selectedViewportSizes'])
-      .then(({ selectedBrowsers, selectedViewportSizes }) => {
-        this.setState({
-          selectedBrowsers: selectedBrowsers || [],
-          selectedViewportSizes: selectedViewportSizes || [],
-        })
-      })
     this.removeOption = this.removeOption.bind(this)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.projectSettings !== this.props.projectSettings)
+      this.setState({ projectSettings: this.props.projectSettings })
   }
 
   _setModal(type, value) {
@@ -41,7 +43,9 @@ export default class VisualGrid extends React.Component {
   }
 
   removeOption(type, value) {
-    const result = this.state[type].filter(option => option !== value)
+    const result = this.state['projectSettings'][type].filter(
+      option => option !== value
+    )
     this.save(type, result)
   }
 
@@ -62,8 +66,28 @@ export default class VisualGrid extends React.Component {
   }
 
   save(type, collection) {
-    this.setState({ [type]: collection })
-    browser.storage.local.set({ [type]: collection })
+    browser.storage.local
+      .get(['projectSettings'])
+      .then(({ projectSettings }) => {
+        browser.storage.local
+          .set({
+            ['projectSettings']: {
+              ...projectSettings,
+              [this.props.projectId]: {
+                ...this.state.projectSettings,
+                [type]: collection,
+              },
+            },
+          })
+          .then(() => {
+            this.setState({
+              ['projectSettings']: {
+                ...this.state.projectSettings,
+                [type]: collection,
+              },
+            })
+          })
+      })
   }
 
   render() {
@@ -73,7 +97,9 @@ export default class VisualGrid extends React.Component {
           <div
             className="option-header"
             style={{
-              paddingBottom: this.state.selectedBrowsers ? '28px' : undefined,
+              paddingBottom: this.state.projectSettings.selectedBrowsers
+                ? '28px'
+                : undefined,
             }}
           >
             <div className="title">Browser</div>
@@ -84,12 +110,12 @@ export default class VisualGrid extends React.Component {
             <VisualGridBrowsers
               modalIsOpen={this.state.modal.browsers}
               modalClose={this.modalClose.bind(this, 'browsers')}
-              selectedOptions={this.state.selectedBrowsers}
+              selectedOptions={this.state.projectSettings.selectedBrowsers}
               onSubmit={this.saveBrowsers.bind(this)}
             />
           </div>
           <VisualGridSelectedOptions
-            items={this.state.selectedBrowsers}
+            items={this.state.projectSettings.selectedBrowsers}
             removeOption={this.removeBrowser.bind(this)}
           />
         </div>
@@ -97,7 +123,7 @@ export default class VisualGrid extends React.Component {
           <div
             className="option-header"
             style={{
-              paddingBottom: this.state.selectedViewportSizes
+              paddingBottom: this.state.projectSettings.selectedViewportSizes
                 ? '28px'
                 : undefined,
             }}
@@ -110,12 +136,12 @@ export default class VisualGrid extends React.Component {
             <VisualGridViewports
               modalIsOpen={this.state.modal.viewports}
               modalClose={this.modalClose.bind(this, 'viewports')}
-              selectedOptions={this.state.selectedViewportSizes}
+              selectedOptions={this.state.projectSettings.selectedViewportSizes}
               onSubmit={this.saveViewports.bind(this)}
             />
           </div>
           <VisualGridSelectedOptions
-            items={this.state.selectedViewportSizes}
+            items={this.state.projectSettings.selectedViewportSizes}
             removeOption={this.removeSelectedViewport.bind(this)}
           />
         </div>

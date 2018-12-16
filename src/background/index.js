@@ -140,6 +140,14 @@ function updateBrowserActionIcon(enableVisualCheckpoints) {
 }
 
 browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.requestProject) {
+    return sendMessage({
+      uri: '/project',
+      verb: 'get',
+    }).then(project => {
+      return sendResponse({ project })
+    })
+  }
   // eslint-disable-line no-unused-vars
   if (message.requestExternalState) {
     return sendResponse({ state: getExternalState() })
@@ -196,33 +204,7 @@ browser.runtime.onMessageExternal.addListener(
       }
     }
     if (message.event === 'projectLoaded') {
-      browser.storage.local
-        .get(['branch', 'parentBranch'])
-        .then(({ branch, parentBranch }) => {
-          if (branch || parentBranch) {
-            sendMessage({
-              uri: '/popup/alert',
-              verb: 'post',
-              payload: {
-                message:
-                  `Your applitools' branches are not at the default state,${
-                    branch ? ' branch: ' + branch : ''
-                  }${
-                    parentBranch ? ' parent branch: ' + parentBranch : ''
-                  }.  \n` + 'Would you like to reset them?',
-                confirm: 'Reset branches',
-                cancel: 'Continue',
-              },
-            }).then(shouldReset => {
-              if (shouldReset) {
-                browser.storage.local.set({
-                  branch: '',
-                  parentBranch: '',
-                })
-              }
-            })
-          }
-        })
+      setExternalState({ projectId: message.options.projectId })
     }
     if (message.event === 'playbackStarted' && message.options.runId) {
       getEyes(

@@ -10,43 +10,66 @@ import VisualGrid from '../../components/VisualGrid'
 import './style.css'
 
 export default class Normal extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      branch: '',
-      parentBranch: '',
-      enableVisualGrid: false,
-    }
-    browser.storage.local
-      .get(['eyesServer', 'branch', 'parentBranch', 'enableVisualGrid'])
-      .then(({ eyesServer, branch, parentBranch, enableVisualGrid }) => {
-        this.setState({
-          eyesServer,
-          branch: branch || '',
-          parentBranch: parentBranch || '',
-          enableVisualGrid: enableVisualGrid || false,
-        })
-      })
-  }
   static propTypes = {
     enableVisualCheckpoints: PropTypes.bool.isRequired,
     visualCheckpointsChanged: PropTypes.func.isRequired,
+    projectId: PropTypes.string.isRequired,
+  }
+  constructor(props) {
+    super(props)
+    this.state = {
+      eyesServer: '',
+    }
+    this.setProjectSettings()
+    this.setProjectSettings = this.setProjectSettings.bind(this)
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.projectId !== this.props.projectId) {
+      this.setProjectSettings()
+    }
   }
   openOptionsPage() {
     browser.runtime.openOptionsPage()
   }
   handleCheckboxChange(name, e) {
-    if (name === 'enableVisualGrid')
+    if (name === 'enableVisualGrid') {
       this.handleInputChange('enableVisualGrid', e.target.checked)
-    else if (this.props.visualCheckpointsChanged)
+    } else if (this.props.visualCheckpointsChanged)
       this.props.visualCheckpointsChanged(e.target.checked)
   }
   handleInputChange(name, value) {
-    browser.storage.local.set({ [name]: value }).then(() => {
-      this.setState({
-        [name]: value,
+    const result = { ...this.state.projectSettings, [name]: value }
+    browser.storage.local
+      .get(['projectSettings'])
+      .then(({ projectSettings }) => {
+        browser.storage.local
+          .set({
+            ['projectSettings']: {
+              ...projectSettings,
+              [this.props.projectId]: result,
+            },
+          })
+          .then(() => {
+            this.setState({ projectSettings: result })
+          })
       })
-    })
+  }
+  setProjectSettings() {
+    browser.storage.local
+      .get(['eyesServer', 'projectSettings'])
+      .then(({ eyesServer, projectSettings }) => {
+        const settings =
+          projectSettings && projectSettings[this.props.projectId]
+            ? projectSettings[this.props.projectId]
+            : {
+                branch: '',
+                parentBranch: '',
+                enableVisualGrid: true,
+                selectedBrowsers: [],
+                selectedViewportSizes: [],
+              }
+        this.setState({ eyesServer, projectSettings: settings })
+      })
   }
   render() {
     return (
@@ -59,30 +82,41 @@ export default class Normal extends React.Component {
           checked={this.props.enableVisualCheckpoints}
           onChange={this.handleCheckboxChange.bind(this, undefined)}
         />
-        <hr />
-        <h4>Project settings</h4>
-        <Input
-          name="branch"
-          label="Branch name"
-          placeholder=""
-          value={this.state.branch}
-          onChange={this.handleInputChange.bind(this, 'branch')}
-        />
-        <Input
-          name="parentBranch"
-          label="Parent branch name"
-          value={this.state.parentBranch}
-          onChange={this.handleInputChange.bind(this, 'parentBranch')}
-        />
-        <Checkbox
-          id="enable-visual-grid"
-          className="checkbox"
-          name="enable-visual-grid"
-          label="Execute using visual grid"
-          checked={this.state.enableVisualGrid}
-          onChange={this.handleCheckboxChange.bind(this, 'enableVisualGrid')}
-        />
-        {this.state.enableVisualGrid && <VisualGrid />}
+        {this.state.projectSettings && (
+          <React.Fragment>
+            <hr />
+            <h4>Project settings</h4>
+            <Input
+              name="branch"
+              label="Branch name"
+              value={this.state.projectSettings.branch}
+              onChange={this.handleInputChange.bind(this, 'branch')}
+            />
+            <Input
+              name="parentBranch"
+              label="Parent branch name"
+              value={this.state.projectSettings.parentBranch}
+              onChange={this.handleInputChange.bind(this, 'parentBranch')}
+            />
+            <Checkbox
+              id="enable-visual-grid"
+              className="checkbox"
+              name="enable-visual-grid"
+              label="Execute using visual grid"
+              checked={this.state.projectSettings.enableVisualGrid}
+              onChange={this.handleCheckboxChange.bind(
+                this,
+                'enableVisualGrid'
+              )}
+            />
+            {this.state.projectSettings.enableVisualGrid && (
+              <VisualGrid
+                projectId={this.props.projectId}
+                projectSettings={this.state.projectSettings}
+              />
+            )}
+          </React.Fragment>
+        )}
         <hr />
         <div className="open-global-settings">
           <a href="#" onClick={this.openOptionsPage}>
