@@ -58,16 +58,17 @@ export default class VisualGrid extends React.Component {
   }
 
   saveBrowsers(browsers) {
-    this.save('selectedBrowsers', browsers)
+    this.save({ selectedBrowsers: browsers })
   }
 
   saveViewports(selectedViewports, customViewports) {
-    console.log(arguments)
-    this.save('selectedViewportSizes', selectedViewports)
-    this.save('customViewportSizes', customViewports)
+    this.save({
+      selectedViewportSizes: selectedViewports,
+      customViewportSizes: customViewports,
+    })
   }
 
-  save(type, collection) {
+  save(result) {
     browser.storage.local
       .get(['projectSettings'])
       .then(({ projectSettings }) => {
@@ -77,7 +78,7 @@ export default class VisualGrid extends React.Component {
               ...projectSettings,
               [this.props.projectId]: {
                 ...this.state.projectSettings,
-                [type]: collection,
+                ...result,
               },
             },
           })
@@ -85,7 +86,7 @@ export default class VisualGrid extends React.Component {
             this.setState({
               ['projectSettings']: {
                 ...this.state.projectSettings,
-                [type]: collection,
+                ...result,
               },
             })
           })

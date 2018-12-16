@@ -38,6 +38,7 @@ export default class VisualGridViewports extends React.Component {
           customViewportSizes: customViewportSizes || [],
         })
       })
+    this.deleteCustomViewport = this.deleteCustomViewport.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -71,18 +72,25 @@ export default class VisualGridViewports extends React.Component {
   }
 
   close() {
-    this.setState({ ['selectedViewportSizes']: [] })
+    this.setState({
+      selectedViewportSizes: [],
+      customViewportSizes: [],
+    })
     this.props.modalClose()
   }
 
   deleteCustomViewport(id) {
-    const result = {
+    this.setState({
       ['customViewportSizes']: this.state.customViewportSizes.filter(
         viewport => viewport.id !== id
       ),
-    }
-    browser.storage.local.set(result)
-    this.setState(result)
+    })
+    this.handleOptionChange(
+      this.generateDimensions(
+        this.state.customViewportSizes.find(size => size.id === id)
+      ),
+      false
+    )
   }
 
   handleOptionChange(dimensions, event) {
