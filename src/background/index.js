@@ -103,7 +103,7 @@ startPolling(
       },
     ],
     dependencies: {
-      'eyes.selenium': '0.0.81',
+      '@applitools/eyes-selenium': '4.0.2',
     },
   },
   err => {
@@ -445,7 +445,7 @@ browser.runtime.onMessageExternal.addListener(
         }
         case 'config': {
           return sendResponse(
-            `const Eyes = require('eyes.selenium').Eyes;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
+            `const Eyes = require('@applitools/eyes-selenium').Eyes;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
               message.project.name
             }", batchId = configuration.runId, batchName;`
           )
@@ -461,7 +461,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
               before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);',
+                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setLogHandler(new ConsoleLogHandler(true));',
               after: 'if (eyes._isOpen) {await eyes.close();}',
             })
           }

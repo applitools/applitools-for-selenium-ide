@@ -1,7 +1,10 @@
 import browser from 'webextension-polyfill'
 import { parseApiServer } from './parsers.js'
-const { Eyes } = window.EyesImages
+import { Eyes } from '@applitools/eyes-images'
+import { ConsoleLogHandler } from '@applitools/eyes-sdk-core'
 import { browserName } from './userAgent'
+
+process.hrtime = require('browser-process-hrtime')
 
 export const promiseFactory = {
   makePromise: p => new Promise(p),
@@ -34,7 +37,7 @@ function makeEyes(batchId, appName, batchName, testName) {
           : undefined
         const eyes = new Eyes(eyesApiServerUrl, undefined, promiseFactory)
         if (process.env.NODE_ENV !== 'production')
-          eyes.setLogHandler(new window.EyesImages.ConsoleLogHandler(true))
+          eyes.setLogHandler(new ConsoleLogHandler(true))
         eyes.setApiKey(apiKey)
         eyes.setBranchName(branch)
         eyes.setParentBranchName(parentBranch)
