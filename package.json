@@ -57,7 +57,7 @@
   "dependencies": {
     "@applitools/dom-capture": "^5.0.1",
     "@applitools/eyes-images": "^4.5.2",
-    "@applitools/visual-grid-client": "^8.0.5",
+    "@applitools/visual-grid-client": "^8.0.7",
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
     "pngjs": "^3.3.3",

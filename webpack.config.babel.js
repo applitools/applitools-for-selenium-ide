@@ -116,6 +116,7 @@ export default {
   node: {
     process: true,
     fs: 'empty',
+    url: true,
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
