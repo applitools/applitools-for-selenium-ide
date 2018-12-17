@@ -122,7 +122,7 @@ class Options extends React.Component {
                   id="enable-dom-capture"
                   className="checkbox"
                   name="enable-dom-capture"
-                  label="Enable DOM capture"
+                  label="Root cause analysis enabled"
                   checked={this.state.enableDomCapture}
                   onChange={this.handleCheckboxChange.bind(
                     this,
