@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill'
+import storage from '../../../IO/storage'
 import React from 'react'
 import PropTypes from 'prop-types'
 import AddButton from '../ActionButtons/AddButton'
@@ -69,34 +69,32 @@ export default class VisualGrid extends React.Component {
   }
 
   save(result) {
-    browser.storage.local
-      .get(['projectSettings'])
-      .then(({ projectSettings }) => {
-        browser.storage.local
-          .set({
+    storage.get(['projectSettings']).then(({ projectSettings }) => {
+      storage
+        .set({
+          ['projectSettings']: {
+            ...projectSettings,
+            [this.props.projectId]: {
+              ...this.state.projectSettings,
+              ...result,
+            },
+          },
+        })
+        .then(() => {
+          this.setState({
             ['projectSettings']: {
-              ...projectSettings,
-              [this.props.projectId]: {
-                ...this.state.projectSettings,
-                ...result,
-              },
+              ...this.state.projectSettings,
+              ...result,
             },
           })
-          .then(() => {
-            this.setState({
-              ['projectSettings']: {
-                ...this.state.projectSettings,
-                ...result,
-              },
-            })
-          })
-      })
+        })
+    })
   }
 
   render() {
     return (
       <div className="visual-grid-options">
-        <div className="category">
+        <div className="category browsers">
           <div
             className="option-header"
             style={{
@@ -122,7 +120,7 @@ export default class VisualGrid extends React.Component {
             removeOption={this.removeBrowser.bind(this)}
           />
         </div>
-        <div className="category">
+        <div className="category viewports">
           <div
             className="option-header"
             style={{

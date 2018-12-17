@@ -1,4 +1,4 @@
-import browser from 'webextension-polyfill'
+import storage from '../../../IO/storage'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Modal from '../Modal'
@@ -31,13 +31,11 @@ export default class VisualGridViewports extends React.Component {
       customViewportSizes: [...this.props.customViewportSizes],
       selectedViewportSizes: [...this.props.selectedOptions],
     }
-    browser.storage.local
-      .get(['customViewportSizes'])
-      .then(({ customViewportSizes }) => {
-        this.setState({
-          customViewportSizes: customViewportSizes || [],
-        })
+    storage.get(['customViewportSizes']).then(({ customViewportSizes }) => {
+      this.setState({
+        customViewportSizes: customViewportSizes || [],
       })
+    })
     this.deleteCustomViewport = this.deleteCustomViewport.bind(this)
   }
 
@@ -165,11 +163,13 @@ export default class VisualGridViewports extends React.Component {
         modalIsOpen={this.props.modalIsOpen}
         onRequestClose={this.close.bind(this)}
       >
-        <CheckList
-          items={this.viewportSizes}
-          optionSelected={this.isOptionSelected.bind(this)}
-          handleOptionChange={this.handleOptionChange.bind(this)}
-        />
+        <div className="predefined-viewport-sizes">
+          <CheckList
+            items={this.viewportSizes}
+            optionSelected={this.isOptionSelected.bind(this)}
+            handleOptionChange={this.handleOptionChange.bind(this)}
+          />
+        </div>
         <hr />
         <div className="custom-viewport-sizes">
           <div className="header">

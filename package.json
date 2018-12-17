@@ -13,6 +13,10 @@
     "postinstall": "patch-package"
   },
   "jest": {
+   "moduleNameMapper": {
+      "^.+\\.(css|scss)$": "identity-obj-proxy",
+      "^.+\\.svg$": "<rootDir>/__mocks__/emptyString.js"
+    },
     "testMatch": [
       "**/src/**/__test?(s)__/**/*.js?(x)"
     ]
@@ -59,11 +63,13 @@
     "@applitools/eyes-images": "^4.4.0",
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
+    "identity-obj-proxy": "^3.0.0",
     "pngjs": "^3.3.3",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-modal": "^3.6.1",
+    "react-testing-library": "^5.4.0",
     "ua-parser-js": "^0.7.18",
     "webextension-polyfill": "https://github.com/corevo/webextension-polyfill#2cc27453b501e4426eb6741943fbb4041c0d18f5"
   }
