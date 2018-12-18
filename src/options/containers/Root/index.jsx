@@ -21,8 +21,8 @@ class Options extends React.Component {
     super(props)
     this.state = {
       tab: Tabs.TESTS,
-      disableDomCapture: false,
-      disableVisualCheckpoints: false,
+      enableDomCapture: true,
+      enableVisualCheckpoints: true,
       branch: '',
       parentBranch: '',
       apiKey: '',
@@ -34,34 +34,28 @@ class Options extends React.Component {
     this.saveOptions = this.saveOptions.bind(this)
     browser.storage.local
       .get([
-        'disableDomCapture',
-        'disableVisualCheckpoints',
+        'enableDomCapture',
+        'enableVisualCheckpoints',
         'openUrls',
         'apiKey',
         'eyesServer',
-        'branch',
-        'parentBranch',
         'seideId',
       ])
       .then(
         ({
-          disableDomCapture,
-          disableVisualCheckpoints,
+          enableDomCapture,
+          enableVisualCheckpoints,
           openUrls,
           apiKey,
           eyesServer,
-          branch,
-          parentBranch,
           seideId,
         }) => {
           this.setState({
-            disableDomCapture,
-            disableVisualCheckpoints,
+            enableDomCapture,
+            enableVisualCheckpoints,
             openUrls,
             apiKey: apiKey || '',
             eyesServer: eyesServer || '',
-            branch: branch || '',
-            parentBranch: parentBranch || '',
             seideId: seideId || '',
           })
         }
@@ -85,8 +79,8 @@ class Options extends React.Component {
   saveOptions() {
     browser.storage.local
       .set({
-        disableDomCapture: this.state.disableDomCapture,
-        disableVisualCheckpoints: this.state.disableVisualCheckpoints,
+        enableDomCapture: this.state.enableDomCapture,
+        enableVisualCheckpoints: this.state.enableVisualCheckpoints,
         openUrls: this.state.openUrls,
         apiKey: this.state.apiKey,
         eyesServer: this.state.eyesServer,
@@ -114,25 +108,25 @@ class Options extends React.Component {
             {this.state.tab === Tabs.TESTS && (
               <React.Fragment>
                 <Checkbox
-                  id="disable-checks"
+                  id="enable-checks"
                   className="checkbox"
-                  name="disable-checks"
-                  label="Disable visual checkpoints"
-                  checked={this.state.disableVisualCheckpoints}
+                  name="enable-checks"
+                  label="Enable visual checkpoints"
+                  checked={this.state.enableVisualCheckpoints}
                   onChange={this.handleCheckboxChange.bind(
                     this,
-                    'disableVisualCheckpoints'
+                    'enableVisualCheckpoints'
                   )}
                 />
                 <Checkbox
-                  id="disable-dom-capture"
+                  id="enable-dom-capture"
                   className="checkbox"
-                  name="disable-dom-capture"
-                  label="Disable DOM capture"
-                  checked={this.state.disableDomCapture}
+                  name="enable-dom-capture"
+                  label="Root cause analysis enabled"
+                  checked={this.state.enableDomCapture}
                   onChange={this.handleCheckboxChange.bind(
                     this,
-                    'disableDomCapture'
+                    'enableDomCapture'
                   )}
                 />
                 <Checkbox
@@ -142,19 +136,6 @@ class Options extends React.Component {
                   label="Open test manager after test runs"
                   checked={this.state.openUrls}
                   onChange={this.handleCheckboxChange.bind(this, 'openUrls')}
-                />
-                <Input
-                  name="branch"
-                  label="branch name"
-                  placeholder="default"
-                  value={this.state.branch}
-                  onChange={this.handleInputChange.bind(this, 'branch')}
-                />
-                <Input
-                  name="parentBranch"
-                  label="parent branch name"
-                  value={this.state.parentBranch}
-                  onChange={this.handleInputChange.bind(this, 'parentBranch')}
                 />
               </React.Fragment>
             )}

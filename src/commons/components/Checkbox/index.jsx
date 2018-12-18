@@ -9,16 +9,17 @@ export default class Checkbox extends React.Component {
     label: PropTypes.string,
     width: PropTypes.number,
     checked: PropTypes.bool,
+    isChecked: PropTypes.func,
     onChange: PropTypes.func.isRequired,
   }
   render() {
     const checked =
       this.props.checked ||
-      (this.props.hasOwnProperty('checked') && this.props.checked !== false)
+      (this.props.hasOwnProperty('checked') && this.props.checked !== false) ||
+      (this.props.hasOwnProperty('isChecked') && this.props.isChecked())
     return (
       <div className="control">
         <input
-          key="checkbox"
           type="checkbox"
           className="checkbox"
           id={this.props.id}

@@ -25,8 +25,9 @@ export default class Panel extends React.Component {
     super(props)
     this.state = {
       mode: Modes.NORMAL,
-      disableVisualCheckpoints: false,
+      enableVisualCheckpoints: true,
       isSubmitting: false,
+      projectId: '',
     }
     browser.runtime
       .sendMessage({
@@ -34,6 +35,11 @@ export default class Panel extends React.Component {
       })
       .then(({ state }) => {
         this.setState(state)
+      })
+    browser.runtime
+      .sendMessage({ requestProject: true })
+      .then(({ project }) => {
+        this.setState({ projectId: project.id })
       })
     this.setExternalState = this.setExternalState.bind(this)
     this.visualCheckpointsChanged = this.visualCheckpointsChanged.bind(this)
@@ -55,7 +61,7 @@ export default class Panel extends React.Component {
     browser.runtime
       .sendMessage({
         setVisualChecks: true,
-        disableVisualCheckpoints: value,
+        enableVisualCheckpoints: value,
       })
       .catch()
   }
@@ -70,13 +76,13 @@ export default class Panel extends React.Component {
       <div>
         {this.state.mode === Modes.DISCONNECTED && <DisconnectBanner />}
         {this.state.mode === Modes.NORMAL &&
-          (this.state.disableVisualCheckpoints ? (
-            <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>
-              Visual checkpoints are disabled.
-            </SpinnerBanner>
-          ) : (
+          (this.state.enableVisualCheckpoints ? (
             <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>
               Successfully connected with Selenium IDE.
+            </SpinnerBanner>
+          ) : (
+            <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>
+              Visual checkpoints are disabled.
             </SpinnerBanner>
           ))}
         {this.state.mode === Modes.SETUP &&
@@ -106,12 +112,14 @@ export default class Panel extends React.Component {
         )}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
-          {this.state.mode === Modes.NORMAL && (
-            <Normal
-              disableVisualCheckpoints={this.state.disableVisualCheckpoints}
-              visualCheckpointsChanged={this.visualCheckpointsChanged}
-            />
-          )}
+          {this.state.mode === Modes.NORMAL &&
+            this.state.projectId && (
+              <Normal
+                enableVisualCheckpoints={this.state.enableVisualCheckpoints}
+                visualCheckpointsChanged={this.visualCheckpointsChanged}
+                projectId={this.state.projectId}
+              />
+            )}
           {(this.state.mode === Modes.SETUP ||
             this.state.mode === Modes.INVALID) && (
             <Setup

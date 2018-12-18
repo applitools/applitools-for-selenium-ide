@@ -1,0 +1,21 @@
+.close {
+  float: left;
+  margin-left: 1px;
+}
+
+.close.outer {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.close.inner {
+  background-color: #767676;
+  width: 14px;
+  height: 16px;
+  padding-right: 1px;
+}
+
+.close.outer:hover {
+  background-color: #b2dbf0;
+}
