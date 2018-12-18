@@ -46,7 +46,7 @@ export default class VisualGrid extends React.Component {
     const result = this.state['projectSettings'][type].filter(
       option => option !== value
     )
-    this.save(type, result)
+    this.save({ [type]: result })
   }
 
   removeBrowser(value) {
