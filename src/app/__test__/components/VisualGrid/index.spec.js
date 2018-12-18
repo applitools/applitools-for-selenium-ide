@@ -82,7 +82,7 @@ describe('Visual grid options', () => {
     })
   })
 
-  it.skip('negative numbers ignored when creating a custom viewport', async () => {
+  it('negative numbers ignored when creating a custom viewport', async () => {
     await addCustomViewport(-100, -100)
     click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
