@@ -1,9 +1,11 @@
-import browser from 'webextension-polyfill'
-import { parseApiServer } from './parsers.js'
 import { Eyes } from '@applitools/eyes-images'
 import { ConsoleLogHandler } from '@applitools/eyes-sdk-core'
-import { browserName } from './userAgent'
 import { makeVisualGridClient } from '@applitools/visual-grid-client'
+import { parseApiServer } from './parsers.js'
+import { browserName } from './userAgent'
+import { getCurrentProject } from './ide-project'
+import { parseViewport } from './parsers'
+import storage from '../../IO/storage'
 
 const DEFAULT_EYES_API_SERVER = 'https://eyesapi.applitools.com'
 const eyes = {}
@@ -17,25 +19,24 @@ async function makeEyes(batchId, appName, batchName, testName) {
     lastResults.batchId = batchId
     lastResults.url = ''
   }
-  const {
-    apiKey,
-    branch,
-    parentBranch,
-    eyesServer,
-  } = await browser.storage.local.get([
+  const { apiKey, eyesServer, projectSettings } = await storage.get([
     'apiKey',
-    'branch',
-    'parentBranch',
     'eyesServer',
+    'projectSettings',
   ])
   if (!apiKey) {
     throw new Error(
       'No API key was provided, please set one in the options page'
     )
   }
+  const projectId = (await getCurrentProject()).id
   const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined
+  const settings = projectSettings[projectId]
+  const branch = settings ? settings.branch : ''
+  const parentBranch = settings ? settings.parentBranch : ''
+  console.log(settings)
 
-  if (true) {
+  if (settings && settings.enableVisualGrid) {
     return await createVisualGridEyes(
       batchId,
       appName,
@@ -44,7 +45,9 @@ async function makeEyes(batchId, appName, batchName, testName) {
       eyesApiServerUrl,
       apiKey,
       branch,
-      parentBranch
+      parentBranch,
+      settings ? settings.selectedBrowsers : undefined,
+      settings ? settings.selectedViewportSizes : undefined
     )
   } else {
     return await createImagesEyes(
@@ -80,7 +83,8 @@ async function createImagesEyes(
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`)
   eyes.setBatch(batchName, batchId)
   decorateEyes(eyes)
-  return await eyes.open(appName, testName)
+  await eyes.open(appName, testName)
+  return eyes
 }
 
 async function createVisualGridEyes(
@@ -91,7 +95,9 @@ async function createVisualGridEyes(
   serverUrl,
   apiKey,
   branchName,
-  parentBranchName
+  parentBranchName,
+  browsers,
+  viewports
 ) {
   const eyes = await makeVisualGridClient({
     apiKey,
@@ -106,6 +112,7 @@ async function createVisualGridEyes(
     serverUrl,
     ignoreCaret: true,
     agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
+    browser: parseBrowsers(browsers, viewports),
   })
   decorateVisualEyes(
     eyes,
@@ -208,4 +215,20 @@ function decorateVisualEyes(
   eyes.getTestName = () => testName
   eyes.getBatch = () => ({ name: batchName })
   eyes.getAppName = () => appName
+}
+
+function parseBrowsers(browsers = ['chrome'], viewports = ['1920x1080']) {
+  const matrix = []
+  browsers.forEach(browser => {
+    const name = browser.toLowerCase()
+    viewports.forEach(viewport => {
+      const { width, height } = parseViewport(viewport)
+      matrix.push({
+        width,
+        height,
+        name,
+      })
+    })
+  })
+  return matrix
 }

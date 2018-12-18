@@ -8,6 +8,7 @@ import {
   resetMode,
   validateOptions,
 } from './external-state'
+import { getCurrentProject } from './utils/ide-project'
 import { sendMessage, startPolling } from '../IO/message-port'
 import { isEyesCommand } from './commands'
 import { getViewportSize, setViewportSize } from './commands/viewport'
@@ -142,10 +143,7 @@ function updateBrowserActionIcon(enableVisualCheckpoints) {
 
 browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.requestProject) {
-    return sendMessage({
-      uri: '/project',
-      verb: 'get',
-    }).then(project => {
+    return getCurrentProject().then(project => {
       return sendResponse({ project })
     })
   }
