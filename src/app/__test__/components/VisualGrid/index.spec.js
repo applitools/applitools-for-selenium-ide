@@ -106,5 +106,5 @@ function sendKeys(locator, text) {
 }
 
 function mouseOver(locator) {
-  fireEvent.mouseOver(findElement('.custom-viewport-size'))
+  fireEvent.mouseOver(findElement(locator))
 }
