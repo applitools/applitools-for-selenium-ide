@@ -1,0 +1,43 @@
+.custom-viewport-sizes .collection {
+  max-height: 100px;
+  overflow-y: scroll;
+}
+
+.custom-viewport-size {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: no-wrap;
+  align-items: flex-end;
+}
+
+.custom-viewport-size:hover .close {
+  visibility: visible;
+}
+
+.custom-viewport-size .input {
+  margin: 0;
+  width: 31%;
+  line-height: 0;
+}
+
+.custom-viewport-size .close.outer {
+  background-color: transparent;
+}
+
+.custom-viewport-size .close {
+  margin-left: 3px;
+  margin-bottom: 11px;
+  visibility: hidden;
+}
+
+.custom-viewport-size .close .inner {
+  width: 20px;
+  height: 20px;
+  mask-size: 20px !important;
+}
+
+.custom-viewport-size .dimension-separator {
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: 8px;
+}
