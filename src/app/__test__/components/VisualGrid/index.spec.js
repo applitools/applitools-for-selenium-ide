@@ -91,20 +91,20 @@ function doRender() {
   return container
 }
 
-function findElement(locator) {
-  return document.querySelector(locator)
+function findElement(selector) {
+  return document.querySelector(selector)
 }
 
-function click(locator) {
-  fireEvent.click(findElement(locator))
+function click(selector) {
+  fireEvent.click(findElement(selector))
 }
 
-function sendKeys(locator, text) {
-  fireEvent.input(findElement(locator), {
+function sendKeys(selector, text) {
+  fireEvent.input(findElement(selector), {
     target: { value: `${text}` },
   })
 }
 
-function mouseOver(locator) {
-  fireEvent.mouseOver(findElement(locator))
+function mouseOver(selector) {
+  fireEvent.mouseOver(findElement(selector))
 }
