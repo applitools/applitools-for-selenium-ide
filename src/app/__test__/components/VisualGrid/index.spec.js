@@ -18,6 +18,12 @@ describe('Visual grid options', () => {
 
   afterEach(cleanup)
 
+  it('disabling visual grid options hides them', async () => {
+    click('#enable-visual-grid')
+    await waitForElement(() => !findElement('.visual-grid-options'))
+    expect(findElement('.visual-grid-options')).toBeNull()
+  })
+
   it('select a browser', () => {
     click('.category.browsers .add.inner')
     click('.browsers .checkbox')
