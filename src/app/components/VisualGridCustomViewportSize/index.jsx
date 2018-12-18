@@ -51,6 +51,7 @@ export default class CustomViewportSize extends React.Component {
           onChange={this.onSelect.bind(this)}
         />
         <Input
+          className="width"
           type="number"
           name="custom-viewport-size-width"
           value={this.props.width}
@@ -58,6 +59,7 @@ export default class CustomViewportSize extends React.Component {
         />
         <div className="dimension-separator">x</div>
         <Input
+          className="height"
           type="number"
           name="custom-viewport-size-height"
           value={this.props.height}

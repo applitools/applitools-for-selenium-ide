@@ -1,18 +1,27 @@
-import { cleanup, render, fireEvent } from 'react-testing-library'
+import {
+  cleanup,
+  fireEvent,
+  render,
+  waitForElement,
+} from 'react-testing-library'
 import React from 'react'
-import VisualGrid from '../../../components/VisualGrid'
+import Normal from '../../../containers/Normal'
 import uuidv4 from 'uuid/v4'
 jest.mock('../../../../IO/storage')
 import { waitForCompletion } from '../../../../IO/storage'
 
 describe('Visual grid options', () => {
+  beforeEach(async () => {
+    doRender()
+    await waitForElement(() => findElement('#enable-visual-grid'))
+  })
+
   afterEach(cleanup)
 
   it('select a browser', () => {
-    const container = renderContainer()
-    fireEvent.click(findElement(container, '.category.browsers .add.inner'))
-    fireEvent.click(findElement(document, '.browsers .checkbox'))
-    fireEvent.click(findElement(document, '.btn.confirm'))
+    click('.category.browsers .add.inner')
+    click('.browsers .checkbox')
+    click('.btn.confirm')
     waitForCompletion().then(storage => {
       expect(storage.projectSettings[projectId].selectedBrowsers).toEqual([
         'Chrome',
@@ -21,12 +30,9 @@ describe('Visual grid options', () => {
   })
 
   it('select a predefined viewport', () => {
-    const container = renderContainer()
-    fireEvent.click(findElement(container, '.category.viewports .add.inner'))
-    fireEvent.click(
-      findElement(document, '.predefined-viewport-sizes .checkbox')
-    )
-    fireEvent.click(findElement(document, '.btn.confirm'))
+    click('.category.viewports .add.inner')
+    click('.predefined-viewport-sizes .checkbox')
+    click('.btn.confirm')
     waitForCompletion().then(storage => {
       expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual([
         '2560x1440',
@@ -34,28 +40,65 @@ describe('Visual grid options', () => {
     })
   })
 
-  it.skip('create a custom viewport', () => {})
-  it.skip('select a custom viewport', () => {})
-})
+  it('create and select a custom viewport', async () => {
+    click('.category.viewports .add.inner')
+    click('.custom-viewport-sizes .add.inner')
+    await waitForElement(() => findElement('.custom-viewport-size'))
+    sendKeys('.custom-viewport-size .width', '100')
+    sendKeys('.custom-viewport-size .height', '100')
+    click('.custom-viewport-size .checkbox')
+    click('.btn.confirm')
+    waitForCompletion().then(storage => {
+      expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual([
+        '100x100',
+      ])
+    })
+  })
 
-const settings = {
-  branch: '',
-  parentBranch: '',
-  enableVisualGrid: true,
-  selectedBrowsers: [],
-  selectedViewportSizes: [],
-  customViewportSizes: [],
-}
+  it('create and delete a custom viewport', async () => {
+    click('.category.viewports .add.inner')
+    click('.custom-viewport-sizes .add.inner')
+    await waitForElement(() => findElement('.custom-viewport-size'))
+    sendKeys('.custom-viewport-size .width', '100')
+    sendKeys('.custom-viewport-size .height', '100')
+    mouseOver('.custom-viewport-size')
+    click('.custom-viewport-size .close.inner')
+    click('.btn.confirm')
+    waitForCompletion().then(storage => {
+      expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual(
+        []
+      )
+    })
+  })
+})
 
 const projectId = uuidv4()
 
-function renderContainer() {
+function doRender() {
   const { container } = render(
-    <VisualGrid projectId={projectId} projectSettings={settings} />
+    <Normal
+      enableVisualCheckpoints={true}
+      visualCheckpointsChanged={() => {}}
+      projectId={projectId}
+    />
   )
   return container
 }
 
-function findElement(container, locator) {
-  return container.querySelector(locator)
+function findElement(locator) {
+  return document.querySelector(locator)
+}
+
+function click(locator) {
+  fireEvent.click(findElement(locator))
+}
+
+function sendKeys(locator, text) {
+  fireEvent.input(findElement(locator), {
+    target: { value: `${text}` },
+  })
+}
+
+function mouseOver(locator) {
+  fireEvent.mouseOver(findElement('.custom-viewport-size'))
 }

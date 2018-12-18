@@ -1,4 +1,5 @@
 import browser from 'webextension-polyfill'
+import storage from '../../../IO/storage'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '../../../commons/components/Checkbox'
@@ -20,7 +21,6 @@ export default class Normal extends React.Component {
     this.state = {
       eyesServer: '',
     }
-    //browser.storage.local.remove('projectSettings')
     this.setProjectSettings()
     this.setProjectSettings = this.setProjectSettings.bind(this)
   }
@@ -40,23 +40,21 @@ export default class Normal extends React.Component {
   }
   handleInputChange(name, value) {
     const result = { ...this.state.projectSettings, [name]: value }
-    browser.storage.local
-      .get(['projectSettings'])
-      .then(({ projectSettings }) => {
-        browser.storage.local
-          .set({
-            ['projectSettings']: {
-              ...projectSettings,
-              [this.props.projectId]: result,
-            },
-          })
-          .then(() => {
-            this.setState({ projectSettings: result })
-          })
-      })
+    storage.get(['projectSettings']).then(({ projectSettings }) => {
+      storage
+        .set({
+          ['projectSettings']: {
+            ...projectSettings,
+            [this.props.projectId]: result,
+          },
+        })
+        .then(() => {
+          this.setState({ projectSettings: result })
+        })
+    })
   }
   setProjectSettings() {
-    browser.storage.local
+    storage
       .get(['eyesServer', 'projectSettings'])
       .then(({ eyesServer, projectSettings }) => {
         const settings =
