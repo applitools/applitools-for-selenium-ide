@@ -91,6 +91,16 @@ export default class VisualGridViewports extends React.Component {
     )
   }
 
+  findNumber(input) {
+    const match = input.match(/\d/g)
+    return match ? match.join('') : ''
+  }
+
+  generateDimensions(viewport, width, height) {
+    if (viewport) return `${viewport.width}x${viewport.height}`
+    else return `${width}x${height}`
+  }
+
   handleOptionChange(dimensions, event) {
     const isEnabled = typeof event === 'boolean' ? event : event.target.checked
     if (isEnabled) {
@@ -117,12 +127,9 @@ export default class VisualGridViewports extends React.Component {
     )[0]
   }
 
-  generateDimensions(viewport, width, height) {
-    if (viewport) return `${viewport.width}x${viewport.height}`
-    else return `${width}x${height}`
-  }
-
   onViewportChange(id, width = '', height = '', selected = false) {
+    width = this.findNumber(width)
+    height = this.findNumber(height)
     this.setState({
       ['customViewportSizes']: this.state.customViewportSizes.map(
         viewport =>
