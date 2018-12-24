@@ -34,7 +34,6 @@ async function makeEyes(batchId, appName, batchName, testName) {
   const settings = projectSettings[projectId]
   const branch = settings ? settings.branch : ''
   const parentBranch = settings ? settings.parentBranch : ''
-  console.log(settings)
 
   if (settings && settings.enableVisualGrid) {
     return await createVisualGridEyes(
