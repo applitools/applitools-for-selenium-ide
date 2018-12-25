@@ -8,15 +8,23 @@ export default class FlatButton extends React.Component {
     buttonRef: PropTypes.func,
   }
   render() {
+    const full =
+      this.props.full ||
+      (this.props.hasOwnProperty('full') && this.props.full !== false)
     const props = { ...this.props }
     delete props.buttonRef
+    delete props.full
     return (
       <button
         type="button"
         ref={this.props.buttonRef}
         {...props}
-        className={classNames('btn', this.props.className)}
+        className={classNames(
+          'btn',
+          { 'btn-full': full },
+          this.props.className
+        )}
       />
-    ) // eslint-disable-line react/prop-types
+    )
   }
 }

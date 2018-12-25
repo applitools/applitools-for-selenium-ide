@@ -8,6 +8,7 @@ import MoreInfo from '../../components/MoreInfo'
 import Link from '../../../commons/components/Link'
 import { DEFAULT_SERVER } from '../../../commons/api.js'
 import VisualGrid from '../../components/VisualGrid'
+import VisualGridEula from '../../components/VisualGridEula'
 import './style.css'
 
 export default class Normal extends React.Component {
@@ -23,6 +24,7 @@ export default class Normal extends React.Component {
     }
     this.setProjectSettings()
     this.setProjectSettings = this.setProjectSettings.bind(this)
+    this.signEula = this.signEula.bind(this)
   }
   componentDidUpdate(prevProps) {
     if (prevProps.projectId !== this.props.projectId) {
@@ -55,8 +57,8 @@ export default class Normal extends React.Component {
   }
   setProjectSettings() {
     storage
-      .get(['eyesServer', 'projectSettings'])
-      .then(({ eyesServer, projectSettings }) => {
+      .get(['eyesServer', 'eulaSignDate', 'projectSettings'])
+      .then(({ eyesServer, eulaSignDate, projectSettings }) => {
         const settings =
           projectSettings && projectSettings[this.props.projectId]
             ? projectSettings[this.props.projectId]
@@ -68,7 +70,21 @@ export default class Normal extends React.Component {
                 selectedViewportSizes: [],
                 customViewportSizes: [],
               }
-        this.setState({ eyesServer, projectSettings: settings })
+        this.setState({
+          eyesServer,
+          eulaSigned: !!eulaSignDate,
+          projectSettings: settings,
+        })
+      })
+  }
+  signEula() {
+    return this.setState({ eulaSigned: true })
+    storage
+      .set({
+        eulaSignDate: new Date().toISOString(),
+      })
+      .then(() => {
+        this.setState({ eulaSigned: true })
       })
   }
   render() {
@@ -103,18 +119,25 @@ export default class Normal extends React.Component {
               className="checkbox"
               name="enable-visual-grid"
               label="Execute using visual grid"
-              checked={this.state.projectSettings.enableVisualGrid}
+              checked={
+                this.state.projectSettings.enableVisualGrid ||
+                !this.state.eulaSigned
+              }
               onChange={this.handleCheckboxChange.bind(
                 this,
                 'enableVisualGrid'
               )}
             />
-            {this.state.projectSettings.enableVisualGrid && (
-              <VisualGrid
-                projectId={this.props.projectId}
-                projectSettings={this.state.projectSettings}
-              />
+            {!this.state.eulaSigned && (
+              <VisualGridEula onEulaSigned={this.signEula} />
             )}
+            {this.state.projectSettings.enableVisualGrid &&
+              this.state.eulaSigned && (
+                <VisualGrid
+                  projectId={this.props.projectId}
+                  projectSettings={this.state.projectSettings}
+                />
+              )}
           </React.Fragment>
         )}
         <hr />
