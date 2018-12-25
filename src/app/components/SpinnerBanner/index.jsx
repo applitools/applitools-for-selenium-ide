@@ -17,6 +17,10 @@ const StatusImages = {
 }
 
 export default class SpinnerBanner extends React.Component {
+  constructor(props) {
+    super(props)
+    this.renderSpinner = this.renderSpinner.bind(this)
+  }
   static propTypes = {
     children: PropTypes.node,
     spin: PropTypes.bool,
@@ -26,11 +30,11 @@ export default class SpinnerBanner extends React.Component {
   static defaultProps = {
     spin: true,
   }
-  render() {
+  renderSpinner(style) {
     return (
       <div
         className={classNames('banner', this.props.state)}
-        style={this.props.style}
+        style={Object.assign({}, this.props.style, style)}
       >
         {this.props.spin && <span className="loader" />}
         {!this.props.spin &&
@@ -45,6 +49,14 @@ export default class SpinnerBanner extends React.Component {
           ))}
         <span>{this.props.children}</span>
       </div>
+    )
+  }
+  render() {
+    return (
+      <React.Fragment>
+        {this.renderSpinner({ position: 'fixed' })}
+        {this.renderSpinner()}
+      </React.Fragment>
     )
   }
 }

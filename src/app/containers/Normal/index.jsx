@@ -154,7 +154,7 @@ export default class Normal extends React.Component {
             }
             style={{
               display: 'block',
-              marginTop: '5px',
+              lineHeight: '17px',
             }}
           >
             Open test manager

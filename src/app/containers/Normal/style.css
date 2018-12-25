@@ -9,8 +9,6 @@
 }
 
 .more-options {
-  height: 85px;
-  width: 269px;
   line-height: 21px;
 }
 
@@ -29,11 +27,20 @@
 }
 
 .project-settings .input input {
-  height: 30px;
+  height: 26px;
+  width: 122px;
   border: 1px solid #dcdcdc;
   border-radius: 2px;
   padding: 0;
   text-indent: 5px;
+}
+
+.disclaimer {
+  font-size: 13px;
+}
+
+.disclaimer p {
+  margin: 3px 0;
 }
 
 .ReactModal__Overlay--after-open {
@@ -41,5 +48,4 @@
 }
 
 .control {
-  padding-top: 5px;
 }
