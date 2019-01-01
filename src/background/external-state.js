@@ -3,8 +3,9 @@ import Modes from '../commons/modes'
 import { verifyStoredAPIKey } from '../commons/api'
 
 let state = {
-  normalMode: Modes.NORMAL,
+  mode: Modes.NORMAL,
 }
+
 export function getExternalState() {
   return state
 }
@@ -20,15 +21,7 @@ export function setExternalState(newState) {
 }
 
 function calculateMode(newState) {
-  if (newState.normalMode) {
-    if (state.mode === Modes.NORMAL) {
-      return newState.normalMode
-    } else {
-      return state.mode
-    }
-  } else {
-    return newState.mode
-  }
+  return newState.mode ? newState.mode : state.mode
 }
 
 let verificationMode = Modes.NORMAL
@@ -45,7 +38,6 @@ export function validateOptions() {
 
 export function resetMode() {
   setExternalState({
-    mode:
-      verificationMode !== Modes.NORMAL ? verificationMode : state.normalMode,
+    mode: verificationMode !== Modes.NORMAL ? verificationMode : Modes.NORMAL,
   })
 }

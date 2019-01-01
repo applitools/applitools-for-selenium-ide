@@ -113,13 +113,15 @@ export default class Panel extends React.Component {
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}
           {this.state.mode === Modes.NORMAL &&
-            this.state.projectId && (
+            (this.state.projectId ? (
               <Normal
                 enableVisualCheckpoints={this.state.enableVisualCheckpoints}
                 visualCheckpointsChanged={this.visualCheckpointsChanged}
                 projectId={this.state.projectId}
               />
-            )}
+            ) : (
+              undefined
+            ))}
           {(this.state.mode === Modes.SETUP ||
             this.state.mode === Modes.INVALID) && (
             <Setup

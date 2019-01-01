@@ -179,7 +179,7 @@ browser.runtime.onMessageExternal.addListener(
   (message, _sender, sendResponse) => {
     if (message.event === 'recordingStarted') {
       setExternalState({
-        normalMode: Modes.RECORD,
+        mode: Modes.RECORD,
         record: {
           testName: message.options.testName,
         },
@@ -187,7 +187,7 @@ browser.runtime.onMessageExternal.addListener(
     }
     if (message.event === 'recordingStopped') {
       setExternalState({
-        normalMode: Modes.NORMAL,
+        mode: Modes.NORMAL,
       })
       resetMode()
     }

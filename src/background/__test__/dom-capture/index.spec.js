@@ -1,5 +1,4 @@
 import { parseOutExternalFrames } from '../../dom-capture'
-jest.mock('webextension-polyfill')
 
 describe('dom-capture', () => {
   it('runs only when valid input is provided', () => {
