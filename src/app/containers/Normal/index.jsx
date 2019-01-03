@@ -54,6 +54,7 @@ export default class Normal extends React.Component {
     })
   }
   setProjectSettings() {
+    //browser.storage.local.remove(['projectSettings'])
     storage
       .get(['eyesServer', 'projectSettings'])
       .then(({ eyesServer, projectSettings }) => {
@@ -64,9 +65,10 @@ export default class Normal extends React.Component {
                 branch: '',
                 parentBranch: '',
                 enableVisualGrid: true,
-                selectedBrowsers: [],
-                selectedViewportSizes: [],
+                selectedBrowsers: [{ name: 'Chrome', type: 'browser' }],
+                selectedViewportSizes: ['750x1334'],
                 customViewportSizes: [],
+                selectedDeviceOrientations: ['Portrait'],
               }
         this.setState({ eyesServer, projectSettings: settings })
       })

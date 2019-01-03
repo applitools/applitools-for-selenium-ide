@@ -1,11 +1,20 @@
 import { fireEvent } from 'react-testing-library'
 
+function click(selector) {
+  fireEvent.click(findElement(selector))
+}
+
 function findElement(selector) {
   return document.querySelector(selector)
 }
 
-function click(selector) {
-  fireEvent.click(findElement(selector))
+function innerHtml(selector) {
+  const result = findElement(selector)
+  return result ? result.innerHTML : ''
+}
+
+function mouseOver(selector) {
+  fireEvent.mouseOver(findElement(selector))
 }
 
 function sendKeys(selector, text) {
@@ -14,8 +23,4 @@ function sendKeys(selector, text) {
   })
 }
 
-function mouseOver(selector) {
-  fireEvent.mouseOver(findElement(selector))
-}
-
-export { click, findElement, sendKeys, mouseOver }
+export { click, findElement, innerHtml, mouseOver, sendKeys }

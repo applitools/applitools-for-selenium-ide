@@ -38,3 +38,7 @@
 .visual-grid-options .category {
   padding-left: 27px;
 }
+
+.error-message {
+  color: red;
+}

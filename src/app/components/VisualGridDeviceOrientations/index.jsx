@@ -5,7 +5,7 @@ import CheckList from '../../../commons/components/CheckList'
 import FlatButton from '../../../commons/components/FlatButton'
 import './style.css'
 
-export default class VisualGridBrowsers extends React.Component {
+export default class VisualGridDeviceOrientations extends React.Component {
   static propTypes = {
     modalIsOpen: PropTypes.bool.isRequired,
     modalClose: PropTypes.func.isRequired,
@@ -15,38 +15,7 @@ export default class VisualGridBrowsers extends React.Component {
 
   constructor(props) {
     super(props)
-    this.browsers = ['Chrome', 'Firefox']
-    this.devices = [
-      'iPhone 4',
-      'iPhone 5/SE',
-      'iPhone 6/7/8',
-      'iPhone 6/7/8 Plus',
-      'iPhone X',
-      'BlackBerry Z30',
-      'Nexus 4',
-      'Nexus 5',
-      'Nexus 5X',
-      'Nexus 6',
-      'Nexus 6P',
-      'Pixel 2',
-      'Pixel 2 XL',
-      'LG Optimus L70',
-      'Nokia N9',
-      'Nokia Lumia 520',
-      'Microsoft Lumia 550',
-      'Microsoft Lumia 950',
-      'Galaxy S III',
-      'Galaxy S5',
-      'Kindle Fire HDX',
-      'iPad Mini',
-      'iPad',
-      'iPad Pro',
-      'Blackberry PlayBook',
-      'Nexus 10',
-      'Nexus 7',
-      'Galaxy Note 3',
-      'Galaxy Note II',
-    ]
+    this.orientations = ['Portrait', 'Landscape']
     this.state = {
       selectedOptions: [...this.props.selectedOptions],
     }
@@ -84,23 +53,15 @@ export default class VisualGridBrowsers extends React.Component {
     } else {
       this.setState({
         ['selectedOptions']: this.state.selectedOptions.filter(
-          selectedOption => selectedOption.name !== option.name
+          selectedOption => selectedOption !== option
         ),
       })
     }
   }
 
-  handleBrowserChange(name, event) {
-    this.handleOptionChange({ name: name, type: 'browser' }, event)
-  }
-
-  handleDeviceChange(name, event) {
-    this.handleOptionChange({ name: name, type: 'device' }, event)
-  }
-
   isOptionSelected(option) {
     return !!this.state.selectedOptions.filter(
-      selectedOption => selectedOption.name === option
+      selectedOption => selectedOption === option
     )[0]
   }
 
@@ -114,10 +75,10 @@ export default class VisualGridBrowsers extends React.Component {
       content: {
         top: 'auto',
         left: 'auto',
-        right: '-30%',
-        bottom: '-11%',
+        right: '-28%',
+        bottom: '5%',
         width: '170px',
-        height: '350px',
+        height: '110px',
         transform: 'translate(-50%, -50%)',
       },
     }
@@ -128,19 +89,11 @@ export default class VisualGridBrowsers extends React.Component {
         onRequestClose={this.close.bind(this)}
       >
         <div className="selections">
-          <div className="select-browsers">
+          <div className="select-device-orientations">
             <CheckList
-              items={this.browsers}
+              items={this.orientations}
               optionSelected={this.isOptionSelected.bind(this)}
-              handleOptionChange={this.handleBrowserChange.bind(this)}
-            />
-          </div>
-          <hr />
-          <div className="select-devices">
-            <CheckList
-              items={this.devices}
-              optionSelected={this.isOptionSelected.bind(this)}
-              handleOptionChange={this.handleDeviceChange.bind(this)}
+              handleOptionChange={this.handleOptionChange.bind(this)}
             />
           </div>
         </div>

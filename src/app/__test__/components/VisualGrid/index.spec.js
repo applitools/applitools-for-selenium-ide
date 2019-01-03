@@ -2,8 +2,9 @@ import { cleanup, render, waitForElement } from 'react-testing-library'
 import {
   click,
   findElement,
-  sendKeys,
+  innerHtml,
   mouseOver,
+  sendKeys,
 } from '../../../../../tests/utils'
 import React from 'react'
 import Normal from '../../../containers/Normal'
@@ -19,55 +20,121 @@ describe('Visual grid options', () => {
 
   afterEach(cleanup)
 
+  // user flow
+
   it('disabling visual grid options hides them', async () => {
     click('#enable-visual-grid')
     await waitForElement(() => !findElement('.visual-grid-options'))
     expect(findElement('.visual-grid-options')).toBeNull()
   })
 
-  it('select a browser', () => {
-    click('.category.browsers .add.inner')
-    click('.browsers .checkbox')
-    click('.btn.confirm')
-    waitForCompletion().then(storage => {
-      expect(storage.projectSettings[projectId].selectedBrowsers).toEqual([
-        'Chrome',
-      ])
-    })
+  it('browser is populated with a sensible default', () => {
+    expect(
+      innerHtml('.category.browsers .selected-options .option-text')
+    ).toBeTruthy()
   })
 
-  it('remove a selected browser', async () => {
-    click('.category.browsers .add.inner')
-    click('.browsers .checkbox')
-    click('.btn.confirm')
+  it('viewport size is displayed only when a browser is selected', async () => {
+    await toggleSelectedBrowser()
+    expect(innerHtml('.category.viewports')).toBeFalsy()
+  })
+
+  it('viewport size is populated with a sensible default', () => {
+    expect(innerHtml('.category.viewports')).toBeTruthy()
+    expect(
+      innerHtml('.category.viewports .selected-options .option-text')
+    ).toBeTruthy()
+  })
+
+  it('error displayed when no viewport size selected', async () => {
+    click('.category.viewports .selected-options .close.outer')
     await waitForCompletion()
+    expect(innerHtml('.category.viewports .error-message')).toBeTruthy()
+  })
+
+  it('device orientation is displayed when a device type is selected', async () => {
+    expect(innerHtml('.category.device-orientations')).toBeFalsy()
+    await toggleSelectedDevice()
+    expect(innerHtml('.category.device-orientations')).toBeTruthy()
+  })
+
+  it('device orientation is populated with a sensible default', async () => {
+    await toggleSelectedDevice()
+    expect(
+      innerHtml('.category.device-orientations .selected-options .option-text')
+    ).toBeTruthy()
+  })
+
+  it('error displayed when no device orientation selected', async () => {
+    await toggleSelectedDevice()
+    click('.category.device-orientations .selected-options .close.outer')
+    await waitForCompletion()
+    expect(
+      innerHtml('.category.device-orientations .error-message')
+    ).toBeTruthy()
+  })
+
+  // browsers
+
+  it('remove a selected browser', async () => {
+    let storage
     click('.category.browsers .selected-options .close.inner')
-    const storage = await waitForCompletion()
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedBrowsers.length
+    ).toBeFalsy()
+    storage = await toggleSelectedBrowser()
+    expect(
+      storage.projectSettings[projectId].selectedBrowsers.length
+    ).toBeTruthy()
+    storage = await toggleSelectedBrowser()
     expect(
       storage.projectSettings[projectId].selectedBrowsers.length
     ).toBeFalsy()
   })
 
-  it('select a predefined viewport', () => {
+  // viewports
+
+  it('remove a predefined viewport size', async () => {
+    let storage
+    click('.category.viewports .selected-options .close.inner')
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.length
+    ).toBeFalsy()
+
+    click('.category.viewports .add.inner')
+    const selectedSize = innerHtml('.predefined-viewport-sizes label div')
+    click('.predefined-viewport-sizes .checkbox')
+    click('.btn.confirm')
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.includes(
+        selectedSize
+      )
+    ).toBeTruthy()
+
     click('.category.viewports .add.inner')
     click('.predefined-viewport-sizes .checkbox')
     click('.btn.confirm')
-    waitForCompletion().then(storage => {
-      expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual([
-        '2560x1440',
-      ])
-    })
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.includes(
+        selectedSize
+      )
+    ).toBeFalsy()
   })
 
   it('create and select a custom viewport', async () => {
     await addCustomViewport(100, 100)
     click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
-    waitForCompletion().then(storage => {
-      expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual([
-        '100x100',
-      ])
-    })
+    const storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.includes(
+        '100x100'
+      )
+    ).toBeTruthy()
   })
 
   it('create and delete a custom viewport', async () => {
@@ -75,11 +142,12 @@ describe('Visual grid options', () => {
     mouseOver('.custom-viewport-size')
     click('.custom-viewport-size .close.inner')
     click('.btn.confirm')
-    waitForCompletion().then(storage => {
-      expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual(
-        []
+    const storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.includes(
+        '100x100'
       )
-    })
+    ).toBeFalsy()
   })
 
   it('negative numbers ignored when creating a custom viewport', async () => {
@@ -87,9 +155,40 @@ describe('Visual grid options', () => {
     click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
     const storage = await waitForCompletion()
-    expect(storage.projectSettings[projectId].selectedViewportSizes).toEqual([
-      '100x100',
-    ])
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.includes(
+        '100x100'
+      )
+    ).toBeTruthy()
+  })
+
+  // device orientations
+
+  it.only('remove a selected device orientation', async () => {
+    let storage
+    await toggleSelectedDevice()
+
+    click('.category.device-orientations .selected-options .close.inner')
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedDeviceOrientations.length
+    ).toBeFalsy()
+
+    click('.category.device-orientations .add.inner')
+    click('.select-device-orientations .checkbox')
+    click('.btn.confirm')
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedDeviceOrientations.length
+    ).toBeTruthy()
+
+    click('.category.device-orientations .add.inner')
+    click('.select-device-orientations .checkbox')
+    click('.btn.confirm')
+    storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedDeviceOrientations.length
+    ).toBeFalsy()
   })
 })
 
@@ -104,6 +203,20 @@ function doRender() {
     />
   )
   return container
+}
+
+async function toggleSelectedBrowser() {
+  click('.category.browsers .add.inner')
+  click('.select-browsers .checkbox')
+  click('.btn.confirm')
+  return await waitForCompletion()
+}
+
+async function toggleSelectedDevice() {
+  click('.category.browsers .add.inner')
+  click('.select-devices .checkbox')
+  click('.btn.confirm')
+  await waitForCompletion()
 }
 
 async function addCustomViewport(width, height) {

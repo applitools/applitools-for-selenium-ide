@@ -78,6 +78,7 @@ export function closeEyes(id) {
         (results._status !== 'Passed' || results._isNew)
           ? results._appUrls._session
           : undefined
+
       return results
     })
     .catch(e => {
