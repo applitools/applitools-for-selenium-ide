@@ -58,10 +58,6 @@ export default class VisualGridBrowsers extends React.Component {
     // in the parent component. Also because when the user closes the window
     // we discard the state, but selections from the parent component need to
     // persist into this window.
-    //
-    // TODO: Look into moving everything in the modal into its own component,
-    // to leveraging unmounting/mounting that will leverage the constructor
-    // without the need for tracking the update lifecycle like we're doing here
     if (
       prevProps.selectedOptions !== this.props.selectedOptions ||
       (!prevProps.modalIsOpen && this.props.modalIsOpen)
@@ -117,7 +113,6 @@ export default class VisualGridBrowsers extends React.Component {
         right: '-30%',
         bottom: '-11%',
         width: '170px',
-        height: '350px',
         transform: 'translate(-50%, -50%)',
       },
     }

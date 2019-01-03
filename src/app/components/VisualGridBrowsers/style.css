@@ -5,7 +5,7 @@
 
 .selections + .btn.confirm {
   float: right;
-  margin: 12px -7px !important;
+  margin: 10px -5px -4px 0 !important;
 }
 
 .selections .title {
