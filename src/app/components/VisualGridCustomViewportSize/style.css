@@ -1,8 +1,3 @@
-.custom-viewport-sizes .collection {
-  max-height: 100px;
-  overflow-y: scroll;
-}
-
 .custom-viewport-size {
   display: flex;
   flex-direction: row;

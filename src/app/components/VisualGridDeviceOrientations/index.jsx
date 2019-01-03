@@ -78,7 +78,6 @@ export default class VisualGridDeviceOrientations extends React.Component {
         right: '-28%',
         bottom: '5%',
         width: '170px',
-        height: '110px',
         transform: 'translate(-50%, -50%)',
       },
     }
