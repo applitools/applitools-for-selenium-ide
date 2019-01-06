@@ -22,24 +22,35 @@ describe('Visual grid options', () => {
 
   // user flow
 
-  it('disabling visual grid options hides them', async () => {
+  it.only('disabling visual grid options hides them', async () => {
     click('#enable-visual-grid')
-    await waitForElement(() => !findElement('.visual-grid-options'))
-    expect(findElement('.visual-grid-options')).toBeNull()
+    //await waitForElement(() => !findElement('.visual-grid-options'))
+    //expect(findElement('.visual-grid-options')).toBeNull()
+    await waitForElement(() => !findElement('.disclaimer'))
+    expect(findElement('.disclaimer')).toBeNull()
+  })
+
+  it('terms of service presented', () => {
+    expect(innerHtml('.disclaimer')).toBeTruthy()
+    click('.disclaimer button')
+    expect(innerHtml('.disclaimer')).toBeFalsy()
   })
 
   it('browser is populated with a sensible default', () => {
+    acceptEula()
     expect(
       innerHtml('.category.browsers .selected-options .option-text')
     ).toBeTruthy()
   })
 
   it('viewport size is displayed only when a browser is selected', async () => {
+    acceptEula()
     await toggleSelectedBrowser()
     expect(innerHtml('.category.viewports')).toBeFalsy()
   })
 
   it('viewport size is populated with a sensible default', () => {
+    acceptEula()
     expect(innerHtml('.category.viewports')).toBeTruthy()
     expect(
       innerHtml('.category.viewports .selected-options .option-text')
@@ -47,18 +58,21 @@ describe('Visual grid options', () => {
   })
 
   it('error displayed when no viewport size selected', async () => {
+    acceptEula()
     click('.category.viewports .selected-options .close.outer')
     await waitForCompletion()
     expect(innerHtml('.category.viewports .error-message')).toBeTruthy()
   })
 
   it('device orientation is displayed when a device type is selected', async () => {
+    acceptEula()
     expect(innerHtml('.category.device-orientations')).toBeFalsy()
     await toggleSelectedDevice()
     expect(innerHtml('.category.device-orientations')).toBeTruthy()
   })
 
   it('device orientation is populated with a sensible default', async () => {
+    acceptEula()
     await toggleSelectedDevice()
     expect(
       innerHtml('.category.device-orientations .selected-options .option-text')
@@ -66,6 +80,7 @@ describe('Visual grid options', () => {
   })
 
   it('error displayed when no device orientation selected', async () => {
+    acceptEula()
     await toggleSelectedDevice()
     click('.category.device-orientations .selected-options .close.outer')
     await waitForCompletion()
@@ -77,6 +92,7 @@ describe('Visual grid options', () => {
   // browsers
 
   it('remove a selected browser', async () => {
+    acceptEula()
     let storage
     click('.category.browsers .selected-options .close.inner')
     storage = await waitForCompletion()
@@ -96,6 +112,7 @@ describe('Visual grid options', () => {
   // viewports
 
   it('remove a predefined viewport size', async () => {
+    acceptEula()
     let storage
     click('.category.viewports .selected-options .close.inner')
     storage = await waitForCompletion()
@@ -126,6 +143,7 @@ describe('Visual grid options', () => {
   })
 
   it('create and select a custom viewport', async () => {
+    await acceptEula()
     await addCustomViewport(100, 100)
     click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
@@ -138,6 +156,7 @@ describe('Visual grid options', () => {
   })
 
   it('create and delete a custom viewport', async () => {
+    await acceptEula()
     await addCustomViewport(100, 100)
     mouseOver('.custom-viewport-size')
     click('.custom-viewport-size .close.inner')
@@ -151,6 +170,7 @@ describe('Visual grid options', () => {
   })
 
   it('negative numbers ignored when creating a custom viewport', async () => {
+    await acceptEula()
     await addCustomViewport(-100, -100)
     click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
@@ -164,7 +184,8 @@ describe('Visual grid options', () => {
 
   // device orientations
 
-  it.only('remove a selected device orientation', async () => {
+  it('remove a selected device orientation', async () => {
+    acceptEula()
     let storage
     await toggleSelectedDevice()
 
@@ -225,4 +246,9 @@ async function addCustomViewport(width, height) {
   await waitForElement(() => findElement('.custom-viewport-size'))
   sendKeys('.custom-viewport-size .width', width)
   sendKeys('.custom-viewport-size .height', height)
+}
+
+async function acceptEula() {
+  click('.disclaimer button')
+  await waitForElement(() => !findElement('.disclaimer'))
 }
