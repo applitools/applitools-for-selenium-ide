@@ -80,7 +80,7 @@ export default class Normal extends React.Component {
       })
   }
   signEula() {
-    return this.setState({ eulaSigned: true })
+    this.setState({ eulaSigned: true })
     storage
       .set({
         eulaSignDate: new Date().toISOString(),
@@ -121,18 +121,16 @@ export default class Normal extends React.Component {
               className="checkbox"
               name="enable-visual-grid"
               label="Execute using visual grid"
-              checked={
-                this.state.projectSettings.enableVisualGrid ||
-                !this.state.eulaSigned
-              }
+              checked={this.state.projectSettings.enableVisualGrid}
               onChange={this.handleCheckboxChange.bind(
                 this,
                 'enableVisualGrid'
               )}
             />
-            {!this.state.eulaSigned && (
-              <VisualGridEula onEulaSigned={this.signEula} />
-            )}
+            {this.state.projectSettings.enableVisualGrid &&
+              !this.state.eulaSigned && (
+                <VisualGridEula onEulaSigned={this.signEula} />
+              )}
             {this.state.projectSettings.enableVisualGrid &&
               this.state.eulaSigned && (
                 <VisualGrid
