@@ -1,9 +1,47 @@
 import UAParser from 'ua-parser-js'
 const parser = new UAParser()
 
+export function parseBrowsers(
+  _browsers = [{ name: 'chrome', type: 'browser' }],
+  viewports = ['1920x1080'],
+  orientations
+) {
+  const browsers = parseBrowserNames(_browsers)
+  const devices = parseDeviceNames(_browsers)
+  const matrix = []
+  browsers.forEach(browser => {
+    const name = browser.toLowerCase()
+    viewports.forEach(viewport => {
+      const { width, height } = parseViewport(viewport)
+      matrix.push({
+        width,
+        height,
+        name,
+      })
+    })
+  })
+  devices.forEach(device => {
+    orientations.forEach(orientation => {
+      matrix.push({
+        screenOrientation: orientation.toLowerCase(),
+        deviceName: device,
+      })
+    })
+  })
+  return matrix
+}
+
 export function parseViewport(vp) {
   const [width, height] = vp.split('x').map(s => parseInt(s))
   return { width, height }
+}
+
+function parseBrowserNames(browsers) {
+  return browsers.filter(b => b.type === 'browser').map(b => b.name)
+}
+
+function parseDeviceNames(browsers) {
+  return browsers.filter(b => b.type === 'device').map(b => b.name)
 }
 
 export function parseRegion(region) {

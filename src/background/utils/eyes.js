@@ -4,7 +4,7 @@ import { makeVisualGridClient } from '@applitools/visual-grid-client'
 import { parseApiServer } from './parsers.js'
 import { browserName } from './userAgent'
 import { getCurrentProject } from './ide-project'
-import { parseViewport } from './parsers'
+import { parseBrowsers } from './parsers'
 import storage from '../../IO/storage'
 
 const DEFAULT_EYES_API_SERVER = 'https://eyesapi.applitools.com'
@@ -46,7 +46,8 @@ async function makeEyes(batchId, appName, batchName, testName) {
       branch,
       parentBranch,
       settings ? settings.selectedBrowsers : undefined,
-      settings ? settings.selectedViewportSizes : undefined
+      settings ? settings.selectedViewportSizes : undefined,
+      settings ? settings.selectedDeviceOrientations : undefined
     )
   } else {
     return await createImagesEyes(
@@ -96,7 +97,8 @@ async function createVisualGridEyes(
   branchName,
   parentBranchName,
   browsers,
-  viewports
+  viewports,
+  orientations
 ) {
   const eyes = await makeVisualGridClient({
     apiKey,
@@ -111,7 +113,7 @@ async function createVisualGridEyes(
     serverUrl,
     ignoreCaret: true,
     agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
-    browser: parseBrowsers(browsers, viewports),
+    browser: parseBrowsers(browsers, viewports, orientations),
   })
   decorateVisualEyes(
     eyes,
@@ -214,20 +216,4 @@ function decorateVisualEyes(
   eyes.getTestName = () => testName
   eyes.getBatch = () => ({ name: batchName })
   eyes.getAppName = () => appName
-}
-
-function parseBrowsers(browsers = ['chrome'], viewports = ['1920x1080']) {
-  const matrix = []
-  browsers.forEach(browser => {
-    const name = browser.toLowerCase()
-    viewports.forEach(viewport => {
-      const { width, height } = parseViewport(viewport)
-      matrix.push({
-        width,
-        height,
-        name,
-      })
-    })
-  })
-  return matrix
 }
