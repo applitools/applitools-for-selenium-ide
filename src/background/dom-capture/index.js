@@ -7,8 +7,8 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export async function getDomCapture(tabId) {
-  const disableDomCapture = await isDomCaptureDisabled()
-  if (disableDomCapture) return false
+  const enableDomCapture = await isDomCaptureEnabled()
+  if (!enableDomCapture) return false
 
   return parseOutExternalFrames(await runDomScript(tabId, domCapture))
 }
@@ -17,12 +17,12 @@ export async function getDomSnapshot(tabId) {
   return (await runDomScript(tabId, domSnapshot))[0]
 }
 
-export async function isDomCaptureDisabled() {
-  const { disableDomCapture } = await browser.storage.local.get([
-    'disableDomCapture',
+export async function isDomCaptureEnabled() {
+  const { enableDomCapture } = await browser.storage.local.get([
+    'enableDomCapture',
   ])
 
-  return disableDomCapture
+  return enableDomCapture
 }
 
 let scriptCount = 0
