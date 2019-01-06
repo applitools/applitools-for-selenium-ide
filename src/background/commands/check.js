@@ -5,13 +5,14 @@ import { getEyes, closeEyes } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
-import { getDomCapture } from '../dom-capture'
+import { getDomCapture, isDomCaptureDisabled } from '../dom-capture'
 import { ImageProvider } from '@applitools/eyes-sdk-core'
 import { Target } from '@applitools/eyes-images'
 import {
   buildCheckWindowFullFunction,
   buildCheckRegionFunction,
 } from '../image-strategies/css-stitching'
+import { buildCheckUsingVisualGrid } from '../image-strategies/visual-grid'
 
 const imageProvider = new ImageProvider()
 
@@ -25,14 +26,26 @@ export async function checkWindow(
   viewport
 ) {
   const eyes = await getEyes(`${runId}${testId}`)
-  return await check(
-    eyes,
-    commandId,
-    tabId,
-    stepName,
-    viewport,
-    buildCheckWindowFullFunction(eyes, tabId, window.devicePixelRatio)
-  )
+  return await (eyes.isVisualGrid
+    ? checkWithVisualGrid(
+        eyes,
+        commandId,
+        tabId,
+        stepName,
+        viewport,
+        buildCheckUsingVisualGrid(eyes, tabId),
+        {
+          sizeMode: 'full-page',
+        }
+      )
+    : check(
+        eyes,
+        commandId,
+        tabId,
+        stepName,
+        viewport,
+        buildCheckWindowFullFunction(eyes, tabId, window.devicePixelRatio)
+      ))
 }
 
 export async function checkRegion(
@@ -50,14 +63,33 @@ export async function checkRegion(
       'Invalid region. Region should be x: [number], y: [number], width: [number], height: [number]'
     )
   const eyes = await getEyes(`${runId}${testId}`)
-  return await check(
-    eyes,
-    commandId,
-    tabId,
-    stepName,
-    viewport,
-    buildCheckRegionFunction(eyes, tabId, window.devicePixelRatio, region)
-  )
+
+  return await (eyes.isVisualGrid
+    ? checkWithVisualGrid(
+        eyes,
+        commandId,
+        tabId,
+        stepName,
+        viewport,
+        buildCheckUsingVisualGrid(eyes, tabId),
+        {
+          sizeMode: 'region',
+          region: {
+            top: region.y,
+            left: region.x,
+            width: region.width,
+            height: region.height,
+          },
+        }
+      )
+    : check(
+        eyes,
+        commandId,
+        tabId,
+        stepName,
+        viewport,
+        buildCheckRegionFunction(eyes, tabId, window.devicePixelRatio, region)
+      ))
 }
 
 export async function checkElement(
@@ -71,18 +103,38 @@ export async function checkElement(
   viewport
 ) {
   const eyes = await getEyes(`${runId}${testId}`)
-  const rect = await browser.tabs.sendMessage(tabId, {
-    getElementRect: true,
-    path: elementXPath,
-  })
-  return await check(
-    eyes,
-    commandId,
-    tabId,
-    stepName,
-    viewport,
-    buildCheckRegionFunction(eyes, tabId, window.devicePixelRatio, rect)
-  )
+  return await (eyes.isVisualGrid
+    ? checkWithVisualGrid(
+        eyes,
+        commandId,
+        tabId,
+        stepName,
+        viewport,
+        buildCheckUsingVisualGrid(eyes, tabId),
+        {
+          sizeMode: 'selector',
+          selector: {
+            type: 'xpath',
+            selector: elementXPath,
+          },
+        }
+      )
+    : check(
+        eyes,
+        commandId,
+        tabId,
+        stepName,
+        viewport,
+        buildCheckRegionFunction(
+          eyes,
+          tabId,
+          window.devicePixelRatio,
+          await browser.tabs.sendMessage(tabId, {
+            getElementRect: true,
+            path: elementXPath,
+          })
+        )
+      ))
 }
 
 async function check(
@@ -105,11 +157,38 @@ async function check(
     pathname = await getTabPathname(tabId)
   }
 
+  const target = Target.image(imageProvider)
   const imageResult = await eyes.check(
     stepName || pathname,
-    Target.image(imageProvider).withDom(domCap)
+    domCap ? target.withDom(domCap) : target
   )
   return imageResult ? true : { status: 'undetermined' }
+}
+
+async function checkWithVisualGrid(
+  eyes,
+  commandId,
+  tabId,
+  stepName,
+  viewport,
+  checkFunction,
+  params
+) {
+  await preCheck(eyes, viewport)
+  eyes.commands.push(commandId)
+
+  let pathname
+  if (!stepName) {
+    pathname = await getTabPathname(tabId)
+  }
+
+  await checkFunction({
+    tag: stepName || pathname,
+    sendDOM: !(await isDomCaptureDisabled()),
+    ...params,
+  })
+
+  return { status: 'undetermined' }
 }
 
 export function endTest(id) {
@@ -145,29 +224,28 @@ export function endTest(id) {
   })
 }
 
-function preCheck(eyes, viewport) {
+async function preCheck(eyes, viewport) {
   if (getExternalState().mode !== Modes.PLAYBACK) {
     let notification = `connecting to ${eyes.getServerUrl()}`
     if (eyes.getBranchName()) {
       notification += `, running on branch ${eyes.getBranchName()}`
     }
-    return ideLogger.log(notification).then(() => {
-      return setExternalState({
-        mode: Modes.PLAYBACK,
-        playback: {
-          testName: eyes._testName,
-          startTime: new Date().toString(),
-          hasFailed: false,
-          batchName: eyes._batch.name || eyes._testName,
-          appName: eyes._appName,
-          eyesServer: eyes._serverUrl,
-          environment: parseEnvironment(navigator.userAgent, viewport),
-          branch: eyes.getBranchName(),
-        },
-      })
+    await ideLogger.log(notification)
+    await setExternalState({
+      mode: Modes.PLAYBACK,
+      playback: {
+        testName: eyes.getTestName(),
+        startTime: new Date().toString(),
+        hasFailed: false,
+        batchName: eyes.getBatch().name || eyes.getTestName(),
+        appName: eyes.getAppName(),
+        eyesServer: eyes.getServerUrl(),
+        environment: eyes.isVisualGrid
+          ? 'Visual Grid'
+          : parseEnvironment(navigator.userAgent, viewport),
+        branch: eyes.getBranchName(),
+      },
     })
-  } else {
-    return Promise.resolve()
   }
 }
 

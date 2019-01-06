@@ -8,6 +8,7 @@ import {
   resetMode,
   validateOptions,
 } from './external-state'
+import { getCurrentProject } from './utils/ide-project'
 import { sendMessage, startPolling } from '../IO/message-port'
 import { isEyesCommand } from './commands'
 import { getViewportSize, setViewportSize } from './commands/viewport'
@@ -142,10 +143,7 @@ function updateBrowserActionIcon(enableVisualCheckpoints) {
 
 browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.requestProject) {
-    return sendMessage({
-      uri: '/project',
-      verb: 'get',
-    }).then(project => {
+    return getCurrentProject().then(project => {
       return sendResponse({ project })
     })
   }
@@ -278,7 +276,11 @@ browser.runtime.onMessageExternal.addListener(
         case 'setMatchTimeout': {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {
-              return eyes.setDefaultMatchTimeout(message.command.target)
+              return eyes.isVisualGrid
+                ? ideLogger.log(
+                    "'set match timeout' has no affect in Visual Grid tests."
+                  )
+                : eyes.setDefaultMatchTimeout(message.command.target)
             })
             .then(() => {
               return sendResponse(true)
@@ -294,16 +296,6 @@ browser.runtime.onMessageExternal.addListener(
           const { width, height } = parseViewport(message.command.target)
           setViewportSize(width, height, message.options)
             .then(() => {
-              // remember that we set the viewport size so we won't warn about that later
-              if (
-                hasEyes(`${message.options.runId}${message.options.testId}`)
-              ) {
-                getEyes(
-                  `${message.options.runId}${message.options.testId}`
-                ).then(eyes => {
-                  eyes.didSetViewportSize = true
-                })
-              }
               return sendResponse(true)
             })
             .catch(error => {

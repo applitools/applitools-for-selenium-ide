@@ -13,7 +13,7 @@
     "postinstall": "patch-package"
   },
   "jest": {
-   "moduleNameMapper": {
+    "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy",
       "^.+\\.svg$": "<rootDir>/__mocks__/emptyString.js"
     },
@@ -59,8 +59,9 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
-    "@applitools/dom-capture": "^5.0.1",
-    "@applitools/eyes-images": "^4.5.2",
+    "@applitools/dom-capture": "^6.1.1",
+    "@applitools/eyes-images": "^4.5.4",
+    "@applitools/visual-grid-client": "^9.0.6",
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
     "identity-obj-proxy": "^3.0.0",

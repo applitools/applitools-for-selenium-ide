@@ -23,8 +23,6 @@ class Options extends React.Component {
       tab: Tabs.TESTS,
       enableDomCapture: true,
       enableVisualCheckpoints: true,
-      branch: '',
-      parentBranch: '',
       apiKey: '',
       eyesServer: '',
       seideId: '',
@@ -84,8 +82,6 @@ class Options extends React.Component {
         openUrls: this.state.openUrls,
         apiKey: this.state.apiKey,
         eyesServer: this.state.eyesServer,
-        branch: this.state.branch,
-        parentBranch: this.state.parentBranch,
         seideId: this.state.seideId,
       })
       .then(() => {
