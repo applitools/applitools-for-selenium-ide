@@ -1,8 +1,8 @@
-import browser from 'webextension-polyfill'
+import storage from '../../IO/storage'
 
 export function setupOptions() {
-  return browser.storage.local.get(['openUrls']).then(options => {
-    return browser.storage.local.set({
+  return storage.get(['openUrls, enableVisualCheckpoints']).then(options => {
+    return storage.set({
       enableVisualCheckpoints: options.hasOwnProperty('enableVisualCheckpoints')
         ? options.enableVisualCheckpoints
         : true,

@@ -5,7 +5,7 @@ import { getEyes, closeEyes } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
-import { getDomCapture, isDomCaptureDisabled } from '../dom-capture'
+import { getDomCapture, isDomCaptureEnabled } from '../dom-capture'
 import { ImageProvider } from '@applitools/eyes-sdk-core'
 import { Target } from '@applitools/eyes-images'
 import {
@@ -184,7 +184,7 @@ async function checkWithVisualGrid(
 
   await checkFunction({
     tag: stepName || pathname,
-    sendDOM: !(await isDomCaptureDisabled()),
+    sendDOM: await isDomCaptureEnabled(),
     ...params,
   })
 

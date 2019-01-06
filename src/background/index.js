@@ -120,6 +120,11 @@ startPolling(
 )
 
 setupOptions().then(() => {
+  browser.storage.local
+    .get(['enableVisualCheckpoints'])
+    .then(({ enableVisualCheckpoints }) => {
+      setExternalState({ enableVisualCheckpoints })
+    })
   validateOptions().then(() => {
     resetMode()
   })
@@ -307,7 +312,7 @@ browser.runtime.onMessageExternal.addListener(
           return true
         }
         case 'checkWindow': {
-          if (getExternalState().enableVisualCheckpoints) {
+          if (!getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -341,7 +346,7 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case 'checkRegion': {
-          if (getExternalState().enableVisualCheckpoints) {
+          if (!getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -377,7 +382,7 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case 'checkElement': {
-          if (getExternalState().enableVisualCheckpoints) {
+          if (!getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
             sendMessage({
