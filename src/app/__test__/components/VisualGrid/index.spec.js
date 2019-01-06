@@ -24,8 +24,6 @@ describe('Visual grid options', () => {
 
   it.only('disabling visual grid options hides them', async () => {
     click('#enable-visual-grid')
-    //await waitForElement(() => !findElement('.visual-grid-options'))
-    //expect(findElement('.visual-grid-options')).toBeNull()
     await waitForElement(() => !findElement('.disclaimer'))
     expect(findElement('.disclaimer')).toBeNull()
   })
