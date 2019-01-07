@@ -56,7 +56,7 @@ export default class Normal extends React.Component {
     })
   }
   setProjectSettings() {
-    //browser.storage.local.remove(['projectSettings'])
+    browser.storage.local.remove(['projectSettings'])
     storage
       .get(['eyesServer', 'eulaSignDate', 'projectSettings'])
       .then(({ eyesServer, eulaSignDate, projectSettings }) => {
@@ -67,9 +67,10 @@ export default class Normal extends React.Component {
                 branch: '',
                 parentBranch: '',
                 enableVisualGrid: true,
-                selectedBrowsers: [{ name: 'Chrome', type: 'browser' }],
+                selectedBrowsers: ['Chrome'],
                 selectedViewportSizes: ['1920x1080'],
                 customViewportSizes: [],
+                selectedDevices: ['iPhone 4'],
                 selectedDeviceOrientations: ['Portrait'],
               }
         this.setState({

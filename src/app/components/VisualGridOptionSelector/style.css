@@ -1,0 +1,13 @@
+.selections {
+  max-height: 310px;
+  overflow-y: scroll;
+}
+
+.selections + .btn.confirm {
+  float: right;
+  margin: 10px -5px -4px 0 !important;
+}
+
+.selections .title {
+  padding-bottom: 5px;
+}
