@@ -31,7 +31,7 @@ async function makeEyes(batchId, appName, batchName, testName) {
   }
   const projectId = (await getCurrentProject()).id
   const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined
-  const settings = projectSettings[projectId]
+  const settings = projectSettings ? projectSettings[projectId] : undefined
   const branch = settings ? settings.branch : ''
   const parentBranch = settings ? settings.parentBranch : ''
 
