@@ -20,7 +20,7 @@ export default class VisualGridViewports extends React.Component {
     modalIsOpen: PropTypes.bool.isRequired,
     modalOpen: PropTypes.func.isRequired,
     modalClose: PropTypes.func.isRequired,
-    modalStyles: PropTypes.func.isRequired,
+    modalStyles: PropTypes.object.isRequired,
     onSubmit: PropTypes.func.isRequired,
   }
 

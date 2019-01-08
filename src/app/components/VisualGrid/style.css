@@ -1,4 +1,4 @@
-.visual-grid-options .option-header {
+.visual-grid-options {
   padding-top: 15px;
 }
 
@@ -9,34 +9,6 @@
 
 .visual-grid-options .option-header .add {
   float: left;
-}
-
-.visual-grid-options .selected-options {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.visual-grid-options .option {
-  height: 16px;
-  padding-right: 9px;
-  padding-bottom: 5px;
-}
-
-.visual-grid-options .option-text {
-  background-color: #d6ecf7;
-  float: left;
-  font-size: 12px;
-  line-height: 12px;
-  color: #454545;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-top: 1px;
-  padding-bottom: 3px;
-}
-
-.visual-grid-options .category {
-  padding-left: 27px;
 }
 
 .error-message {

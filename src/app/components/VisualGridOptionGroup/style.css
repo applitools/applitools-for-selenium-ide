@@ -1,0 +1,27 @@
+.visual-grid-options .group {
+  margin-top: -1px;
+  border: 1px solid grey;
+  cursor: pointer;
+}
+
+.visual-grid-options .group .group-header {
+  height: 30px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+}
+
+.visual-grid-options .group-header .title {
+  width: 30px;
+  margin-left: 27px;
+}
+
+.visual-grid-options .group-header .selected-count {
+  margin-left: 190px;
+  font-size: 12px;
+}
+
+.visual-grid-options .group-header .control {
+  margin-left: 10px;
+}

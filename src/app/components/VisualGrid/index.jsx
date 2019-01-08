@@ -1,6 +1,7 @@
 import storage from '../../../IO/storage'
 import React from 'react'
 import PropTypes from 'prop-types'
+import VisualGridOptionGroup from '../VisualGridOptionGroup'
 import VisualGridOptionCategory from '../VisualGridOptionCategory'
 import VisualGridViewports from '../VisualGridViewports'
 import './style.css'
@@ -121,102 +122,118 @@ export default class VisualGrid extends React.Component {
   render() {
     return (
       <div className="visual-grid-options">
-        <div className="category browsers">
-          <VisualGridOptionCategory
-            name="Browsers"
-            errorMessage="A browser is required."
-            modalIsOpen={this.state.modal.browsers}
-            modalOpen={this.modalOpen.bind(this, 'browsers')}
-            modalClose={this.modalClose.bind(this, 'browsers')}
-            modalStyles={{
-              content: {
-                top: 'auto',
-                left: 'auto',
-                right: '-30%',
-                bottom: '-11%',
-                width: '170px',
-                transform: 'translate(-50%, -50%)',
-              },
-            }}
-            options={browsers}
-            selectedOptions={this.state.projectSettings.selectedBrowsers}
-            removeOption={this.removeBrowser.bind(this)}
-            onSubmit={this.saveBrowsers.bind(this)}
-          />
-        </div>
-        <div className="category viewports">
-          <VisualGridViewports
-            name="Viewport Sizes"
-            errorMessage="A viewport size is required."
-            modalIsOpen={this.state.modal.viewports}
-            modalOpen={this.modalOpen.bind(this, 'viewports')}
-            modalClose={this.modalClose.bind(this, 'viewports')}
-            modalStyles={{
-              content: {
-                top: '325px',
-                left: 'auto',
-                right: '-90px',
-                bottom: 'auto',
-                width: '175px',
-                maxHeight: '370px',
-                transform: 'translate(-50%, -50%)',
-              },
-            }}
-            options={viewportSizes}
-            customOptions={this.state.projectSettings.customViewportSizes}
-            selectedOptions={this.state.projectSettings.selectedViewportSizes}
-            removeOption={this.removeSelectedViewport.bind(this)}
-            onSubmit={this.saveViewports.bind(this)}
-          />
-        </div>
-        <div className="category devices">
-          <VisualGridOptionCategory
-            name="Devices"
-            errorMessage="A device is required."
-            modalIsOpen={this.state.modal.devices}
-            modalOpen={this.modalOpen.bind(this, 'devices')}
-            modalClose={this.modalClose.bind(this, 'devices')}
-            modalStyles={{
-              content: {
-                top: 'auto',
-                left: 'auto',
-                right: '-30%',
-                bottom: '-11%',
-                width: '170px',
-                transform: 'translate(-50%, -50%)',
-              },
-            }}
-            options={devices}
-            selectedOptions={this.state.projectSettings.selectedDevices}
-            removeOption={this.removeDevice.bind(this)}
-            onSubmit={this.saveDevices.bind(this)}
-          />
-        </div>
-        <div className="category device-orientations">
-          <VisualGridOptionCategory
-            name="Orientations"
-            errorMessage="A device orientation is required."
-            modalIsOpen={this.state.modal.orientations}
-            modalOpen={this.modalOpen.bind(this, 'orientations')}
-            modalClose={this.modalClose.bind(this, 'orientations')}
-            modalStyles={{
-              content: {
-                top: 'auto',
-                left: 'auto',
-                right: '-30%',
-                bottom: '-11%',
-                width: '170px',
-                transform: 'translate(-50%, -50%)',
-              },
-            }}
-            options={orientations}
-            selectedOptions={
-              this.state.projectSettings.selectedDeviceOrientations
-            }
-            removeOption={this.removeSelectedDeviceOrientation.bind(this)}
-            onSubmit={this.saveDeviceOrientations.bind(this)}
-          />
-        </div>
+        <VisualGridOptionGroup
+          name="Browsers"
+          selectedCount={
+            this.state.projectSettings.selectedBrowsers.length +
+            this.state.projectSettings.selectedViewportSizes.length
+          }
+        >
+          <div className="category browsers">
+            <VisualGridOptionCategory
+              name="Browsers"
+              errorMessage="A browser is required."
+              modalIsOpen={this.state.modal.browsers}
+              modalOpen={this.modalOpen.bind(this, 'browsers')}
+              modalClose={this.modalClose.bind(this, 'browsers')}
+              modalStyles={{
+                content: {
+                  top: 'auto',
+                  left: 'auto',
+                  right: '-30%',
+                  bottom: '-11%',
+                  width: '170px',
+                  transform: 'translate(-50%, -50%)',
+                },
+              }}
+              options={browsers}
+              selectedOptions={this.state.projectSettings.selectedBrowsers}
+              removeOption={this.removeBrowser.bind(this)}
+              onSubmit={this.saveBrowsers.bind(this)}
+            />
+          </div>
+          <div className="category viewports">
+            <VisualGridViewports
+              name="Viewport Sizes"
+              errorMessage="A viewport size is required."
+              modalIsOpen={this.state.modal.viewports}
+              modalOpen={this.modalOpen.bind(this, 'viewports')}
+              modalClose={this.modalClose.bind(this, 'viewports')}
+              modalStyles={{
+                content: {
+                  top: '325px',
+                  left: 'auto',
+                  right: '-90px',
+                  bottom: 'auto',
+                  width: '175px',
+                  maxHeight: '370px',
+                  transform: 'translate(-50%, -50%)',
+                },
+              }}
+              options={viewportSizes}
+              customOptions={this.state.projectSettings.customViewportSizes}
+              selectedOptions={this.state.projectSettings.selectedViewportSizes}
+              removeOption={this.removeSelectedViewport.bind(this)}
+              onSubmit={this.saveViewports.bind(this)}
+            />
+          </div>
+        </VisualGridOptionGroup>
+        <VisualGridOptionGroup
+          name="Devices"
+          selectedCount={
+            this.state.projectSettings.selectedDevices.length +
+            this.state.projectSettings.selectedDeviceOrientations.length
+          }
+        >
+          <div className="category devices">
+            <VisualGridOptionCategory
+              name="Devices"
+              errorMessage="A device is required."
+              modalIsOpen={this.state.modal.devices}
+              modalOpen={this.modalOpen.bind(this, 'devices')}
+              modalClose={this.modalClose.bind(this, 'devices')}
+              modalStyles={{
+                content: {
+                  top: 'auto',
+                  left: 'auto',
+                  right: '-30%',
+                  bottom: '-11%',
+                  width: '170px',
+                  transform: 'translate(-50%, -50%)',
+                },
+              }}
+              options={devices}
+              selectedOptions={this.state.projectSettings.selectedDevices}
+              removeOption={this.removeDevice.bind(this)}
+              onSubmit={this.saveDevices.bind(this)}
+            />
+          </div>
+          <div className="category device-orientations">
+            <VisualGridOptionCategory
+              name="Orientations"
+              errorMessage="A device orientation is required."
+              modalIsOpen={this.state.modal.orientations}
+              modalOpen={this.modalOpen.bind(this, 'orientations')}
+              modalClose={this.modalClose.bind(this, 'orientations')}
+              modalStyles={{
+                content: {
+                  top: 'auto',
+                  left: 'auto',
+                  right: '-30%',
+                  bottom: '-11%',
+                  width: '170px',
+                  transform: 'translate(-50%, -50%)',
+                },
+              }}
+              options={orientations}
+              selectedOptions={
+                this.state.projectSettings.selectedDeviceOrientations
+              }
+              removeOption={this.removeSelectedDeviceOrientation.bind(this)}
+              onSubmit={this.saveDeviceOrientations.bind(this)}
+            />
+          </div>
+        </VisualGridOptionGroup>
       </div>
     )
   }
