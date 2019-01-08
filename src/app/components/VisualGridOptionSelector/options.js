@@ -1,5 +1,13 @@
 export const browsers = ['Chrome', 'Firefox']
 
+export const viewportSizes = [
+  '2560x1440',
+  '2048x1536',
+  '1920x1080',
+  '750x1334',
+  '720x1280',
+]
+
 export const devices = [
   'iPhone 4',
   'iPhone 5/SE',
@@ -31,3 +39,5 @@ export const devices = [
   'Galaxy Note 3',
   'Galaxy Note II',
 ]
+
+export const orientations = ['Portrait', 'Landscape']
