@@ -59,33 +59,26 @@ export default class Normal extends React.Component {
   setProjectSettings() {
     //browser.storage.local.remove(['projectSettings'])
     storage
-      .get([
-        'eyesServer',
-        'eulaSignDate',
-        'enableVisualGrid',
-        'projectSettings',
-      ])
-      .then(
-        ({ eyesServer, eulaSignDate, enableVisualGrid, projectSettings }) => {
-          const settings =
-            projectSettings && projectSettings[this.props.projectId]
-              ? projectSettings[this.props.projectId]
-              : {
-                  branch: '',
-                  parentBranch: '',
-                  selectedBrowsers: [{ name: 'Chrome', type: 'browser' }],
-                  selectedViewportSizes: ['1920x1080'],
-                  customViewportSizes: [],
-                  selectedDeviceOrientations: ['Portrait'],
-                }
-          this.setState({
-            eyesServer,
-            enableVisualGrid,
-            eulaSigned: !!eulaSignDate,
-            projectSettings: settings,
-          })
-        }
-      )
+      .get(['eyesServer', 'eulaSignDate', 'projectSettings'])
+      .then(({ eyesServer, eulaSignDate, projectSettings }) => {
+        const settings =
+          projectSettings && projectSettings[this.props.projectId]
+            ? projectSettings[this.props.projectId]
+            : {
+                branch: '',
+                parentBranch: '',
+                enableVisualGrid: true,
+                selectedBrowsers: [{ name: 'Chrome', type: 'browser' }],
+                selectedViewportSizes: ['1920x1080'],
+                customViewportSizes: [],
+                selectedDeviceOrientations: ['Portrait'],
+              }
+        this.setState({
+          eyesServer,
+          eulaSigned: !!eulaSignDate,
+          projectSettings: settings,
+        })
+      })
   }
   signEula() {
     this.setState({ eulaSigned: true })
