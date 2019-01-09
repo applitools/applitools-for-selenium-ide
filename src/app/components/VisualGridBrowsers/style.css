@@ -1,6 +1,6 @@
 .selections {
   max-height: 310px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .selections + .btn.confirm {

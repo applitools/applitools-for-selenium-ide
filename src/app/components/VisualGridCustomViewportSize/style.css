@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: no-wrap;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .custom-viewport-size:hover .close {
@@ -10,9 +10,20 @@
 }
 
 .custom-viewport-size .input {
-  margin: 0;
-  width: 31%;
+  margin: 4px 0;
+  width: 28%;
   line-height: 0;
+}
+
+.custom-viewport-size .input input {
+  font-size: 12px;
+  line-height: 12px;
+  padding: 3px;
+}
+.custom-viewport-size .input input[type=number]::-webkit-inner-spin-button, 
+.custom-viewport-size .input input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 
 .custom-viewport-size .close.outer {
@@ -20,8 +31,7 @@
 }
 
 .custom-viewport-size .close {
-  margin-left: 3px;
-  margin-bottom: 11px;
+  margin-bottom: 7px;
   visibility: hidden;
 }
 
@@ -34,5 +44,5 @@
 .custom-viewport-size .dimension-separator {
   padding-left: 4px;
   padding-right: 4px;
-  padding-bottom: 8px;
+  padding-bottom: 2px;
 }
