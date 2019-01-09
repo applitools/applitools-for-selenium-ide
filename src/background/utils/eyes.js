@@ -14,16 +14,27 @@ let lastResults = {
   batchId: '',
 }
 
+function createDefaultSettings() {
+  return {
+    enableVisualGrid: true,
+  }
+}
+
 async function makeEyes(batchId, appName, batchName, testName) {
   if (lastResults.batchId !== batchId) {
     lastResults.batchId = batchId
     lastResults.url = ''
   }
-  const { apiKey, eyesServer, projectSettings } = await storage.get([
+  const {
+    apiKey,
+    eyesServer,
+    projectSettings,
+    eulaSignDate,
+  } = await storage.get([
     'apiKey',
     'eyesServer',
-    'enableVisualGrid',
     'projectSettings',
+    'eulaSignDate',
   ])
   if (!apiKey) {
     throw new Error(
@@ -32,11 +43,14 @@ async function makeEyes(batchId, appName, batchName, testName) {
   }
   const projectId = (await getCurrentProject()).id
   const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined
-  const settings = projectSettings ? projectSettings[projectId] : undefined
+  let settings = projectSettings && projectSettings[projectId]
+  if (!settings) {
+    settings = createDefaultSettings()
+  }
   const branch = settings ? settings.branch : ''
   const parentBranch = settings ? settings.parentBranch : ''
 
-  if (settings && settings.enableVisualGrid) {
+  if (!!eulaSignDate && settings.enableVisualGrid) {
     return await createVisualGridEyes(
       batchId,
       appName,
