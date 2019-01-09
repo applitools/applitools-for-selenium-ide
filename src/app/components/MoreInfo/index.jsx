@@ -4,10 +4,11 @@ import Link from '../../../commons/components/Link'
 export default function MoreInfo() {
   return (
     <span>
-      For more information visit{' '}
+      For more information read the{' '}
       <Link href="https://applitools.com/tutorials/selenium-ide.html">
-        https://applitools.com
+        documentation
       </Link>
+      .
     </span>
   )
 }
