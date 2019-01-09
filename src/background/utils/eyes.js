@@ -19,9 +19,15 @@ async function makeEyes(batchId, appName, batchName, testName) {
     lastResults.batchId = batchId
     lastResults.url = ''
   }
-  const { apiKey, eyesServer, projectSettings } = await storage.get([
+  const {
+    apiKey,
+    eyesServer,
+    enableVisualGrid,
+    projectSettings,
+  } = await storage.get([
     'apiKey',
     'eyesServer',
+    'enableVisualGrid',
     'projectSettings',
   ])
   if (!apiKey) {
@@ -35,7 +41,7 @@ async function makeEyes(batchId, appName, batchName, testName) {
   const branch = settings ? settings.branch : ''
   const parentBranch = settings ? settings.parentBranch : ''
 
-  if (settings && settings.enableVisualGrid) {
+  if (enableVisualGrid) {
     return await createVisualGridEyes(
       batchId,
       appName,
