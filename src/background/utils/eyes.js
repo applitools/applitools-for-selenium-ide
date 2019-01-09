@@ -210,6 +210,7 @@ function decorateVisualEyes(
 ) {
   eyes.isVisualGrid = true
   eyes.commands = []
+  eyes.getMatchLevel = () => eyes.matchLevel
   eyes.setMatchLevel = level => {
     if (level === 'Layout') {
       eyes.matchLevel = 'Layout2'
