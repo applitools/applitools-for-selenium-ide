@@ -3,6 +3,7 @@
   flex-direction: row;
   flex-wrap: no-wrap;
   align-items: center;
+  margin: 1px 0;
 }
 
 .custom-viewport-size:hover .close {
