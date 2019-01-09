@@ -8,7 +8,7 @@ import './style.css'
 export default class VisualGridOptionCategory extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
-    errorMessage: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string,
     modalIsOpen: PropTypes.bool.isRequired,
     modalOpen: PropTypes.func.isRequired,
     modalClose: PropTypes.func.isRequired,
@@ -42,8 +42,10 @@ export default class VisualGridOptionCategory extends React.Component {
             items={this.props.selectedOptions}
             removeOption={this.props.removeOption}
           />
-        ) : (
+        ) : this.props.errorMessage ? (
           <div className="error-message">{this.props.errorMessage}</div>
+        ) : (
+          undefined
         )}
       </React.Fragment>
     )
