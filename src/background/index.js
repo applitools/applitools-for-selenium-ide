@@ -219,7 +219,7 @@ browser.runtime.onMessageExternal.addListener(
         message.options.testName
       )
         .then(() => {
-          if (getExternalState().enableVisualCheckpoints) {
+          if (!getExternalState().enableVisualCheckpoints) {
             ideLogger.log('visual checkpoints are disabled').then(() => {
               return sendResponse(true)
             })
