@@ -1,6 +1,5 @@
 .visual-grid-options .group {
   margin-top: -1px;
-  border: 1px solid grey;
   cursor: pointer;
 }
 
@@ -15,6 +14,7 @@
 .visual-grid-options .group-header .title {
   width: 30px;
   margin-left: 27px;
+  font-weight: bold;
 }
 
 .visual-grid-options .group-header .selected-count {
