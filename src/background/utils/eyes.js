@@ -47,6 +47,7 @@ async function makeEyes(batchId, appName, batchName, testName) {
       parentBranch,
       settings ? settings.selectedBrowsers : undefined,
       settings ? settings.selectedViewportSizes : undefined,
+      settings ? settings.selectedDevices : undefined,
       settings ? settings.selectedDeviceOrientations : undefined
     )
   } else {
@@ -98,6 +99,7 @@ async function createVisualGridEyes(
   parentBranchName,
   browsers,
   viewports,
+  devices,
   orientations
 ) {
   const eyes = await makeVisualGridClient({
@@ -113,7 +115,7 @@ async function createVisualGridEyes(
     serverUrl,
     ignoreCaret: true,
     agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
-    browser: parseBrowsers(browsers, viewports, orientations),
+    browser: parseBrowsers(browsers, viewports, devices, orientations),
   })
   decorateVisualEyes(
     eyes,
