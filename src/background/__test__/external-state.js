@@ -19,4 +19,12 @@ describe('external-state', () => {
     resetMode()
     expect(getExternalState()).toMatchObject({ mode: 'normal' })
   })
+
+  it('diconnection resets normal mode to normal', () => {
+    setExternalState({ mode: 'disconnected', normalMode: 'normal' })
+    expect(getExternalState()).toMatchObject({
+      mode: 'disconnected',
+      normalMode: 'normal',
+    })
+  })
 })

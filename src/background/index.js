@@ -112,6 +112,7 @@ startPolling(
     if (err) {
       setExternalState({
         mode: Modes.DISCONNECTED,
+        normalMode: Modes.NORMAL,
       })
     } else {
       resetMode()

@@ -22,7 +22,9 @@ export function setExternalState(newState) {
 }
 
 function calculateMode(newState) {
-  if (newState.normalMode) {
+  if (newState.normalMode && newState.mode) {
+    return newState.mode
+  } else if (newState.normalMode) {
     if (state.mode === Modes.NORMAL) {
       return newState.normalMode
     } else {
