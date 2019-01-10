@@ -185,6 +185,7 @@ async function checkWithVisualGrid(
   await checkFunction({
     tag: stepName || pathname,
     sendDOM: await isDomCaptureEnabled(),
+    matchLevel: eyes.getMatchLevel() || 'Strict',
     ...params,
   })
 

@@ -16,7 +16,7 @@ function removeCrossOriginIframes(cdt, frames) {
   cdt.map(node => {
     if (node.nodeName === 'IFRAME') {
       const srcAttr = node.attributes.find(attr => attr.name === 'src')
-      if (!frameUrls.has(srcAttr.value)) {
+      if (srcAttr && !frameUrls.has(srcAttr.value)) {
         srcAttr.value = ''
       }
     }

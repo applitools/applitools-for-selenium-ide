@@ -14,15 +14,27 @@ let lastResults = {
   batchId: '',
 }
 
+function createDefaultSettings() {
+  return {
+    enableVisualGrid: true,
+  }
+}
+
 async function makeEyes(batchId, appName, batchName, testName) {
   if (lastResults.batchId !== batchId) {
     lastResults.batchId = batchId
     lastResults.url = ''
   }
-  const { apiKey, eyesServer, projectSettings } = await storage.get([
+  const {
+    apiKey,
+    eyesServer,
+    projectSettings,
+    eulaSignDate,
+  } = await storage.get([
     'apiKey',
     'eyesServer',
     'projectSettings',
+    'eulaSignDate',
   ])
   if (!apiKey) {
     throw new Error(
@@ -31,11 +43,14 @@ async function makeEyes(batchId, appName, batchName, testName) {
   }
   const projectId = (await getCurrentProject()).id
   const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined
-  const settings = projectSettings[projectId]
+  let settings = projectSettings && projectSettings[projectId]
+  if (!settings) {
+    settings = createDefaultSettings()
+  }
   const branch = settings ? settings.branch : ''
   const parentBranch = settings ? settings.parentBranch : ''
 
-  if (settings && settings.enableVisualGrid) {
+  if (!!eulaSignDate && settings.enableVisualGrid) {
     return await createVisualGridEyes(
       batchId,
       appName,
@@ -206,6 +221,7 @@ function decorateVisualEyes(
 ) {
   eyes.isVisualGrid = true
   eyes.commands = []
+  eyes.getMatchLevel = () => eyes.matchLevel
   eyes.setMatchLevel = level => {
     if (level === 'Layout') {
       eyes.matchLevel = 'Layout2'

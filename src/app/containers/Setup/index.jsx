@@ -86,7 +86,7 @@ export default class Setup extends React.Component {
             onClick={this.submitInfo}
             style={{
               float: 'right',
-              margin: '15px 0 0',
+              margin: '15px 0',
             }}
           >
             Apply

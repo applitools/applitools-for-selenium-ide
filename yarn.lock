@@ -3,9 +3,9 @@
 
 
 "@applitools/dom-capture@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-6.1.1.tgz#643f769ee2ccb19483ee8c87daa55768c22f19d2"
-  integrity sha512-HVLyYiz5ThHIaovXyKaJprCOf7WP/LiB5H2ZNa2T69BuDGKlDhObE0IVRAp+M3+c33vF4kzfWaS+tDoCWplzCw==
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-6.1.5.tgz#cc6090e22149e9cebe395cc6f200e5357a7d5687"
+  integrity sha512-4+bQee8VG4UWXXjyDPVsHZ+nqrNA090cqPp22CwBoNLvv3qBSr3f5J2+cG05j+xNI0BOu70WSBSCdUxFWC28cg==
   dependencies:
     "@applitools/functional-commons" "^1.0.27"
 
@@ -60,10 +60,10 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/visual-grid-client@^9.0.6":
-  version "9.0.6"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-9.0.6.tgz#a86d9023298bbeda3e0a9465a8ef0d73ab08a535"
-  integrity sha512-DjsyrMKYTaYtbogsbTbRi8+/ch60r3e8enyYb0UBSN8gSsx4tiKIG2BCi3TKccPYlVpsJzXCGmhZSsRoKwnWdQ==
+"@applitools/visual-grid-client@^9.1.2":
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-9.1.2.tgz#c09362f925f76449f4ce8c681c68c57973e85ccd"
+  integrity sha512-bYX7gygZ399toXdPuK0mrx0CN3553AS4iMRTWZoFzk63UPlzzqxwtE5ORKZJBVxMTZ/+X9TWoF21yJLbjxUtLA==
   dependencies:
     "@applitools/eyes-sdk-core" "^4.5.4"
     "@applitools/functional-commons" "^1.0.27"
