@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import Modal from '../Modal'
 import CheckList from '../../../commons/components/CheckList'
 import FlatButton from '../../../commons/components/FlatButton'
+import Input from '../../../commons/components/Input'
+import Fuse from 'fuse.js'
 import './style.css'
 
 export default class VisualGridOptionSelector extends React.Component {
@@ -13,6 +15,7 @@ export default class VisualGridOptionSelector extends React.Component {
     selectedOptions: PropTypes.array.isRequired,
     onSubmit: PropTypes.func.isRequired,
     customStyles: PropTypes.object.isRequired,
+    isSearch: PropTypes.bool,
   }
 
   constructor(props) {
@@ -67,6 +70,22 @@ export default class VisualGridOptionSelector extends React.Component {
     this.props.modalClose()
   }
 
+  search(pattern) {
+    const fuse = new Fuse(this.props.options, {
+      shouldSort: false,
+      includeMatches: true,
+      threshold: 0.3,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 20,
+      minMatchCharLength: 1,
+    })
+    const result = fuse.search(pattern).map(r => r.matches[0].value)
+    this.setState({
+      searchResults: pattern ? result : this.props.options,
+    })
+  }
+
   render() {
     return (
       <Modal
@@ -75,9 +94,23 @@ export default class VisualGridOptionSelector extends React.Component {
         onRequestClose={this.close.bind(this)}
       >
         <div className="selections">
+          {this.props.isSearch ? (
+            <Input
+              onChange={this.search.bind(this)}
+              name=""
+              label=""
+              placeholder="Search"
+            />
+          ) : (
+            undefined
+          )}
           <div className="selector">
             <CheckList
-              items={this.props.options}
+              items={
+                this.state.searchResults
+                  ? this.state.searchResults
+                  : this.props.options
+              }
               optionSelected={this.isOptionSelected.bind(this)}
               handleOptionChange={this.handleOptionChange.bind(this)}
             />

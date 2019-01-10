@@ -199,6 +199,7 @@ export default class VisualGrid extends React.Component {
                   right: '-30%',
                   bottom: '-11%',
                   width: '170px',
+                  height: '351px',
                   transform: 'translate(-50%, -50%)',
                 },
               }}
@@ -206,6 +207,7 @@ export default class VisualGrid extends React.Component {
               selectedOptions={this.state.projectSettings.selectedDevices}
               removeOption={this.removeDevice.bind(this)}
               onSubmit={this.saveDevices.bind(this)}
+              isSearch={true}
             />
           </div>
           {this.state.projectSettings.selectedDevices.length ? (

@@ -11,3 +11,8 @@
 .selections .title {
   padding-bottom: 5px;
 }
+
+.selections .input {
+  margin: 0px;
+  margin-bottom: 10px;
+}

@@ -64,6 +64,7 @@
     "@applitools/visual-grid-client": "^9.0.6",
     "buffer": "^5.0.8",
     "classnames": "^2.2.5",
+    "fuse.js": "^3.3.0",
     "identity-obj-proxy": "^3.0.0",
     "pngjs": "^3.3.3",
     "prop-types": "^15.5.10",
