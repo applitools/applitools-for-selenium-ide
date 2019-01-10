@@ -37,11 +37,15 @@ export default class Normal extends React.Component {
   }
   handleCheckboxChange(name, e) {
     if (name === 'enableVisualGrid') {
-      this.handleInputChange('enableVisualGrid', e.target.checked)
+      const { checked } = e.target
+      this.setProjectSettings().then(() =>
+        this.handleInputChange('enableVisualGrid', checked)
+      )
     } else if (this.props.visualCheckpointsChanged)
       this.props.visualCheckpointsChanged(e.target.checked)
   }
   handleInputChange(name, value) {
+    // used for branches and visual grid checkbox
     const result = { ...this.state.projectSettings, [name]: value }
     storage.get(['projectSettings']).then(({ projectSettings }) => {
       storage
@@ -58,7 +62,7 @@ export default class Normal extends React.Component {
   }
   setProjectSettings() {
     //browser.storage.local.remove(['projectSettings'])
-    storage
+    return storage
       .get(['eyesServer', 'eulaSignDate', 'projectSettings'])
       .then(({ eyesServer, eulaSignDate, projectSettings }) => {
         const settings =
