@@ -100,6 +100,7 @@ export default class VisualGridOptionSelector extends React.Component {
               name=""
               label=""
               placeholder="Search"
+              autoFocus
             />
           ) : (
             undefined
