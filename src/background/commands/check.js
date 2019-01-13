@@ -189,7 +189,7 @@ async function checkWithVisualGrid(
     ...params,
   })
 
-  return { status: 'undetermined' }
+  return { status: 'awaiting' }
 }
 
 export function endTest(id) {
