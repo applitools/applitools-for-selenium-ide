@@ -1,7 +1,7 @@
 import { parseBrowsers } from '../../utils/parsers'
 
 describe('parsersBrowsers', () => {
-  it('has sensible defaults', () => {
+  it.only('has sensible defaults', () => {
     const result = parseBrowsers()[0]
     expect(result.width).toBeTruthy()
     expect(result.height).toBeTruthy()
@@ -9,10 +9,7 @@ describe('parsersBrowsers', () => {
   })
 
   it('parses browsers and viewports', () => {
-    const result = parseBrowsers(
-      [{ name: 'Firefox', type: 'browser' }],
-      ['800x600', '1024x768']
-    )
+    const result = parseBrowsers(['Firefox'], ['800x600', '1024x768'])
     expect(result[0].width).toEqual(800)
     expect(result[0].height).toEqual(600)
     expect(result[0].name).toEqual('firefox')
@@ -23,8 +20,9 @@ describe('parsersBrowsers', () => {
 
   it('parses devices and orientations', () => {
     const result = parseBrowsers(
-      [{ name: 'iPhone 4', type: 'device' }],
       [],
+      [],
+      ['iPhone 4'],
       ['Landscape', 'Portrait']
     )
     expect(result[0].deviceName).toEqual('iPhone 4')
@@ -35,11 +33,9 @@ describe('parsersBrowsers', () => {
 
   it('parses browsers, viewports, devices, and orientations', () => {
     const result = parseBrowsers(
-      [
-        { name: 'iPhone 4', type: 'device' },
-        { name: 'Chrome', type: 'browser' },
-      ],
+      ['Chrome'],
       ['800x600', '1024x768'],
+      ['iPhone 4'],
       ['Portrait', 'Landscape']
     )
     expect(result).toEqual([
@@ -48,5 +44,10 @@ describe('parsersBrowsers', () => {
       { screenOrientation: 'portrait', deviceName: 'iPhone 4' },
       { screenOrientation: 'landscape', deviceName: 'iPhone 4' },
     ])
+  })
+
+  it('ignores incomplete device configuration', () => {
+    const result = parseBrowsers([], [], [], ['Landscape', 'Portrait'])
+    expect(result).toEqual([])
   })
 })

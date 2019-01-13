@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import CloseButton from '../ActionButtons/CloseButton'
+import './style.css'
 
 export default class VisualGridSelectedOptions extends React.Component {
   static propTypes = {

@@ -1,8 +1,8 @@
-import storage from '../../../IO/storage'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Modal from '../Modal'
 import CustomViewportSize from '../VisualGridCustomViewportSize'
+import VisualGridSelectedOptions from '../VisualGridSelectedOptions'
 import AddButton from '../ActionButtons/AddButton'
 import FlatButton from '../../../commons/components/FlatButton'
 import CheckList from '../../../commons/components/CheckList'
@@ -11,52 +11,83 @@ import './style.css'
 
 export default class VisualGridViewports extends React.Component {
   static propTypes = {
-    customViewportSizes: PropTypes.array.isRequired,
+    name: PropTypes.string.isRequired,
+    errorMessage: PropTypes.string.isRequired,
+    options: PropTypes.array.isRequired,
+    customOptions: PropTypes.array.isRequired,
     selectedOptions: PropTypes.array.isRequired,
+    removeOption: PropTypes.func.isRequired,
+    modalIsOpen: PropTypes.bool.isRequired,
+    modalOpen: PropTypes.func.isRequired,
+    modalClose: PropTypes.func.isRequired,
+    modalStyles: PropTypes.object.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className="option-header">
+          <div className="title">{this.props.name}</div>
+          <AddButton
+            onClick={this.props.modalOpen}
+            isSelected={this.props.modalIsOpen}
+          />
+          <ViewportSelectionModal
+            modalIsOpen={this.props.modalIsOpen}
+            modalClose={this.props.modalClose}
+            modalStyles={this.props.modalStyles}
+            options={this.props.options}
+            customOptions={this.props.customOptions}
+            selectedOptions={this.props.selectedOptions}
+            onSubmit={this.props.onSubmit}
+          />
+        </div>
+        {this.props.selectedOptions.length ? (
+          <VisualGridSelectedOptions
+            items={this.props.selectedOptions}
+            removeOption={this.props.removeOption}
+          />
+        ) : (
+          <div className="error-message">{this.props.errorMessage}</div>
+        )}
+      </React.Fragment>
+    )
+  }
+}
+
+class ViewportSelectionModal extends React.Component {
+  static propTypes = {
+    modalStyles: PropTypes.object.isRequired,
     modalIsOpen: PropTypes.bool.isRequired,
     modalClose: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
+    customOptions: PropTypes.array.isRequired,
+    selectedOptions: PropTypes.array.isRequired,
     onSubmit: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props)
-    this.viewportSizes = [
-      '2560x1440',
-      '2048x1536',
-      '1920x1080',
-      '750x1334',
-      '720x1280',
-    ]
     this.state = {
-      customViewportSizes: [...this.props.customViewportSizes],
+      customViewportSizes: [...this.props.customOptions],
       selectedViewportSizes: [...this.props.selectedOptions],
     }
-    storage.get(['customViewportSizes']).then(({ customViewportSizes }) => {
-      this.setState({
-        customViewportSizes: customViewportSizes || [],
-      })
-    })
-    this.deleteCustomViewport = this.deleteCustomViewport.bind(this)
   }
 
   componentDidUpdate(prevProps) {
-    // NOTE:
     // Refreshing the state since it is passed throught props and is altered
     // in the parent component. Also because when the user closes the window
     // we discard the state, but selections from the parent component need to
     // persist into this window.
-    //
-    // TODO: Look into moving everything in the modal into its own component,
-    // to leveraging unmounting/mounting that will leverage the constructor
-    // without the need for tracking the update lifecycle like we're doing here
     if (
       prevProps.selectedOptions !== this.props.selectedOptions ||
       (!prevProps.modalIsOpen && this.props.modalIsOpen) ||
-      prevProps.customViewportSizes !== this.props.customViewportSizes
+      prevProps.customOptions !== this.props.customOptions
     )
       this.setState({
         selectedViewportSizes: [...this.props.selectedOptions],
-        customViewportSizes: [...this.props.customViewportSizes],
+        customViewportSizes: [...this.props.customOptions],
       })
   }
 
@@ -153,26 +184,15 @@ export default class VisualGridViewports extends React.Component {
   }
 
   render() {
-    const customStyles = {
-      content: {
-        top: '325px',
-        left: 'auto',
-        right: '-90px',
-        bottom: 'auto',
-        width: '175px',
-        maxHeight: '370px',
-        transform: 'translate(-50%, -50%)',
-      },
-    }
     return (
       <Modal
-        customStyles={customStyles}
+        customStyles={this.props.modalStyles}
         modalIsOpen={this.props.modalIsOpen}
         onRequestClose={this.close.bind(this)}
       >
         <div className="predefined-viewport-sizes">
           <CheckList
-            items={this.viewportSizes}
+            items={this.props.options}
             optionSelected={this.isOptionSelected.bind(this)}
             handleOptionChange={this.handleOptionChange.bind(this)}
           />

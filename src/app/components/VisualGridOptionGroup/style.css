@@ -1,0 +1,43 @@
+.visual-grid-options .group {
+  cursor: pointer;
+}
+
+.visual-grid-options .group .group-header {
+  height: 25px;
+  width: 220px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  align-content: stretch;
+}
+
+.visual-grid-options .group-header .title {
+  width: 30px;
+  margin-left: 27px;
+  font-weight: bold;
+}
+
+.visual-grid-options .group-header .selected-count {
+  margin-left: 50px;
+  font-size: 12px;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  border-radius: 50%;
+  background-color: #40A6FF;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.visual-grid-options .group-header .control {
+  margin-left: 10px;
+}
+
+.visual-grid-options .group-divider {
+  margin-left: 27px;
+  width: 220px;
+}
+
+.visual-grid-options .group .contents {
+  padding-top: 5px;
+}

@@ -72,9 +72,10 @@ export default class Normal extends React.Component {
                 branch: '',
                 parentBranch: '',
                 enableVisualGrid: true,
-                selectedBrowsers: [{ name: 'Chrome', type: 'browser' }],
+                selectedBrowsers: ['Chrome'],
                 selectedViewportSizes: ['1920x1080'],
                 customViewportSizes: [],
+                selectedDevices: [],
                 selectedDeviceOrientations: ['Portrait'],
               }
         this.setState({

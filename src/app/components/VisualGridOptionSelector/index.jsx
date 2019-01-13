@@ -3,19 +3,23 @@ import PropTypes from 'prop-types'
 import Modal from '../Modal'
 import CheckList from '../../../commons/components/CheckList'
 import FlatButton from '../../../commons/components/FlatButton'
+import Input from '../../../commons/components/Input'
+import Fuse from 'fuse.js'
 import './style.css'
 
-export default class VisualGridDeviceOrientations extends React.Component {
+export default class VisualGridOptionSelector extends React.Component {
   static propTypes = {
     modalIsOpen: PropTypes.bool.isRequired,
     modalClose: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
     selectedOptions: PropTypes.array.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    customStyles: PropTypes.object.isRequired,
+    isSearch: PropTypes.bool,
   }
 
   constructor(props) {
     super(props)
-    this.orientations = ['Portrait', 'Landscape']
     this.state = {
       selectedOptions: [...this.props.selectedOptions],
     }
@@ -27,10 +31,6 @@ export default class VisualGridDeviceOrientations extends React.Component {
     // in the parent component. Also because when the user closes the window
     // we discard the state, but selections from the parent component need to
     // persist into this window.
-    //
-    // TODO: Look into moving everything in the modal into its own component,
-    // to leveraging unmounting/mounting that will leverage the constructor
-    // without the need for tracking the update lifecycle like we're doing here
     if (
       prevProps.selectedOptions !== this.props.selectedOptions ||
       (!prevProps.modalIsOpen && this.props.modalIsOpen)
@@ -70,27 +70,48 @@ export default class VisualGridDeviceOrientations extends React.Component {
     this.props.modalClose()
   }
 
+  search(pattern) {
+    const fuse = new Fuse(this.props.options, {
+      shouldSort: false,
+      includeMatches: true,
+      threshold: 0.3,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 20,
+      minMatchCharLength: 1,
+    })
+    const result = fuse.search(pattern).map(r => r.matches[0].value)
+    this.setState({
+      searchResults: pattern ? result : this.props.options,
+    })
+  }
+
   render() {
-    const customStyles = {
-      content: {
-        top: 'auto',
-        left: 'auto',
-        right: '-28%',
-        bottom: '5%',
-        width: '170px',
-        transform: 'translate(-50%, -50%)',
-      },
-    }
     return (
       <Modal
-        customStyles={customStyles}
+        customStyles={this.props.customStyles}
         modalIsOpen={this.props.modalIsOpen}
         onRequestClose={this.close.bind(this)}
       >
         <div className="selections">
-          <div className="select-device-orientations">
+          {this.props.isSearch ? (
+            <Input
+              onChange={this.search.bind(this)}
+              name=""
+              label=""
+              placeholder="Search"
+              autoFocus
+            />
+          ) : (
+            undefined
+          )}
+          <div className="selector">
             <CheckList
-              items={this.orientations}
+              items={
+                this.state.searchResults
+                  ? this.state.searchResults
+                  : this.props.options
+              }
               optionSelected={this.isOptionSelected.bind(this)}
               handleOptionChange={this.handleOptionChange.bind(this)}
             />
