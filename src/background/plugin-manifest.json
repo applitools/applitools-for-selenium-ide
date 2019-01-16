@@ -54,8 +54,8 @@
       "id": "setMatchTimeout",
       "name": "set match timeout",
       "docs": {
-        "description": "Sets the match timeout for the subsequent check points, higher timeout means more retries will be made. defaults to 2 seconds.",
-        "target": { "name": "waitTime" }
+        "description": "Sets the match timeout for the subsequent check points, higher timeout means more retries will be made. defaults to 2000 milliseconds.",
+        "target": "waitTime"
       }
     },
     {
