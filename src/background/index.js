@@ -21,104 +21,18 @@ import {
 import { getEyes, hasEyes, getResultsUrl } from './utils/eyes'
 import { parseViewport, parseRegion } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
+import pluginManifest from './plugin-manifest.json'
 
-startPolling(
-  {
-    name: 'Applitools',
-    version: '1.0.0',
-    commands: [
-      {
-        id: 'checkWindow',
-        name: 'check window',
-        docs: {
-          description:
-            'Sets a visual checkpoint on the entire window. This will scroll throughout the page, and build a screenshot of it.',
-          target: {
-            name: 'step name',
-            description:
-              'A name to display at the test results, defaults to url.',
-          },
-        },
-      },
-      {
-        id: 'checkRegion',
-        name: 'check region',
-        type: 'region',
-        docs: {
-          description:
-            'Sets a visual checkpoint on part of the page. This will not scroll, region has to fit inside the viewport.',
-          target: 'region',
-          value: {
-            name: 'step name',
-            description:
-              'A name to display at the test results, defaults to url.',
-          },
-        },
-      },
-      {
-        id: 'checkElement',
-        name: 'check element',
-        type: 'locator',
-        docs: {
-          description:
-            'Sets a visual checkpoint on an element. This will not scroll, element has to fit inside the viewport.',
-          target: 'locator',
-          value: {
-            name: 'step name',
-            description:
-              'A name to display at the test results, defaults to url.',
-          },
-        },
-      },
-      {
-        id: 'setMatchLevel',
-        name: 'set match level',
-        docs: {
-          description:
-            'Sets the match level for the subsequent check points, defaults to Strict.',
-          target: {
-            name: 'match level',
-            description:
-              'The match level describes the way that Eyes matches two images, or two regions of an image. For example a Strict level checks if images are visibly the same, whereas a Layout level allows different text as long as the general geometry of the area is the same. You can specify one of the following: Exact, Strict, Content, Layout.',
-          },
-        },
-      },
-      {
-        id: 'setMatchTimeout',
-        name: 'set match timeout',
-        docs: {
-          description:
-            'Sets the match timeout for the subsequent check points, higher timeout means more retries will be made. defaults to 2 seconds.',
-          target: {
-            name: 'waitTime',
-          },
-        },
-      },
-      {
-        id: 'setViewportSize',
-        name: 'set viewport size',
-        docs: {
-          description:
-            'Resizes the browser to match the viewport size (excluding window borders).',
-          target: 'resolution',
-        },
-      },
-    ],
-    dependencies: {
-      '@applitools/eyes-selenium': '4.3.2',
-    },
-  },
-  err => {
-    if (err) {
-      setExternalState({
-        mode: Modes.DISCONNECTED,
-        normalMode: Modes.NORMAL,
-      })
-    } else {
-      resetMode()
-    }
+startPolling(pluginManifest, err => {
+  if (err) {
+    setExternalState({
+      mode: Modes.DISCONNECTED,
+      normalMode: Modes.NORMAL,
+    })
+  } else {
+    resetMode()
   }
-)
+})
 
 setupOptions().then(() => {
   browser.storage.local
