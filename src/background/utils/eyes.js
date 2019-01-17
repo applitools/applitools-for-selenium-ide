@@ -200,6 +200,7 @@ function decorateEyes(eyes) {
   eyes.commands = []
   const setMatchLevel = eyes.setMatchLevel.bind(eyes)
   eyes.setMatchLevel = level => {
+    verifyMatchLevel(level)
     if (level === 'Layout') {
       setMatchLevel('Layout2')
     } else {
@@ -223,6 +224,7 @@ function decorateVisualEyes(
   eyes.commands = []
   eyes.getMatchLevel = () => eyes.matchLevel
   eyes.setMatchLevel = level => {
+    verifyMatchLevel(level)
     if (level === 'Layout') {
       eyes.matchLevel = 'Layout2'
     } else {
@@ -234,4 +236,12 @@ function decorateVisualEyes(
   eyes.getTestName = () => testName
   eyes.getBatch = () => ({ name: batchName })
   eyes.getAppName = () => appName
+}
+
+function verifyMatchLevel(level) {
+  if (!/Layout|Content|Strict|Exact/.test(level)) {
+    throw new Error(
+      'Match level must be one of: Exact, Strict, Content or Layout.'
+    )
+  }
 }

@@ -464,5 +464,6 @@ browser.runtime.onMessageExternal.addListener(
         }
       }
     }
+    sendResponse(undefined)
   }
 )
