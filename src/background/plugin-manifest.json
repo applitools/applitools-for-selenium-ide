@@ -4,7 +4,7 @@
   "commands": [
     {
       "id": "checkWindow",
-      "name": "check window",
+      "name": "eyes check window",
       "docs": {
         "description": "Sets a visual checkpoint on the entire window. This will scroll throughout the page, and build a screenshot of it.",
         "target": {
@@ -15,7 +15,7 @@
     },
     {
       "id": "checkRegion",
-      "name": "check region",
+      "name": "eyes check region",
       "type": "region",
       "docs": {
         "description": "Sets a visual checkpoint on part of the page. This will not scroll, region has to fit inside the viewport.",
@@ -28,7 +28,7 @@
     },
     {
       "id": "checkElement",
-      "name": "check element",
+      "name": "eyes check element",
       "type": "locator",
       "docs": {
         "description": "Sets a visual checkpoint on an element. This will not scroll, element has to fit inside the viewport.",
@@ -41,7 +41,7 @@
     },
     {
       "id": "setMatchLevel",
-      "name": "set match level",
+      "name": "eyes set match level",
       "docs": {
         "description": "Sets the match level for the subsequent check points, defaults to Strict.",
         "target": {
@@ -52,7 +52,7 @@
     },
     {
       "id": "setMatchTimeout",
-      "name": "set match timeout",
+      "name": "eyes set match timeout",
       "docs": {
         "description": "Sets the match timeout for the subsequent check points, higher timeout means more retries will be made. defaults to 2000 milliseconds.",
         "target": "waitTime"
@@ -60,7 +60,7 @@
     },
     {
       "id": "setViewportSize",
-      "name": "set viewport size",
+      "name": "eyes set viewport size",
       "docs": {
         "description": "Resizes the browser to match the viewport size (excluding window borders).",
         "target": "resolution"
