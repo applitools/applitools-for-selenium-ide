@@ -6,6 +6,7 @@ let state = {
   normalMode: Modes.NORMAL,
   mode: Modes.NORMAL,
 }
+let verificationMode = Modes.NORMAL
 
 export function getExternalState() {
   return state
@@ -14,23 +15,35 @@ export function getExternalState() {
 export function setExternalState(newState) {
   browser.runtime
     .sendMessage({
-      state: Object.assign(state, newState, {
-        mode: calculateMode(newState),
-      }),
+      state: setInternalState(newState),
     })
     .catch(() => {})
 }
 
+export function setInternalState(newState) {
+  return Object.assign(state, newState, {
+    mode: calculateMode(newState),
+  })
+}
+
 function calculateMode(newState) {
-  if (newState.normalMode && newState.mode) {
+  if (verificationMode !== Modes.NORMAL) {
+    // if we are still in a setup stage dont let the mode change
+    return verificationMode
+  } else if (newState.normalMode && newState.mode) {
+    // if both normal mode and mode are defined use mode
     return newState.mode
   } else if (newState.normalMode) {
+    // if only normal mode is defined take it if the current mode is normal
     if (state.mode === Modes.NORMAL) {
       return newState.normalMode
     } else {
       return state.mode
     }
   } else {
+    // if only mode is defined take it
+    // if none is defined use the previous one
+    // else use NORMAL
     return newState.mode
       ? newState.mode
       : state.mode
@@ -39,7 +52,6 @@ function calculateMode(newState) {
   }
 }
 
-let verificationMode = Modes.NORMAL
 export function validateOptions() {
   return verifyStoredAPIKey()
     .then(() => (verificationMode = Modes.NORMAL))
@@ -54,6 +66,10 @@ export function validateOptions() {
 export function resetMode() {
   setExternalState({
     mode:
-      verificationMode !== Modes.NORMAL ? verificationMode : state.normalMode,
+      verificationMode !== Modes.NORMAL
+        ? verificationMode
+        : state.isConnected
+          ? state.normalMode
+          : Modes.DISCONNECTED,
   })
 }
