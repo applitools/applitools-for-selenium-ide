@@ -119,6 +119,7 @@ async function createVisualGridEyes(
 ) {
   const eyes = await makeVisualGridClient({
     apiKey,
+    serverUrl,
   }).openEyes({
     showLogs: true,
     appName,
@@ -127,7 +128,6 @@ async function createVisualGridEyes(
     testName,
     branchName,
     parentBranchName,
-    serverUrl,
     ignoreCaret: true,
     agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
     browser: parseBrowsers(browsers, viewports, devices, orientations),
