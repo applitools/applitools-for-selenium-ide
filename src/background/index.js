@@ -435,7 +435,7 @@ browser.runtime.onMessageExternal.addListener(
           } else if (command === 'checkRegion') {
             const { x, y, width, height } = parseRegion(target)
             return sendResponse(
-              `await eyes.checkRegion({left:${x},top:${y},width:${width},height:${height}}, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`
+              `await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:${x},top:${y},width:${width},height:${height}}));`
             )
           } else if (command === 'checkElement') {
             sendMessage({
@@ -447,7 +447,7 @@ browser.runtime.onMessageExternal.addListener(
             })
               .then(locator => {
                 sendResponse(
-                  `await eyes.checkElementBy(${locator}, undefined, "${value}" || (new URL(await driver.getCurrentUrl())).pathname);`
+                  `await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}));`
                 )
               })
               .catch(console.error) // eslint-disable-line no-console
