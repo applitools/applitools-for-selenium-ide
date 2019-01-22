@@ -14,3 +14,7 @@
 .error-message {
   color: red;
 }
+
+.general-error {
+  padding: 0 0 8px 27px !important;
+}
