@@ -16,6 +16,7 @@ describe('Visual grid options', () => {
   beforeEach(async () => {
     doRender()
     await waitForElement(() => findElement('#enable-visual-grid'))
+    click('#enable-visual-grid')
   })
 
   afterEach(cleanup)
