@@ -1,16 +1,16 @@
 .add.outer {
   border: 1px solid #a2a2a2;
   border-radius: 2px;
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
   cursor: pointer;
   margin-top: 2px;
 }
 
 .add.inner {
   background-color: #767676;
-  width: 13px;
-  height: 13px;
+  width: 11px;
+  height: 11px;
 }
 
 .add.outer.selected,

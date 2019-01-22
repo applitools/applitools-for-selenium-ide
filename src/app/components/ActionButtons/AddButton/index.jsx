@@ -13,7 +13,7 @@ export default class AddButton extends React.Component {
     return (
       <ActionButton
         type="add"
-        size="21px"
+        size="19px"
         position="center"
         imgPath={PlusSymbol}
         onClick={this.props.onClick}
