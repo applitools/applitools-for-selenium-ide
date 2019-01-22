@@ -206,6 +206,27 @@ describe('Visual grid options', () => {
     ).toBeTruthy()
   })
 
+  it('inputting both width and height for a custom viewport enables it', async () => {
+    await acceptEula()
+    toggleBrowsersGroup()
+    await addCustomViewport(100, 100)
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
+  })
+
+  it('remove width or height for a custom viewport disables it', async () => {
+    await acceptEula()
+    toggleBrowsersGroup()
+    await addCustomViewport(100, 100)
+    sendKeys('.custom-viewport-size .width', '')
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeFalsy()
+    sendKeys('.custom-viewport-size .width', 100)
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
+    sendKeys('.custom-viewport-size .height', '')
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeFalsy()
+    sendKeys('.custom-viewport-size .height', 100)
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
+  })
+
   // device orientations
 
   it('remove a selected device orientation', async () => {
@@ -227,6 +248,8 @@ describe('Visual grid options', () => {
     ).toBeFalsy()
   })
 })
+
+// helper functions
 
 const projectId = uuidv4()
 
