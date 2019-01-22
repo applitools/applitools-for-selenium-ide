@@ -18,11 +18,11 @@
 }
 
 .visual-grid-options .group-header .selected-count {
-  margin-left: 50px;
-  font-size: 12px;
-  height: 17px;
-  width: 17px;
-  line-height: 17px;
+  margin: 2px 0 0 46px;
+  font-size: 9px;
+  height: 14px;
+  width: 14px;
+  line-height: 14px;
   border-radius: 50%;
   background-color: #40A6FF;
   color: #FFFFFF;
