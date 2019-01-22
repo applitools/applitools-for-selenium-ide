@@ -1,40 +1,41 @@
 import React from 'react'
 import ButtonList from '../../components/ButtonList'
 import { sendMessage } from '../../../IO/message-port'
+import { CommandIds } from '../../../commons/commands'
 
 export default class Record extends React.Component {
   constructor(props) {
     super(props)
     this.commands = {
       ['Check window']: {
-        command: 'checkWindow',
+        command: CommandIds.CheckWindow,
         target: '',
         value: '',
       },
       ['Check element']: {
-        command: 'checkElement',
+        command: CommandIds.CheckElement,
         target: '',
         value: '',
         select: true,
       },
       ['Check region']: {
-        command: 'checkRegion',
+        command: CommandIds.CheckRegion,
         target: '',
         value: '',
         select: true,
       },
       ['Set viewport size']: {
-        command: 'setViewportSize',
+        command: CommandIds.SetViewportSize,
         target: '1280x800',
         value: '',
       },
       ['Set match timeout']: {
-        command: 'setMatchTimeout',
+        command: CommandIds.SetMatchTimeout,
         target: '2000',
         value: '',
       },
       ['Set match level']: {
-        command: 'setMatchLevel',
+        command: CommandIds.SetMatchLevel,
         target: 'Strict',
         value: '',
       },

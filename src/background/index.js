@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import './image-strategies/css-stitching/polyfills'
+import { CommandIds, isEyesCommand } from '../commons/commands'
 import Modes from '../commons/modes'
 import ideLogger from './utils/ide-logger'
 import {
@@ -11,7 +12,6 @@ import {
 } from './external-state'
 import { getCurrentProject } from './utils/ide-project'
 import { sendMessage, startPolling } from '../IO/message-port'
-import { isEyesCommand } from './commands'
 import { getViewportSize, setViewportSize } from './commands/viewport'
 import {
   checkWindow,
@@ -146,7 +146,7 @@ browser.runtime.onMessageExternal.addListener(
         browser.tabs.get(message.options.tabId).then(tab => {
           sendResponse({
             mutation: 'update',
-            command: 'setViewportSize',
+            command: CommandIds.SetViewportSize,
             target: `${tab.width}x${tab.height}`,
             value: '',
           })
@@ -210,7 +210,7 @@ browser.runtime.onMessageExternal.addListener(
     }
     if (message.action === 'execute') {
       switch (message.command.command) {
-        case 'setMatchLevel': {
+        case CommandIds.SetMatchLevel: {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {
               return eyes.setMatchLevel(message.command.target)
@@ -225,7 +225,7 @@ browser.runtime.onMessageExternal.addListener(
             })
           return true
         }
-        case 'setMatchTimeout': {
+        case CommandIds.SetMatchTimeout: {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {
               return eyes.isVisualGrid
@@ -244,7 +244,7 @@ browser.runtime.onMessageExternal.addListener(
             })
           return true
         }
-        case 'setViewportSize': {
+        case CommandIds.SetViewportSize: {
           const { width, height } = parseViewport(message.command.target)
           setViewportSize(width, height, message.options)
             .then(() => {
@@ -258,7 +258,7 @@ browser.runtime.onMessageExternal.addListener(
             })
           return true
         }
-        case 'checkWindow': {
+        case CommandIds.CheckWindow: {
           if (!getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
@@ -292,7 +292,7 @@ browser.runtime.onMessageExternal.addListener(
             })
           }
         }
-        case 'checkRegion': {
+        case CommandIds.CheckRegion: {
           if (!getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
@@ -328,7 +328,7 @@ browser.runtime.onMessageExternal.addListener(
             })
           }
         }
-        case 'checkElement': {
+        case CommandIds.CheckElement: {
           if (!getExternalState().enableVisualCheckpoints) {
             return sendResponse(true)
           } else if (message.options.runId) {
@@ -428,16 +428,16 @@ browser.runtime.onMessageExternal.addListener(
         }
         case 'command': {
           const { command, target, value } = message.command // eslint-disable-line no-unused-vars
-          if (command === 'checkWindow') {
+          if (command === CommandIds.CheckWindow) {
             return sendResponse(
               `await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));`
             )
-          } else if (command === 'checkRegion') {
+          } else if (command === CommandIds.CheckRegion) {
             const { x, y, width, height } = parseRegion(target)
             return sendResponse(
               `await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:${x},top:${y},width:${width},height:${height}}));`
             )
-          } else if (command === 'checkElement') {
+          } else if (command === CommandIds.CheckElement) {
             sendMessage({
               uri: '/export/location',
               verb: 'get',
@@ -452,15 +452,15 @@ browser.runtime.onMessageExternal.addListener(
               })
               .catch(console.error) // eslint-disable-line no-console
             return true
-          } else if (command === 'setMatchLevel') {
+          } else if (command === CommandIds.SetMatchLevel) {
             return sendResponse(
               `eyes.setMatchLevel("${
                 target === 'Layout' ? 'Layout2' : target
               }");`
             )
-          } else if (command === 'setMatchTimeout') {
+          } else if (command === CommandIds.SetMatchTimeout) {
             return sendResponse(`eyes.setMatchTimeout(${target});`)
-          } else if (command === 'setViewportSize') {
+          } else if (command === CommandIds.SetViewportSize) {
             const { width, height } = parseViewport(target)
             return sendResponse(
               `await eyes.setViewportSize({width: ${width}, height: ${height}});`
