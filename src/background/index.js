@@ -6,7 +6,7 @@ import ideLogger from './utils/ide-logger'
 import {
   getExternalState,
   setExternalState,
-  setInternalState,
+  setExternalStateInternally,
   resetMode,
   validateOptions,
 } from './external-state'
@@ -32,7 +32,7 @@ startPolling(pluginManifest, err => {
       isConnected: false,
     })
   } else {
-    setInternalState({
+    setExternalStateInternally({
       isConnected: true,
     })
     resetMode()

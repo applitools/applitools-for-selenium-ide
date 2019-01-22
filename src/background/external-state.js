@@ -15,12 +15,12 @@ export function getExternalState() {
 export function setExternalState(newState) {
   browser.runtime
     .sendMessage({
-      state: setInternalState(newState),
+      state: setExternalStateInternally(newState),
     })
     .catch(() => {})
 }
 
-export function setInternalState(newState) {
+export function setExternalStateInternally(newState) {
   return Object.assign(state, newState, {
     mode: calculateMode(newState),
   })
