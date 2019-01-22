@@ -1,12 +1,13 @@
+html,
 body {
   width: 320px;
-}
-
-footer {
+  overflow: hidden;
 }
 
 .container {
-  margin: 10px 18px;
+  overflow-y: auto;
+  max-height: 500px;
+  padding: 10px 18px 0px 18px;
 }
 
 hr {
