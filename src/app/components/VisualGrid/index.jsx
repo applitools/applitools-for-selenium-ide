@@ -226,6 +226,7 @@ export default class VisualGrid extends React.Component {
                   left: 'auto',
                   right: '-30%',
                   bottom: '-11%',
+                  overflow: 'hidden',
                   width: '170px',
                   height: '351px',
                   transform: 'translate(-50%, -50%)',
