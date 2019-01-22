@@ -11,6 +11,7 @@ export default class DeleteButton extends React.Component {
   render() {
     return (
       <ActionButton
+        className="delete"
         type="close"
         size="16px"
         position="center"
