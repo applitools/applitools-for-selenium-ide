@@ -280,13 +280,6 @@ async function toggleSelectedBrowser() {
   return await waitForCompletion()
 }
 
-async function toggleSelectedViewport() {
-  click('.category.viewports .add.inner')
-  click('.selections .checkbox')
-  click('.btn.confirm')
-  return await waitForCompletion()
-}
-
 async function toggleSelectedDevice() {
   click('.category.devices .add.inner')
   click('.selections .checkbox')
@@ -320,12 +313,4 @@ function removeSelectedBrowser() {
 
 function removeSelectedViewport() {
   click('.category.viewports .close.inner')
-}
-
-function removeSelectedDevice() {
-  click('.category.devices .close.inner')
-}
-
-function removeSelectedDeviceOrientation() {
-  click('.category.devices .close.inner')
 }
