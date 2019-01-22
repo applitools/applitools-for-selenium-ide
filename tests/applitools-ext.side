@@ -1,6 +1,6 @@
 {
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
-  "version": "1.1",
+  "version": "2.0",
   "name": "applitools-ext",
   "url": "https://applitools.com/",
   "tests": [{
@@ -16,14 +16,14 @@
     }, {
       "id": "d12706ea-0336-4b8c-bda0-d171c9f9f465",
       "comment": "",
-      "command": "setViewportSize",
+      "command": "eyesSetViewportSize",
       "target": "1280x800",
       "targets": [],
       "value": ""
     }, {
       "id": "bed43289-dbbf-4f69-94c0-7c8c13ea455d",
       "comment": "",
-      "command": "checkElement",
+      "command": "eyesCheckElement",
       "target": "css=button",
       "targets": [],
       "value": "a button"
@@ -41,14 +41,14 @@
     }, {
       "id": "d74a069d-325a-476d-958b-05f01359a9b6",
       "comment": "",
-      "command": "setViewportSize",
+      "command": "eyesSetViewportSize",
       "target": "1280x800",
       "targets": [],
       "value": ""
     }, {
       "id": "fce61563-638b-49d8-8fe9-2ee18bc05043",
       "comment": "",
-      "command": "checkWindow",
+      "command": "eyesCheckWindow",
       "target": "check full page",
       "targets": [],
       "value": ""
@@ -66,14 +66,14 @@
     }, {
       "id": "e8b14dcf-05a4-4b9d-ae45-af915b898ed3",
       "comment": "",
-      "command": "setViewportSize",
+      "command": "eyesSetViewportSize",
       "target": "1280x800",
       "targets": [],
       "value": ""
     }, {
       "id": "34304621-84c4-4a29-b6b4-daabe01f2225",
       "comment": "",
-      "command": "checkRegion",
+      "command": "eyesCheckRegion",
       "target": "x: 356, y: 147, width: 562, height: 55",
       "targets": [],
       "value": "the text"
@@ -84,7 +84,7 @@
     "name": "hello world",
     "parallel": false,
     "timeout": 3000,
-    "tests": ["bf93491e-bffe-41cf-b84e-7096515c55b0"]
+    "tests": ["bf93491e-bffe-41cf-b84e-7096515c55b0", "3ca13a63-0f78-4bcc-902a-70945c2b58b7", "d2f08640-cf0b-4881-9f5f-a7cda12e3604"]
   }],
   "urls": ["https://en.wikipedia.org/", "https://applitools.com/"],
   "plugins": [{
@@ -94,12 +94,12 @@
   }],
   "snapshot": {
     "globalConfig": {
-      "snapshot": "const Eyes = require('@applitools/eyes-selenium').Eyes;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"
+      "snapshot": "const Eyes = require('@applitools/eyes-selenium').Eyes;global.Target = require('@applitools/eyes-selenium').Target;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"
     },
     "suites": [{
       "name": "hello world",
       "snapshot": {
-        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId(\"eyes.seleniumide.runner\");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setLogHandler(new ConsoleLogHandler(true));});afterEach(async () => {if (eyes._isOpen) {await eyes.close();}});"
+        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId(\"eyes.seleniumide.runner\");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setStitchMode(\"CSS\");eyes.setSendDom(configuration.params.domUploadDisabled ? false : true);if (configuration.params.logsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}});afterEach(async () => {if (eyes._isOpen) {await eyes.close();}});"
       }
     }],
     "tests": [{
@@ -107,7 +107,7 @@
       "snapshot": {
         "commands": {
           "d12706ea-0336-4b8c-bda0-d171c9f9f465": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "bed43289-dbbf-4f69-94c0-7c8c13ea455d": "await eyes.checkElementBy(By.css(`button`), undefined, \"a button\" || (new URL(await driver.getCurrentUrl())).pathname);"
+          "bed43289-dbbf-4f69-94c0-7c8c13ea455d": "await eyes.check(\"a button\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(By.css(`button`)));"
         },
         "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check element\");"],
         "teardownHooks": ["driver = _driver;"]
@@ -117,7 +117,7 @@
       "snapshot": {
         "commands": {
           "d74a069d-325a-476d-958b-05f01359a9b6": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "fce61563-638b-49d8-8fe9-2ee18bc05043": "eyes.setForceFullPageScreenshot(true);await eyes.checkWindow(\"check full page\" || (new URL(await driver.getCurrentUrl())).pathname).then(() => {eyes.setForceFullPageScreenshot(false);});"
+          "fce61563-638b-49d8-8fe9-2ee18bc05043": "await eyes.check(\"check full page\" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));"
         },
         "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check window full\");"],
         "teardownHooks": ["driver = _driver;"]
@@ -127,7 +127,7 @@
       "snapshot": {
         "commands": {
           "e8b14dcf-05a4-4b9d-ae45-af915b898ed3": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "34304621-84c4-4a29-b6b4-daabe01f2225": "await eyes.checkRegion({left:356,top:147,width:562,height:55}, \"the text\" || (new URL(await driver.getCurrentUrl())).pathname);"
+          "34304621-84c4-4a29-b6b4-daabe01f2225": "await eyes.check(\"the text\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:356,top:147,width:562,height:55}));"
         },
         "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check region\");"],
         "teardownHooks": ["driver = _driver;"]
@@ -135,6 +135,6 @@
     }]
   },
   "dependencies": {
-    "@applitools/eyes-selenium": "4.0.2"
+    "@applitools/eyes-selenium": "4.3.2"
   }
 }

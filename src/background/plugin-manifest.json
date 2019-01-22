@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "commands": [
     {
-      "id": "checkWindow",
+      "id": "eyesCheckWindow",
       "name": "eyes check window",
       "docs": {
         "description": "Sets a visual checkpoint on the entire window. This will scroll throughout the page, and build a screenshot of it.",
@@ -14,7 +14,7 @@
       }
     },
     {
-      "id": "checkRegion",
+      "id": "eyesCheckRegion",
       "name": "eyes check region",
       "type": "region",
       "docs": {
@@ -27,7 +27,7 @@
       }
     },
     {
-      "id": "checkElement",
+      "id": "eyesCheckElement",
       "name": "eyes check element",
       "type": "locator",
       "docs": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "setMatchLevel",
+      "id": "eyesSetMatchLevel",
       "name": "eyes set match level",
       "docs": {
         "description": "Sets the match level for the subsequent check points, defaults to Strict.",
@@ -51,7 +51,7 @@
       }
     },
     {
-      "id": "setMatchTimeout",
+      "id": "eyesSetMatchTimeout",
       "name": "eyes set match timeout",
       "docs": {
         "description": "Sets the match timeout for the subsequent check points, higher timeout means more retries will be made. defaults to 2000 milliseconds.",
@@ -59,7 +59,7 @@
       }
     },
     {
-      "id": "setViewportSize",
+      "id": "eyesSetViewportSize",
       "name": "eyes set viewport size",
       "docs": {
         "description": "Resizes the browser to match the viewport size (excluding window borders).",
