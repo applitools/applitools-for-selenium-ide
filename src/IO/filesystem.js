@@ -2,9 +2,9 @@ import browser from 'webextension-polyfill'
 
 export function downloadFile(input) {
   browser.downloads.download({
-    filename: 'visual-grid-config.yaml',
+    filename: 'visual-grid-config.yml',
     url: createBlob('application/yaml', input),
-    saveAs: true,
+    saveAs: false,
     conflictAction: 'overwrite',
   })
 }
