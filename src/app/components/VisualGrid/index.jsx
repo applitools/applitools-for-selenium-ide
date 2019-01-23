@@ -5,13 +5,14 @@ import classNames from 'classnames'
 import VisualGridOptionGroup from '../VisualGridOptionGroup'
 import VisualGridOptionCategory from '../VisualGridOptionCategory'
 import VisualGridViewports from '../VisualGridViewports'
-import './style.css'
+import DownloadConfig from '../DownloadConfig'
 import {
   browsers,
   viewportSizes,
   devices,
   orientations,
 } from '../VisualGridOptionSelector/options'
+import './style.css'
 
 export default class VisualGrid extends React.Component {
   static propTypes = {
@@ -126,6 +127,11 @@ export default class VisualGrid extends React.Component {
       this.state.projectSettings.selectedBrowsers.length ||
       this.state.projectSettings.selectedViewportSizes.length
     )
+    const hasValidOptions =
+      (this.state.projectSettings.selectedDevices.length &&
+        this.state.projectSettings.selectedDeviceOrientations.length) ||
+      (this.state.projectSettings.selectedBrowsers.length &&
+        this.state.projectSettings.selectedViewportSizes.length)
     return (
       <div className="visual-grid-options">
         {!hasOptionsSelected ? (
@@ -269,6 +275,11 @@ export default class VisualGrid extends React.Component {
             />
           </div>
         </VisualGridOptionGroup>
+        {hasValidOptions ? (
+          <DownloadConfig projectSettings={this.state.projectSettings} />
+        ) : (
+          undefined
+        )}
       </div>
     )
   }

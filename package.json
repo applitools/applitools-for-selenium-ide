@@ -66,6 +66,7 @@
     "classnames": "^2.2.5",
     "fuse.js": "^3.3.0",
     "identity-obj-proxy": "^3.0.0",
+    "js-yaml": "^3.12.1",
     "pngjs": "^3.3.3",
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
