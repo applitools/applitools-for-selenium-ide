@@ -1,0 +1,4 @@
+.keydownHook:focus {
+  outline: 0;
+  border: unset;
+}
