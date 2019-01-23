@@ -390,7 +390,7 @@ browser.runtime.onMessageExternal.addListener(
         }
         case 'config': {
           return sendResponse(
-            `const Eyes = require('@applitools/eyes-selenium').Eyes;global.Target = require('@applitools/eyes-selenium').Target;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
+            `const { Eyes, Target } = configuration.params.eyesRendering ? require('@applitools/eyes-rendering') : require('@applitools/eyes-selenium');global.Target = Target;const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes-sdk-core');let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
               message.project.name
             }", batchId = configuration.runId, batchName;`
           )
@@ -406,7 +406,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
               before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");eyes.setSendDom(configuration.params.domUploadDisabled ? false : true);if (configuration.params.logsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
+                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes.isVisualGrid()){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.domUploadDisabled ? false : true);if (configuration.params.logsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
               after: 'if (eyes._isOpen) {await eyes.close();}',
             })
           }
@@ -420,7 +420,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               setup: `const _driver = driver;driver = await eyes.open(driver, appName, "${
                 message.test.name
-              }");`,
+              }", null, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : null);`,
               teardown: 'driver = _driver;',
             })
           }
