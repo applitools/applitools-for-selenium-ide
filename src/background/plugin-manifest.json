@@ -65,6 +65,14 @@
         "description": "Resizes the browser to match the viewport size (excluding window borders).",
         "target": "resolution"
       }
+    },
+    {
+      "id": "eyesSetBaselineEnvName",
+      "name": "eyes set baseline env name",
+      "docs": {
+        "description": "Uses an existing baseline environment for all Eyes check commands. If a baseline environment for the given name doesn't exist, one will be created.",
+        "target": "baseline env name"
+      }
     }
   ],
   "dependencies": { "@applitools/eyes-selenium": "4.3.2" }
