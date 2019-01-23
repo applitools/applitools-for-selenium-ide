@@ -5143,10 +5143,10 @@ jest-environment-node@^23.4.0:
     jest-mock "^23.2.0"
     jest-util "^23.4.0"
 
-jest-environment-selenium@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-2.0.0.tgz#e3e7222750fbdb4b5d29e41a14fa382d30c2b778"
-  integrity sha512-djAASYYULpx2UFNrjqaOZiM8Boxoo9uhKBbjjjSIiUV3W3plGF73hFeC8gh97/HvztzYPTF63gGGp0uQnqZ3SQ==
+jest-environment-selenium@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-2.1.0.tgz#f1bf4584b6d80fc2dbe48d147f79b8fca7154ca8"
+  integrity sha512-1P6y6326Py+b51JPGjaAqValZpK3qpP43sFpCjusDcz5iLOpeKzxzM33u9ErU3uBtL2ovElxe4Bkj2tiZ8km3Q==
 
 jest-get-type@^22.1.0:
   version "22.1.0"
@@ -8097,21 +8097,21 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
-selenium-side-runner@3.5.0-alpha.0:
-  version "3.5.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/selenium-side-runner/-/selenium-side-runner-3.5.0-alpha.0.tgz#60b818adb4a0def236fe6b2223ec677bfa6eeb25"
-  integrity sha512-KhRjBZsQOcA/TsGCQ47rfrIRTvXi2KyO7AzbNFP8to+k/mGsTtAahztyzHN6RNCE8faNQIrzFjq1e6xKi1FfRQ==
+selenium-side-runner@3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/selenium-side-runner/-/selenium-side-runner-3.5.0.tgz#13d434afe423bb9bd4c0eb421d7ebf884bcd372c"
+  integrity sha512-tMtXqCMnWNJ+ZWWAHI8VWMGe6hw9OuLRHKETBEOif/F+NgclB+T9jnVcQoY/aEWQz4+HhFv8osC1WC4Y0xw6KQ==
   dependencies:
     commander "^2.12.2"
     glob "^7.1.2"
     global-npm "^0.3.0"
     jest "23.4.2"
-    jest-environment-selenium "2.0.0"
+    jest-environment-selenium "2.1.0"
     js-beautify "^1.7.5"
     js-yaml "^3.10.0"
     rimraf "^2.6.2"
     selenium-webdriver "4.0.0-alpha.1"
-    selianize "^3.5.0-alpha.0"
+    selianize "^3.5.0"
     semver "^5.5.1"
     winston "^2.4.0"
 
@@ -8132,10 +8132,10 @@ selfsigned@^1.9.1:
   dependencies:
     node-forge "0.6.33"
 
-selianize@^3.5.0-alpha.0:
-  version "3.5.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/selianize/-/selianize-3.5.0-alpha.0.tgz#2d57ab914619ee2cd62be95e8c0e8deeb084e553"
-  integrity sha512-mnu0rRlRGlyDWGA/M82O/G4h51ElQo4RvmTDRdnGthENBUHxmYchlYz9xoSae81Zfm6O2y7qLtrGjobPApLUtw==
+selianize@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/selianize/-/selianize-3.5.0.tgz#783beb0810c0da72eeeabf2d35c9251660a0ff6d"
+  integrity sha512-C26CDA9T2FisLWRZmU3bDIZ5aNRr7hKLwPx2+JZw3MyA74DZn6VBMPJXyNDK7ybxXPRy815BDSPPL5XcW9yNWg==
   dependencies:
     js-string-escape "^1.0.1"
 
