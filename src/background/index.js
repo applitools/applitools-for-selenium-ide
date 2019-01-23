@@ -6,7 +6,7 @@ import ideLogger from './utils/ide-logger'
 import {
   getExternalState,
   setExternalState,
-  setInternalState,
+  setExternalStateInternally,
   resetMode,
   validateOptions,
 } from './external-state'
@@ -32,7 +32,7 @@ startPolling(pluginManifest, err => {
       isConnected: false,
     })
   } else {
-    setInternalState({
+    setExternalStateInternally({
       isConnected: true,
     })
     resetMode()
@@ -210,6 +210,21 @@ browser.runtime.onMessageExternal.addListener(
     }
     if (message.action === 'execute') {
       switch (message.command.command) {
+        case CommandIds.SetBaselineEnvName: {
+          getEyes(`${message.options.runId}${message.options.testId}`)
+            .then(eyes => {
+              return eyes.setBaselineEnvName(message.command.target)
+            })
+            .then(() => {
+              return sendResponse(true)
+            })
+            .catch(error => {
+              return sendResponse(
+                error instanceof Error ? { error: error.message } : { error }
+              )
+            })
+          return true
+        }
         case CommandIds.SetMatchLevel: {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {

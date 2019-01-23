@@ -231,6 +231,9 @@ function decorateVisualEyes(
       eyes.matchLevel = level
     }
   }
+  eyes.setBaselineEnvName = envName => {
+    eyes.baselineEnvName = envName
+  }
   eyes.getServerUrl = () => serverUrl
   eyes.getBranchName = () => branchName
   eyes.getTestName = () => testName

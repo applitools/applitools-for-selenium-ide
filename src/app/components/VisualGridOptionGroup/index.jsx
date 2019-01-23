@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 import Arrow from '../../assets/images/arrow_sm.svg'
 import './style.css'
 
@@ -21,7 +22,10 @@ export default class VisualGridOptionGroup extends React.Component {
   render() {
     return (
       <div className="group">
-        <div className="group-header" onClick={this.onClick.bind(this)}>
+        <div
+          className={classNames('group-header', this.props.name.toLowerCase())}
+          onClick={this.onClick.bind(this)}
+        >
           <div className="title">{this.props.name}</div>
           <div className="selected-count">{this.props.selectedCount}</div>
           <div className="control">

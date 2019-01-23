@@ -6,6 +6,7 @@ export const CommandIds = {
   SetMatchLevel: 'eyesSetMatchLevel',
   SetMatchTimeout: 'eyesSetMatchTimeout',
   SetViewportSize: 'eyesSetViewportSize',
+  SetBaselineEnvName: 'eyesSetBaselineEnvName',
 }
 
 const CommandNames = Object.values(CommandIds)

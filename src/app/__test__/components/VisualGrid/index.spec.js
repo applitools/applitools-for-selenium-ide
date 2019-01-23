@@ -16,6 +16,7 @@ describe('Visual grid options', () => {
   beforeEach(async () => {
     doRender()
     await waitForElement(() => findElement('#enable-visual-grid'))
+    click('#enable-visual-grid')
   })
 
   afterEach(cleanup)
@@ -42,12 +43,6 @@ describe('Visual grid options', () => {
     ).toBeTruthy()
   })
 
-  it.skip('viewport size is displayed only when a browser is selected', async () => {
-    acceptEula()
-    await toggleSelectedBrowser()
-    expect(innerHtml('.category.viewports')).toBeFalsy()
-  })
-
   it('viewport size is populated with a sensible default', () => {
     acceptEula()
     toggleBrowsersGroup()
@@ -56,40 +51,62 @@ describe('Visual grid options', () => {
     ).toBeTruthy()
   })
 
-  it('error displayed when no viewport size selected', async () => {
+  it('error displayed when browser selected but no viewport size selected', async () => {
     acceptEula()
     toggleBrowsersGroup()
     click('.category.viewports .selected-options .close.outer')
     await waitForCompletion()
     expect(innerHtml('.category.viewports .error-message')).toBeTruthy()
+    expect(innerHtml('.general-error')).toBeFalsy()
   })
 
-  it('device orientation is displayed when a device type is selected', async () => {
-    acceptEula()
-    toggleDevicesGroup()
-    expect(innerHtml('.category.device-orientations')).toBeFalsy()
-    await toggleSelectedDevice()
-    expect(innerHtml('.category.device-orientations')).toBeTruthy()
-  })
-
-  it('device orientation is populated with a sensible default', async () => {
+  it('error displayed when device selected but no device orientation selected', async () => {
     acceptEula()
     toggleDevicesGroup()
     await toggleSelectedDevice()
-    expect(
-      innerHtml('.category.device-orientations .selected-options .option-text')
-    ).toBeTruthy()
-  })
-
-  it('error displayed when no device orientation selected', async () => {
-    acceptEula()
-    toggleDevicesGroup()
-    await toggleSelectedDevice()
-    click('.category.device-orientations .selected-options .close.outer')
     await waitForCompletion()
     expect(
       innerHtml('.category.device-orientations .error-message')
     ).toBeTruthy()
+    expect(innerHtml('.general-error')).toBeFalsy()
+  })
+
+  it('should be able to leave browser and viewport empty if valid device options specified', async () => {
+    acceptEula()
+    toggleDevicesGroup()
+    toggleSelectedDevice()
+    toggleSelectedDeviceOrientation()
+    toggleBrowsersGroup()
+    removeSelectedBrowser()
+    removeSelectedViewport()
+    await waitForCompletion()
+    expect(innerHtml('.category.browsers .error-message')).toBeFalsy()
+    expect(innerHtml('.category.viewports .error-message')).toBeFalsy()
+    expect(innerHtml('.general-error')).toBeFalsy()
+  })
+
+  it('should be able to leave device and orientation empty if valid browser options specified', async () => {
+    acceptEula()
+    toggleDevicesGroup()
+    await waitForCompletion()
+    expect(innerHtml('.category.browsers .error-message')).toBeFalsy()
+    expect(innerHtml('.category.viewports .error-message')).toBeFalsy()
+    expect(innerHtml('.general-error')).toBeFalsy()
+  })
+
+  it.only('should display top level error message when no valid options provided', async () => {
+    acceptEula()
+    toggleBrowsersGroup()
+    removeSelectedBrowser()
+    removeSelectedViewport()
+    await waitForCompletion()
+    expect(innerHtml('.category.browsers .error-message')).toBeFalsy()
+    expect(innerHtml('.category.viewports .error-message')).toBeFalsy()
+    expect(innerHtml('.category.devices .error-message')).toBeFalsy()
+    expect(
+      innerHtml('.category.device-orientations .error-message')
+    ).toBeFalsy()
+    expect(innerHtml('.general-error')).toBeTruthy()
   })
 
   // browsers
@@ -190,6 +207,27 @@ describe('Visual grid options', () => {
     ).toBeTruthy()
   })
 
+  it('inputting both width and height for a custom viewport enables it', async () => {
+    await acceptEula()
+    toggleBrowsersGroup()
+    await addCustomViewport(100, 100)
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
+  })
+
+  it('remove width or height for a custom viewport disables it', async () => {
+    await acceptEula()
+    toggleBrowsersGroup()
+    await addCustomViewport(100, 100)
+    sendKeys('.custom-viewport-size .width', '')
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeFalsy()
+    sendKeys('.custom-viewport-size .width', 100)
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
+    sendKeys('.custom-viewport-size .height', '')
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeFalsy()
+    sendKeys('.custom-viewport-size .height', 100)
+    expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
+  })
+
   // device orientations
 
   it('remove a selected device orientation', async () => {
@@ -197,12 +235,6 @@ describe('Visual grid options', () => {
     acceptEula()
     toggleDevicesGroup()
     await toggleSelectedDevice()
-
-    click('.category.device-orientations .selected-options .close.inner')
-    storage = await waitForCompletion()
-    expect(
-      storage.projectSettings[projectId].selectedDeviceOrientations.length
-    ).toBeFalsy()
 
     toggleSelectedDeviceOrientation()
     storage = await waitForCompletion()
@@ -217,6 +249,8 @@ describe('Visual grid options', () => {
     ).toBeFalsy()
   })
 })
+
+// helper functions
 
 const projectId = uuidv4()
 
@@ -235,8 +269,8 @@ async function toggleBrowsersGroup() {
   click('.group-header')
 }
 
-async function toggleDevicesGroup() {
-  click('.group:nth-child(3) .group-header')
+function toggleDevicesGroup() {
+  click('.group-header.devices')
 }
 
 async function toggleSelectedBrowser() {
@@ -271,4 +305,12 @@ async function addCustomViewport(width, height) {
 async function acceptEula() {
   click('.disclaimer button')
   await waitForElement(() => !findElement('.disclaimer'))
+}
+
+function removeSelectedBrowser() {
+  click('.category.browsers .close.inner')
+}
+
+function removeSelectedViewport() {
+  click('.category.viewports .close.inner')
 }

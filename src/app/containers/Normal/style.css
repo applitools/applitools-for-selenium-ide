@@ -36,6 +36,7 @@
 
 .disclaimer {
   font-size: 13px;
+  padding-left: 27px;
 }
 
 .disclaimer p {
@@ -44,7 +45,4 @@
 
 .ReactModal__Overlay--after-open {
   background-color: transparent !important;
-}
-
-.control {
 }

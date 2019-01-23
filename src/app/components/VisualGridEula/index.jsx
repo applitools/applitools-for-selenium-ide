@@ -10,7 +10,7 @@ export default class VisualGridEula extends React.Component {
     return (
       <div className="disclaimer">
         <p>
-          The Visual Grid functionality allows parallel, cross-browser, multi
+          Visual Grid functionality allows parallel, cross-browser, multi
           viewport, ultra-fast visual testing.
         </p>
         <p>

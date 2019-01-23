@@ -61,7 +61,6 @@ export default class Normal extends React.Component {
     })
   }
   setProjectSettings() {
-    //browser.storage.local.remove(['projectSettings'])
     return storage
       .get(['eyesServer', 'eulaSignDate', 'projectSettings'])
       .then(({ eyesServer, eulaSignDate, projectSettings }) => {
@@ -71,12 +70,12 @@ export default class Normal extends React.Component {
             : {
                 branch: '',
                 parentBranch: '',
-                enableVisualGrid: true,
+                enableVisualGrid: false,
                 selectedBrowsers: ['Chrome'],
                 selectedViewportSizes: ['1920x1080'],
                 customViewportSizes: [],
                 selectedDevices: [],
-                selectedDeviceOrientations: ['Portrait'],
+                selectedDeviceOrientations: [],
               }
         this.setState({
           eyesServer,

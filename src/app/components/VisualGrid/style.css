@@ -14,3 +14,11 @@
 .error-message {
   color: red;
 }
+
+.general-error {
+  padding: 0 0 8px 27px !important;
+}
+
+.download-config {
+  padding: 10px 0 5px 27px;
+}

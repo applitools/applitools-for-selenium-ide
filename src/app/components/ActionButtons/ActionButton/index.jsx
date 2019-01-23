@@ -10,6 +10,7 @@ export default class ActionButton extends React.Component {
     imgPath: PropTypes.string.isRequired,
     onClick: PropTypes.func,
     isSelected: PropTypes.bool,
+    className: PropTypes.string,
   }
   render() {
     return (
@@ -17,7 +18,8 @@ export default class ActionButton extends React.Component {
         className={classNames(
           this.props.type,
           'outer',
-          this.props.isSelected ? 'selected' : undefined
+          this.props.isSelected ? 'selected' : undefined,
+          this.props.className ? this.props.className : undefined
         )}
         onClick={this.props.onClick}
       >
@@ -25,7 +27,8 @@ export default class ActionButton extends React.Component {
           className={classNames(
             this.props.type,
             'inner',
-            this.props.isSelected ? 'selected' : undefined
+            this.props.isSelected ? 'selected' : undefined,
+            this.props.className ? this.props.className : undefined
           )}
           style={{
             mask: `url(${this.props.imgPath})`,

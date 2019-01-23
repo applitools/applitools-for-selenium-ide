@@ -1,6 +1,7 @@
 import {
   getExternalState,
   setExternalState,
+  setExternalStateInternally,
   resetMode,
 } from '../external-state'
 jest.mock('webextension-polyfill')
@@ -16,6 +17,7 @@ describe('external-state', () => {
   })
 
   it('resets to normal mode', () => {
+    setExternalStateInternally({ isConnected: true })
     resetMode()
     expect(getExternalState()).toMatchObject({ mode: 'normal' })
   })

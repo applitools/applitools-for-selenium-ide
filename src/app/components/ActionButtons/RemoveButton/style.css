@@ -1,25 +1,26 @@
-.close {
+.remove.close {
   background-color: #d6ecf7;
 }
 
-.close {
+.remove.close {
   float: left;
   margin-left: 1px;
+  padding-top: 1px;
 }
 
-.close.outer {
+.remove.close.outer {
   width: 16px;
   height: 16px;
   cursor: pointer;
 }
 
-.close.inner {
+.remove.close.inner {
   background-color: #767676;
   width: 14px;
-  height: 16px;
+  height: 14px;
   padding-right: 1px;
 }
 
-.close.outer:hover {
+.remove.close.outer:hover {
   background-color: #b2dbf0;
 }

@@ -15,23 +15,34 @@ export default class CustomViewportSize extends React.Component {
     onViewportChange: PropTypes.func.isRequired,
     deleteOption: PropTypes.func.isRequired,
   }
+  constructor(props) {
+    super(props)
+    this.state = { isSelected: props.selected }
+  }
   onWidthChange(value) {
+    this.setState({
+      isSelected: value.length && this.props.height.length ? true : false,
+    })
     this.props.onViewportChange(
       this.props.id,
       value,
       this.props.height,
-      this.props.selected
+      this.state.isSelected
     )
   }
   onHeightChange(value) {
+    this.setState({
+      isSelected: this.props.width.length && value.length ? true : false,
+    })
     this.props.onViewportChange(
       this.props.id,
       this.props.width,
       value,
-      this.props.selected
+      this.state.isSelected
     )
   }
   onSelect(e) {
+    this.setState({ isSelected: e.target.checked })
     this.props.onViewportChange(
       this.props.id,
       this.props.width,
@@ -47,7 +58,7 @@ export default class CustomViewportSize extends React.Component {
           className="checkbox"
           name="enable-custom-viewport"
           label=""
-          checked={this.props.selected}
+          checked={this.state.isSelected}
           onChange={this.onSelect.bind(this)}
         />
         <Input
