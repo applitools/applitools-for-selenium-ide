@@ -31,7 +31,7 @@ startPolling(pluginManifest, err => {
       normalMode: Modes.NORMAL,
       isConnected: false,
     })
-  } else {
+  } else if (!getExternalState().isConnected) {
     setExternalStateInternally({
       isConnected: true,
     })

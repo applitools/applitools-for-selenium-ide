@@ -44,6 +44,8 @@ export function startPolling(payload, cb) {
           }).then(() => {
             cb()
           })
+        } else if (res === true) {
+          cb()
         } else if (res.error) {
           cb(new Error(res.error))
         }
