@@ -75,5 +75,8 @@
       }
     }
   ],
-  "dependencies": { "@applitools/eyes-selenium": "4.3.2" }
+  "dependencies": {
+    "@applitools/eyes-selenium": "4.3.2",
+    "@applitools/eyes-rendering": "2.1.0-beta.0"
+  }
 }
