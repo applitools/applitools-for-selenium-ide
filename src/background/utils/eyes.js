@@ -20,7 +20,14 @@ function createDefaultSettings() {
   }
 }
 
-async function makeEyes(batchId, appName, batchName, testName) {
+export async function makeEyes(
+  id,
+  batchId,
+  appName,
+  batchName,
+  testName,
+  useNativeOverride = false
+) {
   if (lastResults.batchId !== batchId) {
     lastResults.batchId = batchId
     lastResults.url = ''
@@ -49,9 +56,10 @@ async function makeEyes(batchId, appName, batchName, testName) {
   }
   const branch = settings ? settings.branch : ''
   const parentBranch = settings ? settings.parentBranch : ''
+  let eye
 
-  if (!!eulaSignDate && settings.enableVisualGrid) {
-    return await createVisualGridEyes(
+  if (!!eulaSignDate && settings.enableVisualGrid && !useNativeOverride) {
+    eye = await createVisualGridEyes(
       batchId,
       appName,
       batchName,
@@ -66,7 +74,7 @@ async function makeEyes(batchId, appName, batchName, testName) {
       settings ? settings.selectedDeviceOrientations : undefined
     )
   } else {
-    return await createImagesEyes(
+    eye = await createImagesEyes(
       batchId,
       appName,
       batchName,
@@ -77,6 +85,8 @@ async function makeEyes(batchId, appName, batchName, testName) {
       parentBranch
     )
   }
+  eyes[id] = eye
+  return eye
 }
 
 async function createImagesEyes(
@@ -103,6 +113,24 @@ async function createImagesEyes(
   return eyes
 }
 
+export function hasValidVisualGridSettings(settings) {
+  if (!settings) return true
+  let count = [
+    !!settings.browsers.length,
+    !!settings.viewports.length,
+    !!settings.devices.length,
+    !!settings.orientations.length,
+  ]
+  switch (count.join()) {
+    case 'true,true,false,false':
+    case 'false,false,true,true':
+    case 'true,true,true,true':
+      return true
+    default:
+      return false
+  }
+}
+
 async function createVisualGridEyes(
   batchId,
   appName,
@@ -117,6 +145,10 @@ async function createVisualGridEyes(
   devices,
   orientations
 ) {
+  if (
+    !hasValidVisualGridSettings({ browsers, viewports, devices, orientations })
+  )
+    throw new Error('Incomplete visual grid settings')
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
@@ -151,15 +183,10 @@ export function hasEyes(id) {
   return !!eyes[id]
 }
 
-export function getEyes(id, batchId, appName, batchName, testName) {
+export function getEyes(id) {
   return new Promise((res, rej) => {
     if (!eyes[id]) {
-      makeEyes(batchId, appName, batchName, testName)
-        .then(eye => {
-          eyes[id] = eye
-          res(eye)
-        })
-        .catch(rej)
+      rej('No eyes session found')
     } else {
       res(eyes[id])
     }

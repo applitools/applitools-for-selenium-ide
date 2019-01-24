@@ -1,8 +1,13 @@
 import browser from 'webextension-polyfill'
 import './image-strategies/css-stitching/polyfills'
-import { CommandIds, isEyesCommand } from '../commons/commands'
+import {
+  CommandIds,
+  isEyesCommand,
+  containsEyesCommands,
+} from '../commons/commands'
 import Modes from '../commons/modes'
 import ideLogger from './utils/ide-logger'
+import popup from './utils/ide-popup'
 import {
   getExternalState,
   setExternalState,
@@ -19,7 +24,7 @@ import {
   checkElement,
   endTest,
 } from './commands/check'
-import { getEyes, hasEyes, getResultsUrl } from './utils/eyes'
+import { makeEyes, getEyes, hasEyes, getResultsUrl } from './utils/eyes'
 import { parseViewport, parseRegion } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
 import pluginManifest from './plugin-manifest.json'
@@ -158,25 +163,54 @@ browser.runtime.onMessageExternal.addListener(
       setExternalState({ projectId: message.options.projectId })
     }
     if (message.event === 'playbackStarted' && message.options.runId) {
-      getEyes(
-        `${message.options.runId}${message.options.testId}`,
-        message.options.runId,
-        message.options.projectName,
-        message.options.suiteName,
-        message.options.testName
-      )
-        .then(() => {
-          if (!getExternalState().enableVisualCheckpoints) {
-            ideLogger.log('visual checkpoints are disabled').then(() => {
-              return sendResponse(true)
-            })
-          } else {
+      if (
+        containsEyesCommands(
+          message.options.commands.map(command => command.command)
+        ) &&
+        getExternalState().enableVisualCheckpoints
+      ) {
+        makeEyes(
+          `${message.options.runId}${message.options.testId}`,
+          message.options.runId,
+          message.options.projectName,
+          message.options.suiteName,
+          message.options.testName
+        )
+          .then(() => {
             return sendResponse(true)
-          }
-        })
-        .catch(() => {
+          })
+          .catch(() => {
+            popup({
+              message:
+                'You have incomplete visual grid settings in the Eyes extension. What would you like to do?',
+              cancelLabel: 'Abort',
+              confirmLabel: 'Use Native Eyes',
+            }).then(result => {
+              if (result) {
+                makeEyes(
+                  `${message.options.runId}${message.options.testId}`,
+                  message.options.runId,
+                  message.options.projectName,
+                  message.options.suiteName,
+                  message.options.testName,
+                  true
+                ).then(() => {
+                  return sendResponse(true)
+                })
+              } else {
+                return sendResponse({
+                  message:
+                    'User aborted playback due to incomplete visual grid settings',
+                  status: 'fatal',
+                })
+              }
+            })
+          })
+      } else {
+        ideLogger.log('Visual checkpoints are disabled').then(() => {
           return sendResponse(true)
         })
+      }
       return true
     }
     if (
