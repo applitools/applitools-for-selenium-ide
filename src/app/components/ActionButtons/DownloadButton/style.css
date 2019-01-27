@@ -1,0 +1,21 @@
+.download.close {
+  float: left;
+  margin-left: 1px;
+}
+
+.download.close.outer {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.download.close.inner {
+  background-color: #767676;
+  width: 26px;
+  height: 28px;
+  padding-right: 1px;
+}
+
+.download.close.inner:hover {
+  background-color: #505050;
+}

@@ -1,5 +1,6 @@
 .visual-grid-options {
   padding-top: 7px;
+  position: relative;
 }
 
 .visual-grid-options .option-header .title {
@@ -20,5 +21,7 @@
 }
 
 .download-config {
-  padding: 10px 0 5px 27px;
+  position: absolute;
+  top: -29px;
+  right: -3px;
 }

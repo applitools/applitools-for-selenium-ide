@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { parseBrowsers } from '../../../background/utils/parsers'
 import { downloadFile } from '../../../IO/filesystem'
+import DownloadButton from '../ActionButtons/DownloadButton'
 const yaml = require('js-yaml')
 
 export default class DownloadConfig extends React.Component {
@@ -23,14 +24,11 @@ export default class DownloadConfig extends React.Component {
   render() {
     return (
       <div className="download-config">
-        <a
-          href="#"
+        <DownloadButton
           onClick={() => {
             downloadFile(this.generateYaml())
           }}
-        >
-          Download config
-        </a>
+        />
       </div>
     )
   }

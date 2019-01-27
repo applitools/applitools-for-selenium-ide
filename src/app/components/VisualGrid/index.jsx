@@ -134,6 +134,11 @@ export default class VisualGrid extends React.Component {
         this.state.projectSettings.selectedViewportSizes.length)
     return (
       <div className="visual-grid-options">
+        {hasValidOptions ? (
+          <DownloadConfig projectSettings={this.state.projectSettings} />
+        ) : (
+          undefined
+        )}
         {!hasOptionsSelected ? (
           <div className={classNames('error-message', 'general-error')}>
             No options selected.
@@ -275,11 +280,6 @@ export default class VisualGrid extends React.Component {
             />
           </div>
         </VisualGridOptionGroup>
-        {hasValidOptions ? (
-          <DownloadConfig projectSettings={this.state.projectSettings} />
-        ) : (
-          undefined
-        )}
       </div>
     )
   }
