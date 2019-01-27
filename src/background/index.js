@@ -195,7 +195,7 @@ browser.runtime.onMessageExternal.addListener(
                   message: `You have incomplete visual grid settings in the Eyes 
                   extension. What would you like to do?`,
                   cancelLabel: 'Abort',
-                  confirmLabel: 'Use Native Eyes',
+                  confirmLabel: 'Use native Eyes',
                 }
                 break
             }
