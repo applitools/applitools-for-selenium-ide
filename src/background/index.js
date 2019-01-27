@@ -179,32 +179,39 @@ browser.runtime.onMessageExternal.addListener(
           .then(() => {
             return sendResponse(true)
           })
-          .catch(() => {
-            popup({
-              message:
-                'You have incomplete visual grid settings in the Eyes extension. What would you like to do?',
-              cancelLabel: 'Abort',
-              confirmLabel: 'Use Native Eyes',
-            }).then(result => {
-              if (result) {
-                makeEyes(
-                  `${message.options.runId}${message.options.testId}`,
-                  message.options.runId,
-                  message.options.projectName,
-                  message.options.suiteName,
-                  message.options.testName,
-                  true
-                ).then(() => {
-                  return sendResponse(true)
-                })
-              } else {
-                return sendResponse({
-                  message:
-                    'User aborted playback due to incomplete visual grid settings',
-                  status: 'fatal',
-                })
-              }
-            })
+          .catch(error => {
+            let modalSettings
+            switch (error.message) {
+              case 'Incomplete visual grid settings':
+                modalSettings = {
+                  message: `You have incomplete visual grid settings in the Eyes 
+                  extension. What would you like to do?`,
+                  cancelLabel: 'Abort',
+                  confirmLabel: 'Use Native Eyes',
+                }
+                break
+            }
+            if (modalSettings) {
+              popup(modalSettings).then(result => {
+                if (result) {
+                  makeEyes(
+                    `${message.options.runId}${message.options.testId}`,
+                    message.options.runId,
+                    message.options.projectName,
+                    message.options.suiteName,
+                    message.options.testName,
+                    true
+                  ).then(() => {
+                    return sendResponse(true)
+                  })
+                } else {
+                  return sendResponse({
+                    message: 'User aborted playback.',
+                    status: 'fatal',
+                  })
+                }
+              })
+            }
           })
       } else {
         ideLogger.log('Visual checkpoints are disabled').then(() => {

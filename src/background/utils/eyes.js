@@ -58,6 +58,9 @@ export async function makeEyes(
   const parentBranch = settings ? settings.parentBranch : ''
   let eye
 
+  if (settings.enableVisualGrid && !eulaSignDate)
+    throw new Error('Incomplete visual grid settings')
+
   if (!!eulaSignDate && settings.enableVisualGrid && !useNativeOverride) {
     eye = await createVisualGridEyes(
       batchId,
