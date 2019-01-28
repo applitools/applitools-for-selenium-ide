@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill'
 import React from 'react'
 import ButtonList from '../../components/ButtonList'
 import { sendMessage } from '../../../IO/message-port'
@@ -43,13 +44,40 @@ export default class Record extends React.Component {
     this.handleCommandClick = this.handleCommandClick.bind(this)
   }
   handleCommandClick(command) {
-    sendMessage({
-      uri: '/record/command',
-      verb: 'post',
-      payload: this.commands[command],
-    })
-      .then(console.log) // eslint-disable-line no-console
-      .catch(console.error) // eslint-disable-line no-console
+    if (command === 'Set viewport size') {
+      sendMessage({
+        uri: '/record/tab',
+        verb: 'get',
+      }).then(res => {
+        if (res.error === 'No active tab found') {
+          sendMessage({
+            uri: '/record/command',
+            verb: 'post',
+            payload: this.commands[command],
+          })
+        } else {
+          return browser.tabs.get(res.id).then(tab => {
+            return sendMessage({
+              uri: '/record/command',
+              verb: 'post',
+              payload: {
+                command: CommandIds.SetViewportSize,
+                target: `${tab.width}x${Math.max(tab.height - 100, 100)}`,
+                value: '',
+              },
+            })
+          })
+        }
+      })
+    } else {
+      sendMessage({
+        uri: '/record/command',
+        verb: 'post',
+        payload: this.commands[command],
+      })
+        .then(console.log) // eslint-disable-line no-console
+        .catch(console.error) // eslint-disable-line no-console
+    }
   }
   render() {
     return (

@@ -152,7 +152,7 @@ browser.runtime.onMessageExternal.addListener(
           sendResponse({
             mutation: 'update',
             command: CommandIds.SetViewportSize,
-            target: `${tab.width}x${tab.height}`,
+            target: `${tab.width}x${Math.max(tab.height - 100, 100)}`, // we are subtracting to take care of the info-bars, also can't afford to set viewport size to a negative
             value: '',
           })
         })
