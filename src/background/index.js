@@ -315,7 +315,10 @@ browser.runtime.onMessageExternal.addListener(
           return true
         }
         case CommandIds.CheckWindow: {
-          if (!getExternalState().enableVisualCheckpoints) {
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.isNested
+          ) {
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -349,7 +352,10 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case CommandIds.CheckRegion: {
-          if (!getExternalState().enableVisualCheckpoints) {
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.isNested
+          ) {
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -385,7 +391,10 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case CommandIds.CheckElement: {
-          if (!getExternalState().enableVisualCheckpoints) {
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.isNested
+          ) {
             return sendResponse(true)
           } else if (message.options.runId) {
             sendMessage({
@@ -486,12 +495,12 @@ browser.runtime.onMessageExternal.addListener(
           const { command, target, value } = message.command // eslint-disable-line no-unused-vars
           if (command === CommandIds.CheckWindow) {
             return sendResponse(
-              `await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));`
+              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));}`
             )
           } else if (command === CommandIds.CheckRegion) {
             const { x, y, width, height } = parseRegion(target)
             return sendResponse(
-              `await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:${x},top:${y},width:${width},height:${height}}));`
+              `if (!opts.isNested) {await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:${x},top:${y},width:${width},height:${height}}));}`
             )
           } else if (command === CommandIds.CheckElement) {
             sendMessage({
@@ -503,7 +512,7 @@ browser.runtime.onMessageExternal.addListener(
             })
               .then(locator => {
                 sendResponse(
-                  `await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}));`
+                  `if (!opts.isNested) {await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}));}`
                 )
               })
               .catch(console.error) // eslint-disable-line no-console
