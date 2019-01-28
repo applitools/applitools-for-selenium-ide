@@ -16,7 +16,7 @@ let lastResults = {
 
 function createDefaultSettings() {
   return {
-    enableVisualGrid: true,
+    enableVisualGrid: false,
   }
 }
 
