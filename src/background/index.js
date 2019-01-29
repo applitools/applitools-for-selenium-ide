@@ -192,10 +192,9 @@ browser.runtime.onMessageExternal.addListener(
             switch (error.message) {
               case 'Incomplete visual grid settings':
                 modalSettings = {
-                  message: `You have incomplete visual grid settings in the Eyes 
-                  extension. What would you like to do?`,
-                  cancelLabel: 'Abort',
-                  confirmLabel: 'Use native Eyes',
+                  message: `There are incomplete visual grid settings in the Eyes extension. Playback cannot be completed using the visual grid until the missing settings are fixed.`,
+                  cancelLabel: 'Abort for now',
+                  confirmLabel: 'Run without the grid',
                 }
                 break
             }
@@ -473,7 +472,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
               before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.eyesDomUploadDisabled ? false : true);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
+                'global.eyes = new Eyes(serverUrl, !!configuration.params.eyesEnabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(!!configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
               after: 'if (eyes._isOpen) {await eyes.close();}',
             })
           }
