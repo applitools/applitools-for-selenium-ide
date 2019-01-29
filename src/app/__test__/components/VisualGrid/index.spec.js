@@ -228,6 +228,17 @@ describe('Visual grid options', () => {
     expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
   })
 
+  it.only('committing an auto-enabled custom viewport saves it', async () => {
+    await acceptEula()
+    toggleBrowsersGroup()
+    await addCustomViewport(1, 1)
+    click('.btn.confirm')
+    const storage = await waitForCompletion()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.includes('1x1')
+    ).toBeTruthy()
+  })
+
   // device orientations
 
   it('remove a selected device orientation', async () => {

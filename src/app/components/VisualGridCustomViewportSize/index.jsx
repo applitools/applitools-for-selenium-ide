@@ -20,25 +20,23 @@ export default class CustomViewportSize extends React.Component {
     this.state = { isSelected: props.selected }
   }
   onWidthChange(value) {
-    this.setState({
-      isSelected: value.length && this.props.height.length ? true : false,
-    })
+    const isSelected = value.length && this.props.height.length ? true : false
+    this.setState({ isSelected })
     this.props.onViewportChange(
       this.props.id,
       value,
       this.props.height,
-      this.state.isSelected
+      isSelected
     )
   }
   onHeightChange(value) {
-    this.setState({
-      isSelected: this.props.width.length && value.length ? true : false,
-    })
+    const isSelected = this.props.width.length && value.length ? true : false
+    this.setState({ isSelected })
     this.props.onViewportChange(
       this.props.id,
       this.props.width,
       value,
-      this.state.isSelected
+      isSelected
     )
   }
   onSelect(e) {
