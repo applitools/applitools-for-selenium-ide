@@ -169,12 +169,20 @@ browser.runtime.onMessageExternal.addListener(
         ) &&
         getExternalState().enableVisualCheckpoints
       ) {
+        const baselineEnvNameCommand = message.options.commands.find(
+          command => command.command === CommandIds.SetBaselineEnvName
+        )
         makeEyes(
           `${message.options.runId}${message.options.testId}`,
           message.options.runId,
           message.options.projectName,
           message.options.suiteName,
-          message.options.testName
+          message.options.testName,
+          {
+            baselineEnvName: baselineEnvNameCommand
+              ? baselineEnvNameCommand.target
+              : undefined,
+          }
         )
           .then(() => {
             return sendResponse(true)
@@ -200,7 +208,12 @@ browser.runtime.onMessageExternal.addListener(
                     message.options.projectName,
                     message.options.suiteName,
                     message.options.testName,
-                    true
+                    {
+                      baselineEnvName: baselineEnvNameCommand
+                        ? baselineEnvNameCommand.target
+                        : undefined,
+                      useNativeOverride: true,
+                    }
                   ).then(() => {
                     return sendResponse(true)
                   })
@@ -252,19 +265,8 @@ browser.runtime.onMessageExternal.addListener(
     if (message.action === 'execute') {
       switch (message.command.command) {
         case CommandIds.SetBaselineEnvName: {
-          getEyes(`${message.options.runId}${message.options.testId}`)
-            .then(eyes => {
-              return eyes.setBaselineEnvName(message.command.target)
-            })
-            .then(() => {
-              return sendResponse(true)
-            })
-            .catch(error => {
-              return sendResponse(
-                error instanceof Error ? { error: error.message } : { error }
-              )
-            })
-          return true
+          // this command gets hoisted
+          return sendResponse(true)
         }
         case CommandIds.SetMatchLevel: {
           getEyes(`${message.options.runId}${message.options.testId}`)
@@ -471,7 +473,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
               before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setBaselineEnvName(configuration.params.eyesBaselineEnvName || null);eyes.setSendDom(configuration.params.eyesDomUploadDisabled ? false : true);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
+                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.eyesDomUploadDisabled ? false : true);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
               after: 'if (eyes._isOpen) {await eyes.close();}',
             })
           }
@@ -482,8 +484,17 @@ browser.runtime.onMessageExternal.addListener(
             isEyesCommand(command.command)
           )
           if (hasEyesCommands) {
+            let baselineEnvName = ''
+            const baselineEnvNameCommand = message.test.commands.find(
+              command => command.command === CommandIds.SetBaselineEnvName
+            )
+            if (baselineEnvNameCommand) {
+              baselineEnvName = `eyes.setBaselineEnvName("${
+                baselineEnvNameCommand.target
+              }" || null);`
+            }
             return sendResponse({
-              setup: `const _driver = driver;driver = await eyes.open(driver, appName, "${
+              setup: `${baselineEnvName}const _driver = driver;driver = await eyes.open(driver, appName, "${
                 message.test.name
               }", null, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : null);`,
               teardown: 'driver = _driver;',
@@ -530,6 +541,9 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse(
               `await eyes.setViewportSize({width: ${width}, height: ${height}});`
             )
+          } else if (command === CommandIds.SetBaselineEnvName) {
+            // this command gets hoisted
+            return sendResponse(' ')
           }
         }
       }

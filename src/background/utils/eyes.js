@@ -26,7 +26,7 @@ export async function makeEyes(
   appName,
   batchName,
   testName,
-  useNativeOverride = false
+  options = {}
 ) {
   if (lastResults.batchId !== batchId) {
     lastResults.batchId = batchId
@@ -61,7 +61,11 @@ export async function makeEyes(
   if (settings.enableVisualGrid && !eulaSignDate)
     throw new Error('Incomplete visual grid settings')
 
-  if (!!eulaSignDate && settings.enableVisualGrid && !useNativeOverride) {
+  if (
+    !!eulaSignDate &&
+    settings.enableVisualGrid &&
+    !options.useNativeOverride
+  ) {
     eye = await createVisualGridEyes(
       batchId,
       appName,
@@ -74,7 +78,8 @@ export async function makeEyes(
       settings ? settings.selectedBrowsers : undefined,
       settings ? settings.selectedViewportSizes : undefined,
       settings ? settings.selectedDevices : undefined,
-      settings ? settings.selectedDeviceOrientations : undefined
+      settings ? settings.selectedDeviceOrientations : undefined,
+      options.baselineEnvName
     )
   } else {
     eye = await createImagesEyes(
@@ -85,7 +90,8 @@ export async function makeEyes(
       eyesApiServerUrl,
       apiKey,
       branch,
-      parentBranch
+      parentBranch,
+      options.baselineEnvName
     )
   }
   eyes[id] = eye
@@ -100,7 +106,8 @@ async function createImagesEyes(
   eyesServer,
   apiKey,
   branch,
-  parentBranch
+  parentBranch,
+  baselineEnvName
 ) {
   const eyes = new Eyes(eyesServer)
   if (process.env.NODE_ENV !== 'production')
@@ -111,6 +118,7 @@ async function createImagesEyes(
   eyes.setAgentId(`eyes.seleniumide.${browserName.toLowerCase()}`)
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`)
   eyes.setBatch(batchName, batchId)
+  if (baselineEnvName) eyes.setBaselineEnvName(baselineEnvName)
   decorateEyes(eyes)
   await eyes.open(appName, testName)
   return eyes
@@ -146,7 +154,8 @@ async function createVisualGridEyes(
   browsers,
   viewports,
   devices,
-  orientations
+  orientations,
+  baselineEnvName
 ) {
   if (
     !hasValidVisualGridSettings({ browsers, viewports, devices, orientations })
@@ -166,6 +175,7 @@ async function createVisualGridEyes(
     ignoreCaret: true,
     agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
     browser: parseBrowsers(browsers, viewports, devices, orientations),
+    baselineEnvName,
   })
   decorateVisualEyes(
     eyes,
@@ -260,9 +270,6 @@ function decorateVisualEyes(
     } else {
       eyes.matchLevel = level
     }
-  }
-  eyes.setBaselineEnvName = envName => {
-    eyes.baselineEnvName = envName
   }
   eyes.getServerUrl = () => serverUrl
   eyes.getBranchName = () => branchName
