@@ -12,7 +12,6 @@ import {
   devices,
   orientations,
 } from '../VisualGridOptionSelector/options'
-import Tooltip from '../../../commons/components/Tooltip'
 import './style.css'
 
 export default class VisualGrid extends React.Component {
@@ -281,7 +280,6 @@ export default class VisualGrid extends React.Component {
             />
           </div>
         </VisualGridOptionGroup>
-        <Tooltip />
       </div>
     )
   }
