@@ -13,7 +13,7 @@ export default class DownloadButton extends React.Component {
       <ActionButton
         className="download"
         type="close"
-        size="28px"
+        size="25px"
         position="center"
         imgPath={DownloadIcon}
         onClick={this.props.onClick}
