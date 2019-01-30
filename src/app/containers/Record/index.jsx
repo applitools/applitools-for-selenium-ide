@@ -19,12 +19,6 @@ export default class Record extends React.Component {
         value: '',
         select: true,
       },
-      ['Check region']: {
-        command: CommandIds.CheckRegion,
-        target: '',
-        value: '',
-        select: true,
-      },
       ['Set viewport size']: {
         command: CommandIds.SetViewportSize,
         target: '1280x800',

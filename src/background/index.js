@@ -18,14 +18,9 @@ import {
 import { getCurrentProject } from './utils/ide-project'
 import { sendMessage, startPolling } from '../IO/message-port'
 import { getViewportSize, setViewportSize } from './commands/viewport'
-import {
-  checkWindow,
-  checkRegion,
-  checkElement,
-  endTest,
-} from './commands/check'
+import { checkWindow, checkElement, endTest } from './commands/check'
 import { makeEyes, getEyes, hasEyes, getResultsUrl } from './utils/eyes'
-import { parseViewport, parseRegion } from './utils/parsers'
+import { parseViewport } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
 import pluginManifest from './plugin-manifest.json'
 
@@ -352,45 +347,6 @@ browser.runtime.onMessageExternal.addListener(
             })
           }
         }
-        case CommandIds.CheckRegion: {
-          if (
-            !getExternalState().enableVisualCheckpoints ||
-            message.options.isNested
-          ) {
-            return sendResponse(true)
-          } else if (message.options.runId) {
-            getViewportSize(message.options.tabId).then(viewport => {
-              const region = parseRegion(message.command.target)
-              checkRegion(
-                message.options.runId,
-                message.options.testId,
-                message.options.commandId,
-                message.options.tabId,
-                message.options.windowId,
-                region,
-                message.command.value,
-                viewport
-              )
-                .then(results => {
-                  sendResponse(results)
-                })
-                .catch(error => {
-                  sendResponse(
-                    error instanceof Error
-                      ? { error: error.message }
-                      : { error }
-                  )
-                })
-            })
-            return true
-          } else {
-            return sendResponse({
-              status: 'fatal',
-              error:
-                "This command can't be run individually, please run the test case.",
-            })
-          }
-        }
         case CommandIds.CheckElement: {
           if (
             !getExternalState().enableVisualCheckpoints ||
@@ -506,11 +462,6 @@ browser.runtime.onMessageExternal.addListener(
           if (command === CommandIds.CheckWindow) {
             return sendResponse(
               `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));}`
-            )
-          } else if (command === CommandIds.CheckRegion) {
-            const { x, y, width, height } = parseRegion(target)
-            return sendResponse(
-              `if (!opts.isNested) {await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:${x},top:${y},width:${width},height:${height}}));}`
             )
           } else if (command === CommandIds.CheckElement) {
             sendMessage({

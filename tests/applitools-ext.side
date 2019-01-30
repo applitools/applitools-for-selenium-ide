@@ -35,7 +35,7 @@
       "id": "bef8150d-a331-40d0-acbd-3eba5b0c32e0",
       "comment": "",
       "command": "open",
-      "target": "/helloworld",
+      "target": "helloworld",
       "targets": [],
       "value": ""
     }, {
@@ -53,38 +53,13 @@
       "targets": [],
       "value": ""
     }]
-  }, {
-    "id": "d2f08640-cf0b-4881-9f5f-a7cda12e3604",
-    "name": "check region",
-    "commands": [{
-      "id": "a35ba2f1-b936-471f-a72c-d4e769c5cdee",
-      "comment": "",
-      "command": "open",
-      "target": "/helloworld",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "e8b14dcf-05a4-4b9d-ae45-af915b898ed3",
-      "comment": "",
-      "command": "eyesSetViewportSize",
-      "target": "1280x800",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "34304621-84c4-4a29-b6b4-daabe01f2225",
-      "comment": "",
-      "command": "eyesCheckRegion",
-      "target": "x: 356, y: 147, width: 562, height: 55",
-      "targets": [],
-      "value": "the text"
-    }]
   }],
   "suites": [{
     "id": "87b889f7-70eb-4a6c-a97b-297c27cbad73",
     "name": "hello world",
     "parallel": false,
     "timeout": 3000,
-    "tests": ["bf93491e-bffe-41cf-b84e-7096515c55b0", "3ca13a63-0f78-4bcc-902a-70945c2b58b7", "d2f08640-cf0b-4881-9f5f-a7cda12e3604"]
+    "tests": ["bf93491e-bffe-41cf-b84e-7096515c55b0", "3ca13a63-0f78-4bcc-902a-70945c2b58b7"]
   }],
   "urls": ["https://en.wikipedia.org/", "https://applitools.com/"],
   "plugins": [{
@@ -94,12 +69,12 @@
   }],
   "snapshot": {
     "globalConfig": {
-      "snapshot": "const Eyes = require('@applitools/eyes-selenium').Eyes;global.Target = require('@applitools/eyes-selenium').Target;const ConsoleLogHandler = require('@applitools/eyes-sdk-core').ConsoleLogHandler;let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"
+      "snapshot": "const { Eyes, Target } = configuration.params.eyesRendering ? require('@applitools/eyes-rendering') : require('@applitools/eyes-selenium');global.Target = Target;const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes-sdk-core');let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = \"applitools-ext\", batchId = configuration.runId, batchName;"
     },
     "suites": [{
       "name": "hello world",
       "snapshot": {
-        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.setAgentId(\"eyes.seleniumide.runner\");eyes.setBatch(batchName, batchId);eyes.setHideScrollbars(true);eyes.setStitchMode(\"CSS\");eyes.setSendDom(configuration.params.domUploadDisabled ? false : true);if (configuration.params.logsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}});afterEach(async () => {if (eyes._isOpen) {await eyes.close();}});"
+        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = new Eyes(serverUrl, !!configuration.params.eyesEnabled);eyes.setApiKey(apiKey);eyes.setAgentId(\"eyes.seleniumide.runner\");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode(\"CSS\");}eyes.setSendDom(!!configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}});afterEach(async () => {if (eyes._isOpen) {await eyes.close();}});"
       }
     }],
     "tests": [{
@@ -107,9 +82,9 @@
       "snapshot": {
         "commands": {
           "d12706ea-0336-4b8c-bda0-d171c9f9f465": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "bed43289-dbbf-4f69-94c0-7c8c13ea455d": "await eyes.check(\"a button\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(By.css(`button`)));"
+          "bed43289-dbbf-4f69-94c0-7c8c13ea455d": "if (!opts.isNested) {await eyes.check(\"a button\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(By.css(`button`)));}"
         },
-        "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check element\");"],
+        "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check element\", null, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : null);"],
         "teardownHooks": ["driver = _driver;"]
       }
     }, {
@@ -117,24 +92,18 @@
       "snapshot": {
         "commands": {
           "d74a069d-325a-476d-958b-05f01359a9b6": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "fce61563-638b-49d8-8fe9-2ee18bc05043": "await eyes.check(\"check full page\" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));"
+          "fce61563-638b-49d8-8fe9-2ee18bc05043": "if (!opts.isNested) {await eyes.check(\"check full page\" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));}"
         },
-        "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check window full\");"],
-        "teardownHooks": ["driver = _driver;"]
-      }
-    }, {
-      "id": "d2f08640-cf0b-4881-9f5f-a7cda12e3604",
-      "snapshot": {
-        "commands": {
-          "e8b14dcf-05a4-4b9d-ae45-af915b898ed3": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "34304621-84c4-4a29-b6b4-daabe01f2225": "await eyes.check(\"the text\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region({left:356,top:147,width:562,height:55}));"
-        },
-        "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check region\");"],
+        "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check window full\", null, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : null);"],
         "teardownHooks": ["driver = _driver;"]
       }
     }]
   },
   "dependencies": {
-    "@applitools/eyes-selenium": "4.3.2"
+    "@applitools/eyes-selenium": "4.3.2",
+    "@applitools/eyes-rendering": "2.2.1"
+  },
+  "jest": {
+    "extraGlobals": ["Math"]
   }
 }

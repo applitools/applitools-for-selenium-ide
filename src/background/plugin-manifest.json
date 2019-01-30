@@ -14,19 +14,6 @@
       }
     },
     {
-      "id": "eyesCheckRegion",
-      "name": "eyes check region",
-      "type": "region",
-      "docs": {
-        "description": "Sets a visual checkpoint on part of the page. This will not scroll, region has to fit inside the viewport.",
-        "target": "region",
-        "value": {
-          "name": "step name",
-          "description": "A name to display at the test results, defaults to url."
-        }
-      }
-    },
-    {
       "id": "eyesCheckElement",
       "name": "eyes check element",
       "type": "locator",
