@@ -193,20 +193,28 @@ async function checkWithVisualGrid(
 }
 
 export function endTest(id) {
-  return closeEyes(id).then(results => {
+  return closeEyes(id).then(({ results, commands }) => {
     // eslint-disable-next-line
     console.log(results)
     return Promise.all(
-      results.commands.map((commandId, index) =>
-        sendMessage({
+      commands.map((commandId, index) => {
+        let state
+        if (results.length) {
+          state = results.find(result => result._stepsInfo[index]._isDifferent)
+            ? 'failed'
+            : 'passed'
+        } else {
+          state = results._stepsInfo[index]._isDifferent ? 'failed' : 'passed'
+        }
+        return sendMessage({
           uri: '/playback/command',
           verb: 'post',
           payload: {
             commandId,
-            state: results._stepsInfo[index]._isDifferent ? 'failed' : 'passed',
+            state,
           },
         })
-      )
+      })
     ).then(commandStates => {
       // eslint-disable-next-line
       console.log(commandStates)
