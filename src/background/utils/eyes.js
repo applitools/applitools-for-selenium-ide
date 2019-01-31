@@ -235,15 +235,22 @@ export async function closeEyes(id) {
         firstFailingResultOrLast._isNew)
         ? firstFailingResultOrLast._appUrls._session
         : undefined
-    return { results, commands: eye.commands }
+    return { results, firstFailingResultOrLast }
   } catch (e) {
-    console.error(e) // eslint-disable-line no-console
-    eye.abortIfNotClosed()
+    await eye.abortIfNotClosed().catch(e => {
+      // eslint-disable-next-line no-console
+      console.error(e)
+    })
+    throw e
   }
 }
 
 export function getResultsUrl() {
   return lastResults.url
+}
+
+export function getCommandsForEyes(id) {
+  return eyes[id] ? eyes[id].commands : undefined
 }
 
 function decorateEyes(eyes) {
@@ -287,6 +294,7 @@ function decorateVisualEyes(
   eyes.getTestName = () => testName
   eyes.getBatch = () => ({ name: batchName })
   eyes.getAppName = () => appName
+  eyes.abortIfNotClosed = eyes.abort
 }
 
 function verifyMatchLevel(level) {

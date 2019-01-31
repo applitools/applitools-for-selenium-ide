@@ -185,13 +185,20 @@ browser.runtime.onMessageExternal.addListener(
           .catch(error => {
             let modalSettings
             switch (error.message) {
-              case 'Incomplete visual grid settings':
+              case 'Incomplete visual grid settings': {
                 modalSettings = {
                   message: `There are incomplete visual grid settings in the Eyes extension. Playback cannot be completed using the visual grid until the missing settings are fixed.`,
                   cancelLabel: 'Abort for now',
                   confirmLabel: 'Run without the grid',
                 }
                 break
+              }
+              default: {
+                return sendResponse({
+                  message: error.message,
+                  status: 'fatal',
+                })
+              }
             }
             if (modalSettings) {
               popup(modalSettings).then(result => {
@@ -233,7 +240,6 @@ browser.runtime.onMessageExternal.addListener(
       hasEyes(`${message.options.runId}${message.options.testId}`)
     ) {
       endTest(`${message.options.runId}${message.options.testId}`)
-        .catch(r => r)
         .then(results => {
           resetMode()
           browser.storage.local.get(['openUrls']).then(({ openUrls }) => {
@@ -244,7 +250,12 @@ browser.runtime.onMessageExternal.addListener(
           })
           return sendResponse(results)
         })
-        .catch(sendResponse)
+        .catch(e => {
+          return sendResponse({
+            error: e.message,
+            status: 'fatal',
+          })
+        })
       return true
     }
     if (message.event === 'suitePlaybackStopped' && message.options.runId) {

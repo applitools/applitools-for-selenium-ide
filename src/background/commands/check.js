@@ -1,7 +1,7 @@
 import browser from 'webextension-polyfill'
 import Modes from '../../commons/modes'
 import { sendMessage } from '../../IO/message-port'
-import { getEyes, closeEyes } from '../utils/eyes'
+import { getEyes, closeEyes, getCommandsForEyes } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
@@ -193,44 +193,68 @@ async function checkWithVisualGrid(
 }
 
 export function endTest(id) {
-  return closeEyes(id).then(({ results, commands }) => {
-    // eslint-disable-next-line
-    console.log(results)
-    return Promise.all(
-      commands.map((commandId, index) => {
-        let state
-        if (results.length) {
-          state = results.find(result => result._stepsInfo[index]._isDifferent)
-            ? 'failed'
-            : 'passed'
-        } else {
-          state = results._stepsInfo[index]._isDifferent ? 'failed' : 'passed'
-        }
-        return sendMessage({
-          uri: '/playback/command',
-          verb: 'post',
-          payload: {
-            commandId,
-            state,
-          },
-        })
-      })
-    ).then(commandStates => {
+  const commands = getCommandsForEyes(id)
+  return closeEyes(id)
+    .then(({ results, firstFailingResultOrLast }) => {
       // eslint-disable-next-line
-      console.log(commandStates)
-      return results._status === 'Passed'
-        ? {
-            message: `All visual tests have passed,\nresults: ${
-              results._appUrls._session
-            }`,
+      console.log(results)
+      return Promise.all(
+        commands.map((commandId, index) => {
+          let state
+          if (results.length) {
+            state = results.find(
+              result => result._stepsInfo[index]._isDifferent
+            )
+              ? 'failed'
+              : 'passed'
+          } else {
+            state = results._stepsInfo[index]._isDifferent ? 'failed' : 'passed'
           }
-        : {
-            error: `Diffs were found in visual tests,\nresults: ${
-              results._appUrls._session
-            }`,
-          }
+          return sendMessage({
+            uri: '/playback/command',
+            verb: 'post',
+            payload: {
+              commandId,
+              state,
+            },
+          })
+        })
+      ).then(commandStates => {
+        // eslint-disable-next-line
+        console.log(commandStates)
+        return firstFailingResultOrLast._status === 'Passed'
+          ? {
+              message: `All visual tests have passed,\nresults: ${
+                firstFailingResultOrLast._appUrls._session
+              }`,
+            }
+          : {
+              error: `Diffs were found in visual tests,\nresults: ${
+                firstFailingResultOrLast._appUrls._session
+              }`,
+            }
+      })
     })
-  })
+    .catch(e => {
+      if (commands && commands.length) {
+        return Promise.all(
+          commands.map(commandId => {
+            return sendMessage({
+              uri: '/playback/command',
+              verb: 'post',
+              payload: {
+                commandId,
+                state: 'failed',
+              },
+            })
+          })
+        ).then(() => {
+          throw e
+        })
+      } else {
+        throw e
+      }
+    })
 }
 
 async function preCheck(eyes, viewport) {
