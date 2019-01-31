@@ -54,7 +54,7 @@ function buildCheckFunction(tabId, fn) {
 
     let result
     try {
-      result = fn()
+      result = await fn()
     } catch (e) {
       await restoreCaret()
       await restoreScrollbars()
