@@ -2,7 +2,7 @@ import { hasValidVisualGridSettings } from '../../utils/eyes'
 
 describe('hasValidVisualGridSettings', () => {
   it('should be invalid with no input', () => {
-    expect(hasValidVisualGridSettings(undefined)).toBeTruthy()
+    expect(hasValidVisualGridSettings(undefined)).toBeFalsy()
   })
   it('should be invalid with no option groups populated', () => {
     let settings = {

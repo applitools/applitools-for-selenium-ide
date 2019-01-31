@@ -127,7 +127,7 @@ async function createImagesEyes(
 }
 
 export function hasValidVisualGridSettings(settings) {
-  if (!settings) return true
+  if (!settings) return false
   let count = [
     !!settings.browsers.length,
     !!settings.viewports.length,
