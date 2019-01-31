@@ -19,12 +19,18 @@
 .custom-viewport-size .input input {
   font-size: 12px;
   line-height: 12px;
+  width: auto;
   padding: 3px;
 }
-.custom-viewport-size .input input[type=number]::-webkit-inner-spin-button, 
-.custom-viewport-size .input input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+
+.custom-viewport-size .input input[type='number']::-webkit-inner-spin-button,
+.custom-viewport-size .input input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-viewport-size .input input {
+  -moz-appearance: textfield;
 }
 
 .custom-viewport-size .close.outer {
