@@ -222,17 +222,19 @@ export function endTest(id) {
       ).then(commandStates => {
         // eslint-disable-next-line
         console.log(commandStates)
-        return firstFailingResultOrLast._status === 'Passed'
-          ? {
-              message: `All visual tests have passed,\nresults: ${
-                firstFailingResultOrLast._appUrls._session
-              }`,
-            }
-          : {
-              error: `Diffs were found in visual tests,\nresults: ${
-                firstFailingResultOrLast._appUrls._session
-              }`,
-            }
+        if (commandStates.length) {
+          return firstFailingResultOrLast._status === 'Passed'
+            ? {
+                message: `All visual tests have passed,\nresults: ${
+                  firstFailingResultOrLast._appUrls._session
+                }`,
+              }
+            : {
+                error: `Diffs were found in visual tests,\nresults: ${
+                  firstFailingResultOrLast._appUrls._session
+                }`,
+              }
+        }
       })
     })
     .catch(e => {
