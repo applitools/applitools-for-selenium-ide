@@ -62,8 +62,8 @@ export default class Normal extends React.Component {
   }
   setProjectSettings() {
     return storage
-      .get(['eyesServer', 'eulaSignDate', 'projectSettings'])
-      .then(({ eyesServer, eulaSignDate, projectSettings }) => {
+      .get(['eyesServer', 'eulaSignDate', 'isFree', 'projectSettings'])
+      .then(({ eyesServer, eulaSignDate, isFree, projectSettings }) => {
         const settings =
           projectSettings && projectSettings[this.props.projectId]
             ? projectSettings[this.props.projectId]
@@ -80,6 +80,7 @@ export default class Normal extends React.Component {
         this.setState({
           eyesServer,
           eulaSigned: !!eulaSignDate,
+          isFree,
           projectSettings: settings,
         })
       })
@@ -133,11 +134,12 @@ export default class Normal extends React.Component {
               )}
             />
             {this.state.projectSettings.enableVisualGrid &&
-              !this.state.eulaSigned && (
+              !this.state.eulaSigned &&
+              !this.state.isFree && (
                 <VisualGridEula onEulaSigned={this.signEula} />
               )}
             {this.state.projectSettings.enableVisualGrid &&
-              this.state.eulaSigned && (
+              (this.state.eulaSigned || this.state.isFree) && (
                 <VisualGrid
                   projectId={this.props.projectId}
                   projectSettings={this.state.projectSettings}

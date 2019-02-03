@@ -37,11 +37,13 @@ export async function makeEyes(
     eyesServer,
     projectSettings,
     eulaSignDate,
+    isFree,
   } = await storage.get([
     'apiKey',
     'eyesServer',
     'projectSettings',
     'eulaSignDate',
+    'isFree',
   ])
   if (!apiKey) {
     throw new Error(
@@ -58,11 +60,11 @@ export async function makeEyes(
   const parentBranch = settings ? settings.parentBranch : ''
   let eye
 
-  if (settings.enableVisualGrid && !eulaSignDate)
+  if (settings.enableVisualGrid && !isFree && !eulaSignDate)
     throw new Error('Incomplete visual grid settings')
 
   if (
-    !!eulaSignDate &&
+    (!!eulaSignDate || isFree) &&
     settings.enableVisualGrid &&
     !options.useNativeOverride
   ) {
