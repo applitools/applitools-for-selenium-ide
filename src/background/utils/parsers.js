@@ -56,3 +56,8 @@ export function parseApiServer(server) {
   }
   return server
 }
+
+export function parseMatchLevel(level = 'Strict') {
+  const lvl = level[0].toUpperCase() + level.substr(1).toLowerCase()
+  return lvl === 'Layout' ? 'Layout2' : lvl
+}

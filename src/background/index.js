@@ -20,7 +20,7 @@ import { sendMessage, startPolling } from '../IO/message-port'
 import { getViewportSize, setViewportSize } from './commands/viewport'
 import { checkWindow, checkElement, endTest } from './commands/check'
 import { makeEyes, getEyes, hasEyes, getResultsUrl } from './utils/eyes'
-import { parseViewport } from './utils/parsers'
+import { parseViewport, parseMatchLevel } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
 import pluginManifest from './plugin-manifest.json'
 
@@ -492,9 +492,7 @@ browser.runtime.onMessageExternal.addListener(
             return true
           } else if (command === CommandIds.SetMatchLevel) {
             return sendResponse(
-              `eyes.setMatchLevel("${
-                target === 'Layout' ? 'Layout2' : target
-              }");`
+              `eyes.setMatchLevel("${parseMatchLevel(target)}");`
             )
           } else if (command === CommandIds.SetMatchTimeout) {
             return sendResponse(`eyes.setMatchTimeout(${target});`)

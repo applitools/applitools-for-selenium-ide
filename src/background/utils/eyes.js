@@ -4,7 +4,7 @@ import { makeVisualGridClient } from '@applitools/visual-grid-client'
 import { parseApiServer } from './parsers.js'
 import { browserName } from './userAgent'
 import { getCurrentProject } from './ide-project'
-import { parseBrowsers } from './parsers'
+import { parseBrowsers, parseMatchLevel } from './parsers'
 import storage from '../../IO/storage'
 
 const DEFAULT_EYES_API_SERVER = 'https://eyesapi.applitools.com'
@@ -261,11 +261,7 @@ function decorateEyes(eyes) {
   const setMatchLevel = eyes.setMatchLevel.bind(eyes)
   eyes.setMatchLevel = level => {
     verifyMatchLevel(level)
-    if (level === 'Layout') {
-      setMatchLevel('Layout2')
-    } else {
-      setMatchLevel(level)
-    }
+    setMatchLevel(parseMatchLevel(level))
   }
 }
 
@@ -285,11 +281,7 @@ function decorateVisualEyes(
   eyes.getMatchLevel = () => eyes.matchLevel
   eyes.setMatchLevel = level => {
     verifyMatchLevel(level)
-    if (level === 'Layout') {
-      eyes.matchLevel = 'Layout2'
-    } else {
-      eyes.matchLevel = level
-    }
+    eyes.matchLevel = parseMatchLevel(level)
   }
   eyes.getServerUrl = () => serverUrl
   eyes.getBranchName = () => branchName
@@ -300,7 +292,7 @@ function decorateVisualEyes(
 }
 
 function verifyMatchLevel(level) {
-  if (!/Layout|Content|Strict|Exact/.test(level)) {
+  if (!/Layout|Content|Strict|Exact/i.test(level)) {
     throw new Error(
       'Match level must be one of: Exact, Strict, Content or Layout.'
     )
