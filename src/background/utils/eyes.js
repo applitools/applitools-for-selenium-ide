@@ -20,18 +20,7 @@ function createDefaultSettings() {
   }
 }
 
-export async function makeEyes(
-  id,
-  batchId,
-  appName,
-  batchName,
-  testName,
-  options = {}
-) {
-  if (lastResults.batchId !== batchId) {
-    lastResults.batchId = batchId
-    lastResults.url = ''
-  }
+export async function getExtensionSettings() {
   const {
     apiKey,
     eyesServer,
@@ -45,43 +34,64 @@ export async function makeEyes(
     'eulaSignDate',
     'isFree',
   ])
-  if (!apiKey) {
+  const { id } = await getCurrentProject()
+  let settings = projectSettings && projectSettings[id]
+  if (!settings) {
+    settings = createDefaultSettings()
+  }
+  return { apiKey, eyesServer, projectSettings: settings, isFree, eulaSignDate }
+}
+
+export async function makeEyes(
+  id,
+  batchId,
+  appName,
+  batchName,
+  testName,
+  options = {}
+) {
+  if (lastResults.batchId !== batchId) {
+    lastResults.batchId = batchId
+    lastResults.url = ''
+  }
+  const settings = await getExtensionSettings()
+  if (!settings.apiKey) {
     throw new Error(
       'No API key was provided, please set one in the options page'
     )
   }
-  const projectId = (await getCurrentProject()).id
-  const eyesApiServerUrl = eyesServer ? parseApiServer(eyesServer) : undefined
-  let settings = projectSettings && projectSettings[projectId]
-  if (!settings) {
-    settings = createDefaultSettings()
-  }
-  const branch = settings ? settings.branch : ''
-  const parentBranch = settings ? settings.parentBranch : ''
+  const eyesApiServerUrl = settings.eyesServer
+    ? parseApiServer(settings.eyesServer)
+    : undefined
+  const branch = settings ? settings.projectSettings.branch : ''
+  const parentBranch = settings ? settings.projectSettings.parentBranch : ''
   let eye
 
-  if (settings.enableVisualGrid && !isFree && !eulaSignDate)
-    throw new Error('Incomplete visual grid settings')
-
-  if (
-    (!!eulaSignDate || isFree) &&
-    settings.enableVisualGrid &&
-    !options.useNativeOverride
-  ) {
+  if (settings.projectSettings.enableVisualGrid && !options.useNativeOverride) {
     eye = await createVisualGridEyes(
       batchId,
       appName,
       batchName,
       testName,
       eyesApiServerUrl,
-      apiKey,
+      settings.apiKey,
       branch,
       parentBranch,
-      settings ? settings.selectedBrowsers : undefined,
-      settings ? settings.selectedViewportSizes : undefined,
-      settings ? settings.selectedDevices : undefined,
-      settings ? settings.selectedDeviceOrientations : undefined,
-      options.baselineEnvName
+      settings.projectSettings
+        ? settings.projectSettings.selectedBrowsers
+        : undefined,
+      settings.projectSettings
+        ? settings.projectSettings.selectedViewportSizes
+        : undefined,
+      settings.projectSettings
+        ? settings.projectSettings.selectedDevices
+        : undefined,
+      settings.projectSettings
+        ? settings.projectSettings.selectedDeviceOrientations
+        : undefined,
+      options.baselineEnvName,
+      settings.isFree,
+      settings.eulaSignDate
     )
   } else {
     eye = await createImagesEyes(
@@ -90,7 +100,7 @@ export async function makeEyes(
       batchName,
       testName,
       eyesApiServerUrl,
-      apiKey,
+      settings.apiKey,
       branch,
       parentBranch,
       options.baselineEnvName
@@ -128,11 +138,24 @@ async function createImagesEyes(
 
 export function hasValidVisualGridSettings(settings) {
   if (!settings) return false
+  if (
+    settings.selectedBrowsers ||
+    settings.selectedViewportSizes ||
+    settings.selectedDevices ||
+    settings.selectedDeviceOrientations
+  ) {
+    // projectSettings object passed in,
+    // assign values to the correct keys
+    settings.browsers = settings.selectedBrowsers
+    settings.viewports = settings.selectedViewportSizes
+    settings.devices = settings.selectedDevices
+    settings.orientations = settings.selectedDeviceOrientations
+  }
   let count = [
-    !!settings.browsers.length,
-    !!settings.viewports.length,
-    !!settings.devices.length,
-    !!settings.orientations.length,
+    settings.browsers ? !!settings.browsers.length : false,
+    settings.viewports ? !!settings.viewports.length : false,
+    settings.devices ? !!settings.devices.length : false,
+    settings.orientations ? !!settings.orientations.length : false,
   ]
   switch (count.join()) {
     case 'true,true,false,false':
@@ -157,10 +180,18 @@ async function createVisualGridEyes(
   viewports,
   devices,
   orientations,
-  baselineEnvName
+  baselineEnvName,
+  isFree,
+  eulaSignDate
 ) {
   if (
-    !hasValidVisualGridSettings({ browsers, viewports, devices, orientations })
+    (!isFree && !eulaSignDate) ||
+    !hasValidVisualGridSettings({
+      browsers,
+      viewports,
+      devices,
+      orientations,
+    })
   )
     throw new Error('Incomplete visual grid settings')
   const eyes = await makeVisualGridClient({

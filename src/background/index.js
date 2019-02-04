@@ -19,10 +19,18 @@ import { getCurrentProject } from './utils/ide-project'
 import { sendMessage, startPolling } from '../IO/message-port'
 import { getViewportSize, setViewportSize } from './commands/viewport'
 import { checkWindow, checkElement, endTest } from './commands/check'
-import { makeEyes, getEyes, hasEyes, getResultsUrl } from './utils/eyes'
+import {
+  makeEyes,
+  getEyes,
+  hasEyes,
+  getResultsUrl,
+  hasValidVisualGridSettings,
+  getExtensionSettings,
+} from './utils/eyes'
 import { parseViewport, parseMatchLevel } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
 import pluginManifest from './plugin-manifest.json'
+import { incompleteVisualGridSettings } from './modal-settings'
 
 startPolling(pluginManifest, err => {
   if (err) {
@@ -112,6 +120,8 @@ browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 })
 
+let useNativeOverride = undefined
+
 // BEWARE CONVOLUTED API AHEAD!!!
 // When using onMessage or onMessageExternal listeners only one response can
 // be returned, or else it will throw (sometimes throw in a different message at all!)
@@ -157,15 +167,48 @@ browser.runtime.onMessageExternal.addListener(
     if (message.event === 'projectLoaded') {
       setExternalState({ projectId: message.options.projectId })
     }
-    if (message.event === 'playbackStarted' && message.options.runId) {
+    if (message.event === 'suitePlaybackStarted' && message.options.runId) {
+      const commands = message.options.tests
+        .map(test => test.commands.map(command => command.command))
+        .join()
+        .split(',')
       if (
-        containsEyesCommands(
-          message.options.commands.map(command => command.command)
-        ) &&
+        containsEyesCommands(commands) &&
         getExternalState().enableVisualCheckpoints
       ) {
-        const baselineEnvNameCommand = message.options.commands.find(
-          command => command.command === CommandIds.SetBaselineEnvName
+        getExtensionSettings().then(settings => {
+          if (
+            !settings.eulaSignDate ||
+            !hasValidVisualGridSettings(settings.projectSettings)
+          ) {
+            popup(incompleteVisualGridSettings).then(result => {
+              if (result) {
+                useNativeOverride = true
+                return sendResponse(true)
+              } else {
+                return sendResponse({
+                  message: 'User aborted playback.',
+                  status: 'fatal',
+                })
+              }
+            })
+          } else {
+            return sendResponse(true)
+          }
+        })
+      }
+      return true
+    }
+    if (message.event === 'playbackStarted' && message.options.runId) {
+      const commands = message.options.test.commands.map(
+        command => command.command
+      )
+      if (
+        containsEyesCommands(commands) &&
+        getExternalState().enableVisualCheckpoints
+      ) {
+        const baselineEnvNameCommand = commands.find(
+          command => command === CommandIds.SetBaselineEnvName
         )
         makeEyes(
           `${message.options.runId}${message.options.testId}`,
@@ -177,6 +220,7 @@ browser.runtime.onMessageExternal.addListener(
             baselineEnvName: baselineEnvNameCommand
               ? baselineEnvNameCommand.target
               : undefined,
+            useNativeOverride,
           }
         )
           .then(() => {
@@ -186,11 +230,7 @@ browser.runtime.onMessageExternal.addListener(
             let modalSettings
             switch (error.message) {
               case 'Incomplete visual grid settings': {
-                modalSettings = {
-                  message: `There are incomplete visual grid settings in the Eyes extension. Playback cannot be completed using the visual grid until the missing settings are fixed.`,
-                  cancelLabel: 'Abort for now',
-                  confirmLabel: 'Run without the grid',
-                }
+                modalSettings = incompleteVisualGridSettings
                 break
               }
               default: {
@@ -259,13 +299,18 @@ browser.runtime.onMessageExternal.addListener(
       return true
     }
     if (message.event === 'suitePlaybackStopped' && message.options.runId) {
-      browser.storage.local.get(['openUrls']).then(({ openUrls }) => {
-        const url = getResultsUrl()
-        if (openUrls && url) {
-          browser.tabs.create({ url })
-        }
-      })
-      return sendResponse(true)
+      browser.storage.local
+        .get(['openUrls'])
+        .then(({ openUrls }) => {
+          const url = getResultsUrl()
+          if (openUrls && url) {
+            browser.tabs.create({ url })
+          }
+          sendResponse(true)
+        })
+        .catch(sendResponse)
+      useNativeOverride = undefined
+      return true
     }
     if (message.action === 'execute') {
       switch (message.command.command) {
