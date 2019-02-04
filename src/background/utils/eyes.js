@@ -246,18 +246,20 @@ export async function closeEyes(id) {
   try {
     let results = await eye.close(false)
     // set it to the results in the hopes that it isn't a visual grid result
-    let firstFailingResultOrLast = results
+    let firstFailingResultOrLast = results,
+      found = false
     // get the first failing test if available from visual grid
     if (Array.isArray(results) && eye.isVisualGrid) {
       for (let i = 0; i < results.length; i++) {
         let result = results[i]
         if (result._status !== 'Passed' || result._isNew) {
           firstFailingResultOrLast = result
+          found = true
           break
         }
       }
       // set it to the first test since none failed
-      firstFailingResultOrLast = results[0]
+      if (!found) firstFailingResultOrLast = results[0]
     }
     // eslint-disable-next-line no-console
     console.log(results)
@@ -267,7 +269,7 @@ export async function closeEyes(id) {
       (firstFailingResultOrLast._status !== 'Passed' ||
         firstFailingResultOrLast._isNew)
         ? firstFailingResultOrLast._appUrls._session
-        : undefined
+        : lastResults.url
     return { results, firstFailingResultOrLast }
   } catch (e) {
     await eye.abortIfNotClosed().catch(e => {
