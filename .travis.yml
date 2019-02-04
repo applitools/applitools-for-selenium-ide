@@ -9,6 +9,7 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"  
   - docker pull selenium/standalone-chrome
   - docker run -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome:3.11.0-antimony
+  - yarn global add selenium-side-runner
 script:
   - yarn lint
   - yarn test:webdriver --server http://localhost:4444/wd/hub
