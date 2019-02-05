@@ -178,8 +178,9 @@ browser.runtime.onMessageExternal.addListener(
       ) {
         getExtensionSettings().then(settings => {
           if (
-            !settings.eulaSignDate ||
-            !hasValidVisualGridSettings(settings.projectSettings)
+            settings.projectSettings.enableVisualGrid &&
+            (!settings.eulaSignDate ||
+              !hasValidVisualGridSettings(settings.projectSettings))
           ) {
             popup(incompleteVisualGridSettings).then(result => {
               if (result) {
