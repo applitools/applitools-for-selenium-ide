@@ -8,7 +8,6 @@
     "build": "webpack",
     "build:prod": "rm -rf build && env NODE_ENV=production yarn build",
     "test": "jest",
-    "test:webdriver": "selenium-side-runner tests/*.side",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package"
   },
