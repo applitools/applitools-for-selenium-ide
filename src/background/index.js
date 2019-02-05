@@ -176,27 +176,31 @@ browser.runtime.onMessageExternal.addListener(
         containsEyesCommands(commands) &&
         getExternalState().enableVisualCheckpoints
       ) {
-        getExtensionSettings().then(settings => {
-          if (
-            settings.projectSettings.enableVisualGrid &&
-            (!settings.eulaSignDate ||
-              !hasValidVisualGridSettings(settings.projectSettings))
-          ) {
-            popup(incompleteVisualGridSettings).then(result => {
-              if (result) {
-                useNativeOverride = true
-                return sendResponse(true)
-              } else {
-                return sendResponse({
-                  message: 'User aborted playback.',
-                  status: 'fatal',
-                })
-              }
-            })
-          } else {
-            return sendResponse(true)
-          }
-        })
+        getExtensionSettings()
+          .then(settings => {
+            if (
+              settings.projectSettings.enableVisualGrid &&
+              (!settings.eulaSignDate ||
+                !hasValidVisualGridSettings(settings.projectSettings))
+            ) {
+              popup(incompleteVisualGridSettings).then(result => {
+                if (result) {
+                  useNativeOverride = true
+                  return sendResponse(true)
+                } else {
+                  return sendResponse({
+                    message: 'User aborted playback.',
+                    status: 'fatal',
+                  })
+                }
+              })
+            } else {
+              return sendResponse(true)
+            }
+          })
+          .catch(sendResponse) // eslint-disable-line
+      } else {
+        sendResponse(true)
       }
       return true
     }
