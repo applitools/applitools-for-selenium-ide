@@ -18,7 +18,7 @@ export async function verifyStoredAPIKey() {
     if (response.ok) {
       try {
         const { isFree } = await response.json()
-        await browser.storage.local.set({ isFree })
+        await browser.storage.local.set({ isFree: !!isFree })
         return
       } catch (e) {
         await browser.storage.local.set({ isFree: false })
