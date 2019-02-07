@@ -202,13 +202,24 @@ export function endTest(id) {
         commands.map((commandId, index) => {
           let state
           if (results.length) {
+            // check if at least one of the tests step failed
             state = results.find(
-              result => result._stepsInfo[index]._isDifferent
+              result =>
+                result._stepsInfo[index]
+                  ? result._stepsInfo[index]._isDifferent
+                  : true // returning true in case the image never made it to eyes for processing, thus is should fail
             )
               ? 'failed'
               : 'passed'
           } else {
-            state = results._stepsInfo[index]._isDifferent ? 'failed' : 'passed'
+            if (results._stepsInfo[index]) {
+              state = results._stepsInfo[index]._isDifferent
+                ? 'failed'
+                : 'passed'
+            } else {
+              // image never made it to eyes, thus should fail
+              state = 'failed'
+            }
           }
           return sendMessage({
             uri: '/playback/command',
