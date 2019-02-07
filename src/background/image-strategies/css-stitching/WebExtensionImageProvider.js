@@ -11,7 +11,7 @@ export default class WebExtensionImageProvider extends ImageProvider {
 
   async getImage() {
     if (!this._windowId) {
-      this._windowId = await browser.tabs.get(this._tabId).windowId
+      this._windowId = (await browser.tabs.get(this._tabId)).windowId
     }
     const dataURI = await browser.tabs.captureVisibleTab(this._windowId, {
       format: 'png',
