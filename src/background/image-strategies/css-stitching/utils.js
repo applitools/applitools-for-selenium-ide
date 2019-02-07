@@ -5,7 +5,7 @@ const JS_GET_CURRENT_SCROLL_POSITION =
   'var doc = document.documentElement; ' +
   'var x = window.scrollX || ((window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0)); ' +
   'var y = window.scrollY || ((window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0)); ' +
-  'return [x, y];'
+  '[x, y];'
 
 const JS_COMPUTE_CONTENT_ENTIRE_SIZE =
   'var scrollWidth = document.documentElement.scrollWidth; ' +

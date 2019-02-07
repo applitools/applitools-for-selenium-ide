@@ -431,6 +431,7 @@ browser.runtime.onMessageExternal.addListener(
                     message.options.runId,
                     message.options.testId,
                     message.options.commandId,
+                    message.options.frameId,
                     message.options.tabId,
                     message.options.windowId,
                     target,

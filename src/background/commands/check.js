@@ -96,6 +96,7 @@ export async function checkElement(
   runId,
   testId,
   commandId,
+  frameId,
   tabId,
   _windowId,
   elementXPath,
@@ -129,10 +130,14 @@ export async function checkElement(
           eyes,
           tabId,
           window.devicePixelRatio,
-          await browser.tabs.sendMessage(tabId, {
-            getElementRect: true,
-            path: elementXPath,
-          })
+          await browser.tabs.sendMessage(
+            tabId,
+            {
+              getElementRect: true,
+              path: elementXPath,
+            },
+            { frameId }
+          )
         )
       ))
 }
