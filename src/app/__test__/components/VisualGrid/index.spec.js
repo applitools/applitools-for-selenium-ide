@@ -94,7 +94,7 @@ describe('Visual grid options', () => {
     expect(innerHtml('.general-error')).toBeFalsy()
   })
 
-  it.only('should display top level error message when no valid options provided', async () => {
+  it('should display top level error message when no valid options provided', async () => {
     acceptEula()
     toggleBrowsersGroup()
     removeSelectedBrowser()
@@ -111,7 +111,7 @@ describe('Visual grid options', () => {
 
   // browsers
 
-  it('remove a selected browser', async () => {
+  it('select/deselect a browser', async () => {
     let storage
     acceptEula()
     toggleBrowsersGroup()
@@ -132,43 +132,48 @@ describe('Visual grid options', () => {
 
   // viewports
 
-  it('remove a predefined viewport size', async () => {
-    let storage
+  it('deselect a predefined viewport size from the main menu', async () => {
     acceptEula()
     toggleBrowsersGroup()
     click('.category.viewports .selected-options .close.inner')
-    storage = await waitForCompletion()
+    const storage = await waitForCompletion()
     expect(
       storage.projectSettings[projectId].selectedViewportSizes.length
     ).toBeFalsy()
+  })
 
-    click('.category.viewports .add.inner')
-    const selectedSize = innerHtml('.predefined-viewport-sizes label div')
-    click('.predefined-viewport-sizes .checkbox')
-    click('.btn.confirm')
-    storage = await waitForCompletion()
+  it('select a predefined viewport size', async () => {
+    acceptEula()
+    toggleBrowsersGroup()
+    click('.category.viewports .selected-options .close.inner')
+    await waitForCompletion()
+    const selectedSize = togglePredefinedViewportSize()
+    const storage = await waitForCompletion()
     expect(
       storage.projectSettings[projectId].selectedViewportSizes.includes(
         selectedSize
       )
     ).toBeTruthy()
+  })
 
+  it('deselect a predefined viewport size', async () => {
+    acceptEula()
+    toggleBrowsersGroup()
     click('.category.viewports .add.inner')
-    click('.predefined-viewport-sizes .checkbox')
+    click('.predefined-viewport-sizes input[type=checkbox]:checked')
     click('.btn.confirm')
-    storage = await waitForCompletion()
+    const storage = await waitForCompletion()
     expect(
-      storage.projectSettings[projectId].selectedViewportSizes.includes(
-        selectedSize
-      )
+      storage.projectSettings[projectId].selectedViewportSizes.length
     ).toBeFalsy()
   })
 
   it('create and select a custom viewport', async () => {
     await acceptEula()
     toggleBrowsersGroup()
+    click('.category.viewports .selected-options .close.inner')
+    await waitForCompletion()
     await addCustomViewport(100, 100)
-    click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
     const storage = await waitForCompletion()
     expect(
@@ -176,6 +181,9 @@ describe('Visual grid options', () => {
         '100x100'
       )
     ).toBeTruthy()
+    expect(
+      storage.projectSettings[projectId].selectedViewportSizes.length
+    ).toEqual(1)
   })
 
   it('create and delete a custom viewport', async () => {
@@ -197,7 +205,6 @@ describe('Visual grid options', () => {
     await acceptEula()
     toggleBrowsersGroup()
     await addCustomViewport(-100, -100)
-    click('.custom-viewport-size .checkbox')
     click('.btn.confirm')
     const storage = await waitForCompletion()
     expect(
@@ -228,7 +235,7 @@ describe('Visual grid options', () => {
     expect(findElement('.custom-viewport-size .checkbox').checked).toBeTruthy()
   })
 
-  it.only('committing an auto-enabled custom viewport saves it', async () => {
+  it('committing an auto-enabled custom viewport saves it', async () => {
     await acceptEula()
     toggleBrowsersGroup()
     await addCustomViewport(1, 1)
@@ -303,6 +310,14 @@ async function toggleSelectedDeviceOrientation() {
   click('.selections .checkbox')
   click('.btn.confirm')
   await waitForCompletion()
+}
+
+function togglePredefinedViewportSize() {
+  click('.category.viewports .add.inner')
+  const selectedSize = innerHtml('.predefined-viewport-sizes label div')
+  click('.predefined-viewport-sizes .checkbox')
+  click('.btn.confirm')
+  return selectedSize
 }
 
 async function addCustomViewport(width, height) {

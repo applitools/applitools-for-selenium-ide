@@ -167,20 +167,32 @@ class ViewportSelectionModal extends React.Component {
           viewport.id === id ? { id, width, height, selected } : viewport
       ),
     })
-    if (width.length && height.length) {
-      this.handleOptionChange(
-        this.generateDimensions(undefined, width, height),
-        selected
-      )
-    }
+  }
+
+  async syncSelectedViewportSizes() {
+    if (!this.state.customViewportSizes.length) return
+    this.state.customViewportSizes.forEach(viewportSize => {
+      if (viewportSize.width.length && viewportSize.height.length) {
+        this.handleOptionChange(
+          this.generateDimensions(
+            undefined,
+            viewportSize.width,
+            viewportSize.height
+          ),
+          viewportSize.selected
+        )
+      }
+    })
   }
 
   onViewportSubmit() {
-    this.props.onSubmit(
-      this.state.selectedViewportSizes,
-      this.state.customViewportSizes
-    )
-    this.props.modalClose()
+    this.syncSelectedViewportSizes().then(() => {
+      this.props.onSubmit(
+        this.state.selectedViewportSizes,
+        this.state.customViewportSizes
+      )
+      this.props.modalClose()
+    })
   }
 
   render() {
