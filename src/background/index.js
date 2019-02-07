@@ -296,6 +296,7 @@ browser.runtime.onMessageExternal.addListener(
           return sendResponse(results)
         })
         .catch(e => {
+          resetMode()
           return sendResponse({
             error: e.message,
             status: 'fatal',
