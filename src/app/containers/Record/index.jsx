@@ -2,7 +2,10 @@ import browser from 'webextension-polyfill'
 import React from 'react'
 import ButtonList from '../../components/ButtonList'
 import { sendMessage } from '../../../IO/message-port'
-import { CommandIds } from '../../../commons/commands'
+import {
+  CommandIds,
+  elevateSetWindowSizeIfNecessary,
+} from '../../../commons/commands'
 
 export default class Record extends React.Component {
   constructor(props) {
@@ -64,6 +67,9 @@ export default class Record extends React.Component {
         }
       })
     } else {
+      if (/^Check/.test(command)) {
+        elevateSetWindowSizeIfNecessary()
+      }
       sendMessage({
         uri: '/record/command',
         verb: 'post',

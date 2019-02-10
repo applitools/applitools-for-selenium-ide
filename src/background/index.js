@@ -151,19 +151,6 @@ browser.runtime.onMessageExternal.addListener(
       })
       resetMode()
     }
-    if (message.event === 'commandRecorded') {
-      if (message.options.command === 'setWindowSize') {
-        browser.tabs.get(message.options.tabId).then(tab => {
-          sendResponse({
-            mutation: 'update',
-            command: CommandIds.SetViewportSize,
-            target: `${tab.width}x${Math.max(tab.height - 100, 100)}`, // we are subtracting to take care of the info-bars, also can't afford to set viewport size to a negative
-            value: '',
-          })
-        })
-        return true
-      }
-    }
     if (message.event === 'projectLoaded') {
       setExternalState({ projectId: message.options.projectId })
     }
