@@ -32,8 +32,8 @@ export async function getEntirePageSize(tabId) {
 }
 
 export async function getCurrentScrollPosition(tabId) {
-  const result = await browser.tabs.executeScript(tabId, {
+  const result = (await browser.tabs.executeScript(tabId, {
     code: JS_GET_CURRENT_SCROLL_POSITION,
-  })
+  }))[0]
   return new Location(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0)
 }
