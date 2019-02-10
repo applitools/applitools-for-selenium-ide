@@ -7,9 +7,13 @@ export function setViewportSize(width, height, playbackOptions) {
     )
   const compensatedSize = {}
   return browser.tabs
-    .sendMessage(playbackOptions.tabId, {
-      compensateSize: true,
-    })
+    .sendMessage(
+      playbackOptions.tabId,
+      {
+        compensateSize: true,
+      },
+      { frameId: 0 }
+    )
     .then(compensation => {
       compensatedSize.width = width + compensation.width
       compensatedSize.height = height + compensation.height
