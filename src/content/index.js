@@ -15,8 +15,8 @@ function getElementRect(request, _sender, sendResponse) {
     const element = getElementByXpath(request.path)
     const elementRects = element.getBoundingClientRect()
     sendResponse({
-      x: Math.round(elementRects.left),
-      y: Math.round(elementRects.top),
+      x: Math.round(elementRects.x + window.scrollX),
+      y: Math.round(elementRects.y + window.scrollY),
       width: Math.round(elementRects.width),
       height: Math.round(elementRects.height),
     })
