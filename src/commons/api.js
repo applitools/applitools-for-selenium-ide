@@ -1,6 +1,7 @@
 import browser from 'webextension-polyfill'
 
-export const DEFAULT_SERVER = 'https://eyesapi.applitools.com/'
+export const DEFAULT_SERVER = 'https://eyes.applitools.com/'
+export const DEFAULT_API_SERVER = 'https://eyesapi.applitools.com/'
 
 export async function verifyStoredAPIKey() {
   const { apiKey, eyesServer } = await browser.storage.local.get([
@@ -12,7 +13,7 @@ export async function verifyStoredAPIKey() {
   } else {
     const response = await fetch(
       `${
-        new URL('/api/auth/access', eyesServer || DEFAULT_SERVER).href
+        new URL('/api/auth/access', eyesServer || DEFAULT_API_SERVER).href
       }?accessKey=${apiKey}&format=json`
     )
     if (response.ok) {
