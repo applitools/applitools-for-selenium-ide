@@ -58,7 +58,10 @@
       "name": "eyes set baseline env name",
       "docs": {
         "description": "Uses an existing baseline environment for all Eyes check commands. If a baseline environment for the given name doesn't exist, one will be created.",
-        "target": "baseline env name"
+        "target": {
+          "name": "baseline env name",
+          "description": "The name of the the baseline environment to use during test execution."
+        }
       }
     }
   ],
