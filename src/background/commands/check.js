@@ -13,8 +13,10 @@ import {
   buildCheckRegionFunction,
 } from '../image-strategies/css-stitching'
 import { buildCheckUsingVisualGrid } from '../image-strategies/visual-grid'
+import { isFirefox } from '../utils/userAgent'
 
 const imageProvider = new ImageProvider()
+const DEVICE_PIXEL_RATIO = isFirefox ? 1 : window.devicePixelRatio
 
 export async function checkWindow(
   runId,
@@ -44,7 +46,7 @@ export async function checkWindow(
         tabId,
         stepName,
         viewport,
-        buildCheckWindowFullFunction(eyes, tabId, window.devicePixelRatio)
+        buildCheckWindowFullFunction(eyes, tabId, DEVICE_PIXEL_RATIO)
       ))
 }
 
@@ -88,7 +90,7 @@ export async function checkRegion(
         tabId,
         stepName,
         viewport,
-        buildCheckRegionFunction(eyes, tabId, window.devicePixelRatio, region)
+        buildCheckRegionFunction(eyes, tabId, DEVICE_PIXEL_RATIO, region)
       ))
 }
 
@@ -129,7 +131,7 @@ export async function checkElement(
         buildCheckRegionFunction(
           eyes,
           tabId,
-          window.devicePixelRatio,
+          DEVICE_PIXEL_RATIO,
           await browser.tabs.sendMessage(
             tabId,
             {
