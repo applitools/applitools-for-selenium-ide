@@ -325,7 +325,7 @@ function decorateVisualEyes(
 }
 
 function verifyMatchLevel(level) {
-  if (!/Layout|Content|Strict|Exact/i.test(level)) {
+  if (!/^(Layout|Content|Strict|Exact)$/i.test(level)) {
     throw new Error(
       'Match level must be one of: Exact, Strict, Content or Layout.'
     )
