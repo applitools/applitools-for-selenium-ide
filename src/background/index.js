@@ -167,7 +167,8 @@ browser.runtime.onMessageExternal.addListener(
           .then(settings => {
             if (
               settings.projectSettings.enableVisualGrid &&
-              (!settings.eulaSignDate ||
+              (!settings.isFree ||
+                !settings.eulaSignDate ||
                 !hasValidVisualGridSettings(settings.projectSettings))
             ) {
               popup(incompleteVisualGridSettings).then(result => {
