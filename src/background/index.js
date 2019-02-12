@@ -334,7 +334,7 @@ browser.runtime.onMessageExternal.addListener(
                 ? ideLogger.log(
                     "'set match timeout' has no affect in Visual Grid tests."
                   )
-                : eyes.setDefaultMatchTimeout(message.command.target)
+                : eyes.setMatchTimeout(message.command.target)
             })
             .then(() => {
               return sendResponse(true)
