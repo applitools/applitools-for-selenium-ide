@@ -52,6 +52,7 @@ export function parseEnvironment(userAgent, viewport) {
 
 export function parseApiServer(server) {
   if (/^(?!.*(api)\.).*\.applitools\.com\/?$/.test(server)) {
+    if (server === 'localhost.applitools.com') return server
     return server.replace('.applitools.com', 'api.applitools.com')
   }
   return server
