@@ -91,7 +91,7 @@ export default class Panel extends React.Component {
         {this.state.mode === Modes.NORMAL &&
           (this.state.enableVisualCheckpoints ? (
             <SpinnerBanner state={SpinnerStates.SUCCESS} spin={false}>
-              Successfully connected with Selenium IDE.
+              Successfully connected with Selenium IDE
             </SpinnerBanner>
           ) : (
             <SpinnerBanner state={SpinnerStates.ERROR} spin={false}>
