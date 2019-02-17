@@ -6,14 +6,7 @@ export function setViewportSize(width, height, playbackOptions) {
       'Invalid value. Value should be WidthxHeight (e.g. 1280x800)'
     )
   const compensatedSize = {}
-  return browser.tabs
-    .sendMessage(
-      playbackOptions.tabId,
-      {
-        compensateSize: true,
-      },
-      { frameId: 0 }
-    )
+  return getSizeCompensation(playbackOptions.tabId, playbackOptions.windowId)
     .then(compensation => {
       compensatedSize.width = width + compensation.width
       compensatedSize.height = height + compensation.height
@@ -38,6 +31,22 @@ export function getViewportSize(tabId) {
     height: tab.height,
     width: tab.width,
   }))
+}
+
+export function getWindowSize(windowId) {
+  return browser.windows.get(windowId).then(win => ({
+    height: win.height,
+    width: win.width,
+  }))
+}
+
+export function getSizeCompensation(tabId, windowId) {
+  return Promise.all([getViewportSize(tabId), getWindowSize(windowId)]).then(
+    ([viewportSize, windowSize]) => ({
+      height: windowSize.height - viewportSize.height,
+      width: windowSize.width - viewportSize.width,
+    })
+  )
 }
 
 function fixInaccuracies(sizes, playbackOptions, retries = 3) {
