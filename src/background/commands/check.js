@@ -106,42 +106,41 @@ export async function checkElement(
   viewport
 ) {
   const eyes = await getEyes(`${runId}${testId}`)
-  return await (eyes.isVisualGrid
-    ? checkWithVisualGrid(
-        eyes,
-        commandId,
-        tabId,
-        stepName,
-        viewport,
-        buildCheckUsingVisualGrid(eyes, tabId),
-        {
-          sizeMode: 'selector',
-          selector: {
-            type: 'xpath',
-            selector: elementXPath,
-          },
-        }
-      )
-    : check(
-        eyes,
-        commandId,
-        tabId,
-        stepName,
-        viewport,
-        buildCheckRegionFunction(
-          eyes,
-          tabId,
-          DEVICE_PIXEL_RATIO,
-          await browser.tabs.sendMessage(
-            tabId,
-            {
-              getElementRect: true,
-              path: elementXPath,
-            },
-            { frameId }
-          )
-        )
-      ))
+  if (eyes.isVisualGrid) {
+    return await checkWithVisualGrid(
+      eyes,
+      commandId,
+      tabId,
+      stepName,
+      viewport,
+      buildCheckUsingVisualGrid(eyes, tabId),
+      {
+        sizeMode: 'selector',
+        selector: {
+          type: 'xpath',
+          selector: elementXPath,
+        },
+      }
+    )
+  } else {
+    const region = await browser.tabs.sendMessage(
+      tabId,
+      {
+        getElementRect: true,
+        path: elementXPath,
+      },
+      { frameId }
+    )
+    return await check(
+      eyes,
+      commandId,
+      tabId,
+      stepName,
+      viewport,
+      buildCheckRegionFunction(eyes, tabId, DEVICE_PIXEL_RATIO, region),
+      { x: region.x, y: region.y }
+    )
+  }
 }
 
 async function check(
@@ -150,7 +149,8 @@ async function check(
   tabId,
   stepName,
   viewport,
-  checkFunction
+  checkFunction,
+  location
 ) {
   await preCheck(eyes, viewport)
   eyes.commands.push(commandId)
@@ -165,10 +165,11 @@ async function check(
   }
 
   const target = Target.image(imageProvider)
-  const imageResult = await eyes.check(
-    stepName || pathname,
-    domCap ? target.withDom(domCap) : target
-  )
+  if (domCap) {
+    target.withDom(domCap)
+    if (location) target.withLocation(location)
+  }
+  const imageResult = await eyes.check(stepName || pathname, target)
   return imageResult ? true : { status: 'undetermined' }
 }
 
