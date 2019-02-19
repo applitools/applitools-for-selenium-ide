@@ -20,9 +20,33 @@ export function isEyesCommand(command, exclusions = []) {
   )
 }
 
+export function isCheckCommand(command) {
+  return (
+    command.command === CommandIds.CheckWindow ||
+    command.command === CommandIds.CheckElement
+  )
+}
+
 export function containsEyesCommands(commands, exclusions) {
   if (!Array.isArray(commands)) return false
   return !!commands.find(command => isEyesCommand(command, exclusions))
+}
+
+export async function dedupeSetWindowSizeIfNecessary() {
+  const { commands } = await sendMessage({
+    uri: '/record/command',
+    verb: 'get',
+  })
+  const setWindowSize = commands.find(cmd => cmd.command === 'setWindowSize')
+  if (setWindowSize) {
+    return sendMessage({
+      uri: '/record/command',
+      verb: 'delete',
+      payload: {
+        id: setWindowSize.id,
+      },
+    })
+  }
 }
 
 export async function elevateSetWindowSizeIfNecessary() {

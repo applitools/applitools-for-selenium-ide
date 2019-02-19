@@ -17,6 +17,7 @@ import {
 } from './external-state'
 import { getCurrentProject } from './utils/ide-project'
 import { sendMessage, startPolling } from '../IO/message-port'
+import { recordCommand } from './commands/recorder'
 import { getViewportSize, setViewportSize } from './commands/viewport'
 import { checkWindow, checkElement, endTest } from './commands/check'
 import {
@@ -117,6 +118,9 @@ browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     validateOptions().then(() => {
       resetMode()
     })
+  }
+  if (message.recordCommand) {
+    recordCommand(message.command)
   }
 })
 
