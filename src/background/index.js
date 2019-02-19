@@ -155,12 +155,12 @@ browser.runtime.onMessageExternal.addListener(
       setExternalState({ projectId: message.options.projectId })
     }
     if (message.event === 'suitePlaybackStarted' && message.options.runId) {
-      const commands = message.options.tests
-        .map(test => test.commands.map(command => command.command))
-        .join()
-        .split(',')
+      const commands = message.options.tests.reduce(
+        (cmds, test) => [...cmds, ...test.commands],
+        []
+      )
       if (
-        containsEyesCommands(commands) &&
+        containsEyesCommands(commands, [CommandIds.SetViewportSize]) &&
         getExternalState().enableVisualCheckpoints
       ) {
         getExtensionSettings()
@@ -193,15 +193,13 @@ browser.runtime.onMessageExternal.addListener(
       return true
     }
     if (message.event === 'playbackStarted' && message.options.runId) {
-      const commands = message.options.test.commands.map(
-        command => command.command
-      )
+      const commands = message.options.test.commands
       if (
-        containsEyesCommands(commands) &&
+        containsEyesCommands(commands, [CommandIds.SetViewportSize]) &&
         getExternalState().enableVisualCheckpoints
       ) {
         const baselineEnvNameCommand = commands.find(
-          command => command === CommandIds.SetBaselineEnvName
+          command => command.command === CommandIds.SetBaselineEnvName
         )
         makeEyes(
           `${message.options.runId}${message.options.testId}`,
@@ -458,7 +456,7 @@ browser.runtime.onMessageExternal.addListener(
             .reduce((commands, test) => {
               return [...commands, ...test.commands]
             }, [])
-            .find(({ command }) => isEyesCommand(command))
+            .find(command => isEyesCommand(command))
           return sendResponse({ canEmit: !!hasEyesCommands })
         }
         case 'config': {
@@ -474,7 +472,7 @@ browser.runtime.onMessageExternal.addListener(
             .reduce((commands, test) => {
               return [...commands, ...test.commands]
             }, [])
-            .find(({ command }) => isEyesCommand(command))
+            .find(command => isEyesCommand(command))
           if (hasEyesCommands) {
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
@@ -487,10 +485,7 @@ browser.runtime.onMessageExternal.addListener(
           break
         }
         case 'test': {
-          const hasEyesCommands = message.test.commands.find(command =>
-            isEyesCommand(command.command)
-          )
-          if (hasEyesCommands) {
+          if (containsEyesCommands(message.test.commands)) {
             let baselineEnvName = ''
             const baselineEnvNameCommand = message.test.commands.find(
               command => command.command === CommandIds.SetBaselineEnvName

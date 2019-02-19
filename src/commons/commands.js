@@ -13,18 +13,16 @@ export const CommandIds = {
 
 const CommandNames = Object.values(CommandIds)
 
-export function isEyesCommand(command) {
-  return CommandNames.includes(command)
+export function isEyesCommand(command, exclusions = []) {
+  return (
+    CommandNames.includes(command.command) &&
+    !exclusions.includes(command.command)
+  )
 }
 
-export function containsEyesCommands(commands) {
+export function containsEyesCommands(commands, exclusions) {
   if (!Array.isArray(commands)) return false
-  const commandNames = [...CommandNames]
-  commandNames.splice(
-    commandNames.findIndex(name => name === 'eyesSetViewportSize'),
-    1
-  )
-  return commands.map(command => commandNames.includes(command)).includes(true)
+  return !!commands.find(command => isEyesCommand(command, exclusions))
 }
 
 export async function elevateSetWindowSizeIfNecessary() {
