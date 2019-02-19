@@ -9,10 +9,10 @@
   dependencies:
     "@applitools/functional-commons" "^1.0.27"
 
-"@applitools/eyes-common@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-common/-/eyes-common-1.2.4.tgz#423cf30358dd260b3d2e4c24c966431bce4774f9"
-  integrity sha512-5OEW4LIUb6ov21uWkkgKxMMyYyMomHq4pj/2PhFD1GFEzZfBfCWuM8cam4S0RgOwU4UKMNmV64Jm/XgXcd+lmw==
+"@applitools/eyes-common@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-common/-/eyes-common-1.3.0.tgz#8acfffe3ff4a75e50d454785e01d3f92d5012c08"
+  integrity sha512-d2hdgUyhGE6RDXfViVX+M7IwCze3zlmGu6i/h++RAT28Pm7gq8DRtrShbb+Yn578s/7WpKvh7s3HcPxMAx1Ovw==
   dependencies:
     cosmiconfig "^5.0.7"
     dateformat "^3.0.3"
@@ -20,20 +20,20 @@
     png-async "^0.9.3"
     stack-trace "^0.0.10"
 
-"@applitools/eyes-images@^4.7.0":
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-images/-/eyes-images-4.7.0.tgz#050cadb07ee567d2ff322bbafe04b31af1fcb707"
-  integrity sha512-7/8bllx7SbaFy5/vf5nx18htRJXQyVAVVLjcxTLVWoUKL9Sj54Dl6vQrkgUw9wt+mez0VjD+0ZZAMskonJT2Uw==
+"@applitools/eyes-images@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-images/-/eyes-images-4.8.0.tgz#2cd3d2954565bc0219af84209e14721fb367b55a"
+  integrity sha512-AIfaRx1PQjYNF3IeLIlPP51rMVrQ+9JFeJRMQoQzUbDDIX6f7PmUYJxg5N1hawjg2OOlgsqnPSaTeFtLceM9Uw==
   dependencies:
-    "@applitools/eyes-common" "^1.2.4"
-    "@applitools/eyes-sdk-core" "^4.7.2"
+    "@applitools/eyes-common" "^1.3.0"
+    "@applitools/eyes-sdk-core" "^4.8.0"
 
-"@applitools/eyes-sdk-core@^4.7.2":
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-4.7.2.tgz#bed6e98cc95d987b57455da62712d9df418a7413"
-  integrity sha512-xeumFaiy7du4SP4LjvaQeXUjJHlLSUiDBBK+pD+aAAQvkDWZO0PWhoDp2sMocmU6oN5QWX67qssaZXjlmsh2zQ==
+"@applitools/eyes-sdk-core@^4.8.0":
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/@applitools/eyes-sdk-core/-/eyes-sdk-core-4.8.0.tgz#90b0fdf87494225648d1b4df4389b08f06ad0644"
+  integrity sha512-bWi+xmBvXpPd54WTy3fm5qv1myaMpDZBOdIORwWBXPfmnwluYkKzgbj9YrRo6F1aJjXZ0CqtIkfGealnkyeSiA==
   dependencies:
-    "@applitools/eyes-common" "^1.2.4"
+    "@applitools/eyes-common" "^1.3.0"
     axios "^0.18.0"
     es6-promise-pool "^2.5.0"
 
@@ -42,12 +42,12 @@
   resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.0.27.tgz#b8a763e4ec1f5a2fadb7a8cba87b6d402f641c13"
   integrity sha512-tQjD+CloqvFSc7b/tyPsTADSkQTfHL3S49OL0I4Mgufr1b1y95E0YDASLuM2QaMbFYxzTCtFwHXkCdZvSqEbkg==
 
-"@applitools/functional-commons@^1.0.33", "@applitools/functional-commons@^1.0.39":
+"@applitools/functional-commons@^1.0.33":
   version "1.0.39"
   resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.0.39.tgz#c73208a17125ba1719c609495a42baf3521ff5fa"
   integrity sha512-yX5kFPCs968NYemgWlYpHW4WuleQ2FN/KT1LMJBwAlUkMgN41w1r2XD2/egXpi8rPYq6ehqfk2fzT/FOFwS5aw==
 
-"@applitools/http-commons@^1.2.5":
+"@applitools/http-commons@^1.2.3":
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@applitools/http-commons/-/http-commons-1.2.5.tgz#1a7b0bf58241ad07d822b08276c6a32cf484010f"
   integrity sha512-wc8mwyZTnr4NIdxyqVtwZCIAOhO2OsfYwx3jcXHj+4fyjWZxie5qw0KBFWQUxqUCJabtEOXCN7E/ghNS3sKCxA==
@@ -74,16 +74,17 @@
   dependencies:
     debug "^4.1.0"
 
-"@applitools/visual-grid-client@10.0.9":
-  version "10.0.9"
-  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-10.0.9.tgz#3bced11597f9a1bab68664f96c74acb29b74cff2"
-  integrity sha512-bWkmG5xfFj8QYhT6ZnNjDPkrfOSJp37YIIdoQk5Asc89eJL/T6lNdNyBpBc7xt5T7gffVzAFvJ/cH8k8ck0BhQ==
+"@applitools/visual-grid-client@11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@applitools/visual-grid-client/-/visual-grid-client-11.1.0.tgz#3dd2bd1a34aa6cdea02bf3e83f6f639d8f1a633c"
+  integrity sha512-g8lWtJB0uc7p2JJ2vSEf71oxy6pyTbpc7lF25WlN0JPBPnkOzak+ABtm347rQbehsxnxWQx+7VgZ6cPZ8BY2lQ==
   dependencies:
-    "@applitools/eyes-sdk-core" "^4.7.1"
-    "@applitools/functional-commons" "^1.0.39"
-    "@applitools/http-commons" "^1.2.5"
+    "@applitools/eyes-common" "^1.3.0"
+    "@applitools/eyes-sdk-core" "^4.8.0"
+    "@applitools/functional-commons" "^1.0.33"
+    "@applitools/http-commons" "^1.2.3"
     "@applitools/isomorphic-fetch" "^3.0.0"
-    cssom "^0.3.6"
+    cssom "git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8"
     he "^1.2.0"
     lodash.mapkeys "^4.6.0"
     lodash.mapvalues "^4.6.0"
@@ -2457,10 +2458,9 @@ cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.3.2.tgz#b8036170c79f07a90ff2f16e22284027a243848b"
   integrity sha1-uANhcMefB6kP8vFuIihAJ6JDhIs=
 
-cssom@^0.3.6:
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.3.6.tgz#f85206cee04efa841f3c5982a74ba96ab20d65ad"
-  integrity sha512-DtUeseGk9/GBW0hl0vVPpU22iHL6YB5BUX7ml1hB+GMpo0NX5G4voX3kdWiMSEguFtcW3Vh3djqNF4aIe6ne0A==
+"cssom@git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8":
+  version "0.3.3"
+  resolved "git+https://github.com/amitzur/CSSOM.git#925260ff2c8f8387cf76df4d5776a06044a644c8"
 
 "cssstyle@>= 0.2.37 < 0.3.0":
   version "0.2.37"
