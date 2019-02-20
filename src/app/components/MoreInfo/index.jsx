@@ -6,7 +6,7 @@ export default function MoreInfo() {
     <span>
       For more information read the{' '}
       <Link href="https://applitools.com/tutorials/selenium-ide.html">
-        documentation
+        tutorial
       </Link>
       .
     </span>
