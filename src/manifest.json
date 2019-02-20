@@ -2,7 +2,7 @@
   "description": "Applitools plugin for Selenium IDE",
   "manifest_version": 2,
   "name": "Applitools for Selenium IDE",
-  "version": "1.0.0.13",
+  "version": "1.0.0.14",
   "version_name": "1.0.0",
   "homepage_url": "https://applitools.com/",
   "icons": {
