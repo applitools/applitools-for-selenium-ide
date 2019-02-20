@@ -63,8 +63,9 @@ export async function makeEyes(
   const eyesApiServerUrl = settings.eyesServer
     ? parseApiServer(settings.eyesServer)
     : undefined
-  const branch = settings ? settings.projectSettings.branch : ''
-  const parentBranch = settings ? settings.projectSettings.parentBranch : ''
+  const branch = (settings ? settings.projectSettings.branch : '') || ''
+  const parentBranch =
+    (settings ? settings.projectSettings.parentBranch : '') || ''
   let eye
 
   if (settings.projectSettings.enableVisualGrid && !options.useNativeOverride) {
