@@ -42,12 +42,6 @@ This sets a visual checkpoint on an element. Note that this command will not scr
 
 Similar to `Check Window`, this command takes an optional argument of a name. If one is not provided the URL of the current page will be used.
 
-### Check Region
-
-This sets a visual checkpoint on part of the page. This command will not scroll the region into view, and the region has to fit inside of the viewport.
-
-It takes an optional name argument like `Check Window` and `Check Element`, defaulting to the URL of the current page if not provided.
-
 ### Set Viewport Size
 
 This resizes the browser to match the viewport size (excluding window borders). Setting a viewport size is useful for ensuring consistent test results.
