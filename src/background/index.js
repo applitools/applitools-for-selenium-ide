@@ -531,7 +531,7 @@ browser.runtime.onMessageExternal.addListener(
             })
               .then(locator => {
                 sendResponse(
-                  `if (!opts.isNested) {await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}));}`
+                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}));}`
                 )
               })
               .catch(console.error) // eslint-disable-line no-console
