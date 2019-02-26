@@ -3,6 +3,14 @@
 ## Building The Project
 
 ```sh
+yarn
+yarn build:prod
+```
+
+For faster development builds use `yarn build -w`
+
+To build for a development version of Selenium IDE use
+```
 env SIDE_IDE="extension-id" yarn build
 ```
 
