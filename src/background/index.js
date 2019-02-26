@@ -331,11 +331,19 @@ browser.runtime.onMessageExternal.addListener(
         case CommandIds.SetMatchTimeout: {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {
-              return eyes.isVisualGrid
-                ? ideLogger.log(
-                    "'set match timeout' has no affect in Visual Grid tests."
+              if (eyes.isVisualGrid) {
+                return ideLogger.log(
+                  "'set match timeout' has no affect in Visual Grid tests."
+                )
+              } else {
+                const timeout = message.command.target.trim()
+                if (!/^\d+$/.test(timeout)) {
+                  throw new Error(
+                    'Timeout is not an integer, pass a timeout in ms to the target field.'
                   )
-                : eyes.setMatchTimeout(message.command.target)
+                }
+                return eyes.setMatchTimeout(parseInt(timeout))
+              }
             })
             .then(() => {
               return sendResponse(true)
