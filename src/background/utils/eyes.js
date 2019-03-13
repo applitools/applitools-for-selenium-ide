@@ -128,6 +128,7 @@ async function createImagesEyes(
   eyes.setApiKey(apiKey)
   eyes.setBranchName(branch)
   eyes.setParentBranchName(parentBranch)
+  eyes.getBaseAgentId = () => `eyes.seleniumide.${browserName.toLowerCase()}`
   eyes.setAgentId(`eyes.seleniumide.${browserName.toLowerCase()}`)
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`)
   eyes.setBatch(batchName, batchId)
@@ -198,6 +199,7 @@ async function createVisualGridEyes(
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
+    agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
   }).openEyes({
     showLogs: true,
     appName,
@@ -207,7 +209,6 @@ async function createVisualGridEyes(
     branchName,
     parentBranchName,
     ignoreCaret: true,
-    agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
     browser: parseBrowsers(browsers, viewports, devices, orientations),
     baselineEnvName,
   })
