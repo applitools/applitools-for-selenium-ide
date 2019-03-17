@@ -16,7 +16,6 @@ import { buildCheckUsingVisualGrid } from '../image-strategies/visual-grid'
 import { isFirefox } from '../utils/userAgent'
 
 const imageProvider = new ImageProvider()
-const DEVICE_PIXEL_RATIO = isFirefox ? 1 : window.devicePixelRatio
 
 export async function checkWindow(
   runId,
@@ -46,7 +45,11 @@ export async function checkWindow(
         tabId,
         stepName,
         viewport,
-        buildCheckWindowFullFunction(eyes, tabId, DEVICE_PIXEL_RATIO)
+        buildCheckWindowFullFunction(
+          eyes,
+          tabId,
+          await getDevicePixelRatio(tabId)
+        )
       ))
 }
 
@@ -90,7 +93,12 @@ export async function checkRegion(
         tabId,
         stepName,
         viewport,
-        buildCheckRegionFunction(eyes, tabId, DEVICE_PIXEL_RATIO, region)
+        buildCheckRegionFunction(
+          eyes,
+          tabId,
+          await getDevicePixelRatio(tabId),
+          region
+        )
       ))
 }
 
@@ -137,7 +145,12 @@ export async function checkElement(
       tabId,
       stepName,
       viewport,
-      buildCheckRegionFunction(eyes, tabId, DEVICE_PIXEL_RATIO, region),
+      buildCheckRegionFunction(
+        eyes,
+        tabId,
+        await getDevicePixelRatio(tabId),
+        region
+      ),
       { x: region.x, y: region.y }
     )
   }
@@ -305,4 +318,15 @@ async function preCheck(eyes, viewport) {
 
 function getTabPathname(tab) {
   return browser.tabs.get(tab).then(data => new URL(data.url).pathname)
+}
+
+async function getDevicePixelRatio(tabId) {
+  if (isFirefox) {
+    return 1
+  } else {
+    const result = await browser.tabs.executeScript(tabId, {
+      code: 'window.devicePixelRatio',
+    })
+    return result[0]
+  }
 }
