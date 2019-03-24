@@ -30,6 +30,7 @@ import {
 } from './utils/eyes'
 import { parseViewport, parseMatchLevel } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
+import manifest from '../manifest.json'
 import pluginManifest from './plugin-manifest.json'
 import { incompleteVisualGridSettings } from './modal-settings'
 
@@ -487,8 +488,11 @@ browser.runtime.onMessageExternal.addListener(
           if (hasEyesCommands) {
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
-              before:
-                'global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => "eyes.seleniumide.runner";eyes.setAgentId("eyes.seleniumide.runner");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.eyesDomUploadEnabled === undefined ? true : configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}',
+              before: `global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => ("eyes.seleniumide.runner ${
+                manifest.version
+              } " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setAgentId("eyes.seleniumide.runner ${
+                manifest.version
+              } " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.eyesDomUploadEnabled === undefined ? true : configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}`,
               after:
                 'if (eyes._isOpen) {eyes.getEyesRunner ? await eyes.getEyesRunner().getAllResults() : await eyes.close();}',
             })

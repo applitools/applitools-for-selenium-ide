@@ -6,6 +6,7 @@ import { browserName } from './userAgent'
 import { getCurrentProject } from './ide-project'
 import { parseBrowsers, parseMatchLevel } from './parsers'
 import storage from '../../IO/storage'
+import manifest from '../../manifest.json'
 
 const DEFAULT_EYES_API_SERVER = 'https://eyesapi.applitools.com'
 const eyes = {}
@@ -123,13 +124,15 @@ async function createImagesEyes(
   baselineEnvName
 ) {
   const eyes = new Eyes(eyesServer)
-  if (process.env.NODE_ENV !== 'production')
-    eyes.setLogHandler(new ConsoleLogHandler(true))
+  eyes.setLogHandler(new ConsoleLogHandler(true))
   eyes.setApiKey(apiKey)
   eyes.setBranchName(branch)
   eyes.setParentBranchName(parentBranch)
-  eyes.getBaseAgentId = () => `eyes.seleniumide.${browserName.toLowerCase()}`
-  eyes.setAgentId(`eyes.seleniumide.${browserName.toLowerCase()}`)
+  eyes.getBaseAgentId = () =>
+    `eyes.seleniumide.${browserName.toLowerCase()} ${manifest.version} local`
+  eyes.setAgentId(
+    `eyes.seleniumide.${browserName.toLowerCase()} ${manifest.version} local`
+  )
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`)
   eyes.setBatch(batchName, batchId)
   if (baselineEnvName) eyes.setBaselineEnvName(baselineEnvName)
@@ -199,7 +202,9 @@ async function createVisualGridEyes(
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
-    agentId: `eyes.seleniumide.${browserName.toLowerCase()}`,
+    agentId: `eyes.seleniumide.${browserName.toLowerCase()} ${
+      manifest.version
+    } visualgrid`,
   }).openEyes({
     showLogs: true,
     appName,
