@@ -13,6 +13,10 @@ export default class WebExtensionImageProvider extends ImageProvider {
     if (!this._windowId) {
       this._windowId = (await browser.tabs.get(this._tabId)).windowId
     }
+    await browser.windows.update(this._windowId, {
+      focused: true,
+    })
+    await psetTimeout(100)
     const dataURI = await browser.tabs.captureVisibleTab(this._windowId, {
       format: 'png',
     })
@@ -20,3 +24,8 @@ export default class WebExtensionImageProvider extends ImageProvider {
     return new MutableImage(imageBase64)
   }
 }
+
+const psetTimeout = timeout =>
+  new Promise(res => {
+    setTimeout(res, timeout)
+  })
