@@ -37,7 +37,7 @@ async function runDomScript(tabId, script) {
   return new Promise((res, rej) => {
     let count = 0
     const domCapRetry = setInterval(() => {
-      if (count >= 30000) {
+      if (count >= 300000) {
         clearInterval(domCapRetry)
         rej('Unable to capture DOM within the timeout specified')
       }
