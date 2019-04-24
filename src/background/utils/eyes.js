@@ -4,7 +4,13 @@ import { makeVisualGridClient } from '@applitools/visual-grid-client'
 import { parseApiServer } from './parsers.js'
 import { browserName } from './userAgent'
 import { getCurrentProject } from './ide-project'
-import { parseBrowsers, parseMatchLevel } from './parsers'
+import {
+  parseBrowsers,
+  parseMatchLevel,
+  maxExperimentalResolution,
+  isExperimentalBrowser,
+} from './parsers'
+import ideLogger from './ide-logger'
 import storage from '../../IO/storage'
 import manifest from '../../manifest.json'
 
@@ -28,19 +34,28 @@ export async function getExtensionSettings() {
     projectSettings,
     eulaSignDate,
     isFree,
+    experimentalEnabled,
   } = await storage.get([
     'apiKey',
     'eyesServer',
     'projectSettings',
     'eulaSignDate',
     'isFree',
+    'experimentalEnabled',
   ])
   const { id } = await getCurrentProject()
   let settings = projectSettings && projectSettings[id]
   if (!settings) {
     settings = createDefaultSettings()
   }
-  return { apiKey, eyesServer, projectSettings: settings, isFree, eulaSignDate }
+  return {
+    apiKey,
+    eyesServer,
+    projectSettings: settings,
+    isFree,
+    eulaSignDate,
+    experimentalEnabled,
+  }
 }
 
 export async function makeEyes(
@@ -70,6 +85,15 @@ export async function makeEyes(
   let eye
 
   if (settings.projectSettings.enableVisualGrid && !options.useNativeOverride) {
+    let filteredBrowsers = settings.projectSettings
+      ? settings.projectSettings.selectedBrowsers
+      : undefined
+    if (!settings.experimentalEnabled) {
+      filteredBrowsers = filteredBrowsers.filter(
+        b => !isExperimentalBrowser(b.toLowerCase())
+      )
+    }
+
     eye = await createVisualGridEyes(
       batchId,
       appName,
@@ -79,9 +103,7 @@ export async function makeEyes(
       settings.apiKey,
       branch,
       parentBranch,
-      settings.projectSettings
-        ? settings.projectSettings.selectedBrowsers
-        : undefined,
+      filteredBrowsers,
       settings.projectSettings
         ? settings.projectSettings.selectedViewportSizes
         : undefined,
@@ -199,6 +221,23 @@ async function createVisualGridEyes(
     })
   )
     throw new Error('Incomplete visual grid settings')
+  const { matrix, didRemoveResolution } = parseBrowsers(
+    browsers,
+    viewports,
+    devices,
+    orientations
+  )
+  if (didRemoveResolution) {
+    if (matrix.length) {
+      await ideLogger.warn(
+        `IE and Edge are experimental and only support viewports of up to ${maxExperimentalResolution}.`
+      )
+    } else {
+      throw new Error(
+        `Visual Grid has invalid settings, IE and Edge are experimental and only support viewports of up to ${maxExperimentalResolution}, please make sure there is at least one supported viewport.`
+      )
+    }
+  }
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
@@ -214,7 +253,7 @@ async function createVisualGridEyes(
     branchName,
     parentBranchName,
     ignoreCaret: true,
-    browser: parseBrowsers(browsers, viewports, devices, orientations),
+    browser: matrix,
     baselineEnvName,
   })
   decorateVisualEyes(

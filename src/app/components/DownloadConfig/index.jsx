@@ -17,7 +17,7 @@ export default class DownloadConfig extends React.Component {
           this.props.projectSettings.selectedViewportSizes,
           this.props.projectSettings.selectedDevices,
           this.props.projectSettings.selectedDeviceOrientations
-        ),
+        ).matrix,
       },
     })
   }

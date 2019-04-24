@@ -1,4 +1,5 @@
 export const browsers = ['Chrome', 'Firefox']
+export const experimentalBrowsers = ['IE10', 'IE11', 'Edge']
 
 export const viewportSizes = [
   '2560x1440',

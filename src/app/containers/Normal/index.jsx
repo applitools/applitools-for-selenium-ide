@@ -9,6 +9,7 @@ import Link from '../../../commons/components/Link'
 import { DEFAULT_SERVER } from '../../../commons/api.js'
 import VisualGrid from '../../components/VisualGrid'
 import VisualGridEula from '../../components/VisualGridEula'
+import { isExperimentalBrowser } from '../../../background/utils/parsers'
 import './style.css'
 
 export default class Normal extends React.Component {
@@ -62,28 +63,60 @@ export default class Normal extends React.Component {
   }
   setProjectSettings() {
     return storage
-      .get(['eyesServer', 'eulaSignDate', 'isFree', 'projectSettings'])
-      .then(({ eyesServer, eulaSignDate, isFree, projectSettings }) => {
-        const settings =
-          projectSettings && projectSettings[this.props.projectId]
-            ? projectSettings[this.props.projectId]
-            : {
-                branch: '',
-                parentBranch: '',
-                enableVisualGrid: false,
-                selectedBrowsers: ['Chrome'],
-                selectedViewportSizes: ['1920x1080'],
-                customViewportSizes: [],
-                selectedDevices: [],
-                selectedDeviceOrientations: [],
-              }
-        this.setState({
+      .get([
+        'eyesServer',
+        'eulaSignDate',
+        'isFree',
+        'projectSettings',
+        'experimentalEnabled',
+      ])
+      .then(
+        ({
           eyesServer,
-          eulaSigned: !!eulaSignDate,
+          eulaSignDate,
           isFree,
-          projectSettings: settings,
-        })
-      })
+          projectSettings,
+          experimentalEnabled,
+        }) => {
+          const settings =
+            projectSettings && projectSettings[this.props.projectId]
+              ? projectSettings[this.props.projectId]
+              : {
+                  branch: '',
+                  parentBranch: '',
+                  enableVisualGrid: false,
+                  selectedBrowsers: ['Chrome'],
+                  selectedViewportSizes: ['1920x1080'],
+                  customViewportSizes: [],
+                  selectedDevices: [],
+                  selectedDeviceOrientations: [],
+                }
+          if (
+            !experimentalEnabled &&
+            projectSettings &&
+            projectSettings[this.props.projectId]
+          ) {
+            settings.selectedBrowsers = settings.selectedBrowsers.filter(
+              b => !isExperimentalBrowser(b.toLowerCase())
+            )
+            storage.set({
+              ['projectSettings']: {
+                ...projectSettings,
+                [this.props.projectId]: {
+                  ...settings,
+                },
+              },
+            })
+          }
+          this.setState({
+            eyesServer,
+            eulaSigned: !!eulaSignDate,
+            isFree,
+            projectSettings: settings,
+            isExperimental: experimentalEnabled,
+          })
+        }
+      )
   }
   signEula() {
     this.setState({ eulaSigned: true })
@@ -143,6 +176,7 @@ export default class Normal extends React.Component {
                 <VisualGrid
                   projectId={this.props.projectId}
                   projectSettings={this.state.projectSettings}
+                  isExperimental={this.state.isExperimental}
                 />
               )}
           </React.Fragment>

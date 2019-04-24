@@ -1,6 +1,10 @@
 import UAParser from 'ua-parser-js'
 const parser = new UAParser()
 
+export const experimentalBrowsers = ['ie10', 'ie11', 'edge']
+export const maxExperimentalResolution = '1280x1024'
+const parsedMax = parseViewport(maxExperimentalResolution)
+
 export function parseBrowsers(
   browsers = ['Chrome'],
   viewports = ['1920x1080'],
@@ -8,15 +12,25 @@ export function parseBrowsers(
   orientations = ['Portrait']
 ) {
   const matrix = []
+  let didRemoveResolution = false
   browsers.forEach(browser => {
     const name = browser.toLowerCase()
     viewports.forEach(viewport => {
       const { width, height } = parseViewport(viewport)
-      matrix.push({
-        width,
-        height,
-        name,
-      })
+      if (
+        !(
+          isExperimentalBrowser(name) &&
+          isBiggerResolution(parseViewport(viewport), parsedMax)
+        )
+      ) {
+        matrix.push({
+          width,
+          height,
+          name,
+        })
+      } else {
+        didRemoveResolution = true
+      }
     })
   })
   devices.forEach(device => {
@@ -27,7 +41,18 @@ export function parseBrowsers(
       })
     })
   })
-  return matrix
+  return {
+    matrix,
+    didRemoveResolution,
+  }
+}
+
+export function isExperimentalBrowser(browser) {
+  return experimentalBrowsers.includes(browser)
+}
+
+function isBiggerResolution(res1, res2) {
+  return res1.height > res2.height || res1.width > res2.width
 }
 
 export function parseViewport(vp) {

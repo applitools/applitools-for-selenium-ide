@@ -38,6 +38,7 @@ class Options extends React.Component {
         'apiKey',
         'eyesServer',
         'seideId',
+        'experimentalEnabled',
       ])
       .then(
         ({
@@ -47,6 +48,7 @@ class Options extends React.Component {
           apiKey,
           eyesServer,
           seideId,
+          experimentalEnabled,
         }) => {
           this.setState({
             enableDomCapture,
@@ -55,6 +57,7 @@ class Options extends React.Component {
             apiKey: apiKey || '',
             eyesServer: eyesServer || '',
             seideId: seideId || '',
+            experimentalEnabled: experimentalEnabled || false,
           })
         }
       )
@@ -83,6 +86,7 @@ class Options extends React.Component {
         apiKey: this.state.apiKey,
         eyesServer: this.state.eyesServer,
         seideId: this.state.seideId,
+        experimentalEnabled: this.state.experimentalEnabled,
       })
       .then(() => {
         browser.runtime.sendMessage({
@@ -172,6 +176,17 @@ class Options extends React.Component {
                   placeholder={DEFAULT_ID}
                   value={this.state.seideId}
                   onChange={this.handleInputChange.bind(this, 'seideId')}
+                />
+                <Checkbox
+                  id="experimental"
+                  className="checkbox"
+                  name="experimental"
+                  label="Enable experimental features"
+                  checked={this.state.experimentalEnabled}
+                  onChange={this.handleCheckboxChange.bind(
+                    this,
+                    'experimentalEnabled'
+                  )}
                 />
               </React.Fragment>
             )}

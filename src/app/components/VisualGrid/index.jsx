@@ -8,16 +8,19 @@ import VisualGridViewports from '../VisualGridViewports'
 import DownloadConfig from '../DownloadConfig'
 import {
   browsers,
+  experimentalBrowsers,
   viewportSizes,
   devices,
   orientations,
 } from '../VisualGridOptionSelector/options'
 import './style.css'
 
+const ALL_BROWSERS = [...browsers, ...experimentalBrowsers]
 export default class VisualGrid extends React.Component {
   static propTypes = {
     projectId: PropTypes.string.isRequired,
     projectSettings: PropTypes.object.isRequired,
+    isExperimental: PropTypes.bool,
   }
 
   constructor(props) {
@@ -176,7 +179,7 @@ export default class VisualGrid extends React.Component {
                   transform: 'translate(-50%, -50%)',
                 },
               }}
-              options={browsers}
+              options={this.props.isExperimental ? ALL_BROWSERS : browsers}
               selectedOptions={this.state.projectSettings.selectedBrowsers}
               removeOption={this.removeBrowser.bind(this)}
               onSubmit={this.saveBrowsers.bind(this)}
