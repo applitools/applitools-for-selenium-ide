@@ -309,15 +309,23 @@ export async function closeEyes(id) {
     }
     // eslint-disable-next-line no-console
     console.log(results)
-    // checking the length because we might not necessarily have checkpoints
-    lastResults.url =
-      eye.commands.length &&
-      (firstFailingResultOrLast._status !== 'Passed' ||
-        firstFailingResultOrLast._isNew)
-        ? firstFailingResultOrLast._appUrls._session
-        : lastResults.url
+
+    if (firstFailingResultOrLast._status) {
+      // checking the length because we might not necessarily have checkpoints
+      lastResults.url =
+        eye.commands.length &&
+        (firstFailingResultOrLast._status !== 'Passed' ||
+          firstFailingResultOrLast._isNew)
+          ? firstFailingResultOrLast._appUrls._session
+          : lastResults.url
+    } else {
+      lastResults.url = ''
+      lastResults.batchId = ''
+    }
     return { results, firstFailingResultOrLast }
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
     await eye.abortIfNotClosed().catch(e => {
       // eslint-disable-next-line no-console
       console.error(e)
