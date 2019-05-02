@@ -460,6 +460,136 @@ browser.runtime.onMessageExternal.addListener(
         }
       }
     }
+    if (message.action === 'export') {
+      if (message.entity === 'command') {
+        const { command, target, value } = message.command // eslint-disable-line no-unused-vars
+        if (command === CommandIds.SetBaselineEnvName) {
+          // this command gets hoisted
+          return sendResponse(false)
+        } else if (command === CommandIds.CheckWindow) {
+          switch (message.language) {
+            case 'java-junit': {
+              return sendResponse(
+                target
+                  ? `eyes.checkWindow("${target}");`
+                  : `eyes.checkWindow();`
+              )
+            }
+          }
+        } else if (command === CommandIds.CheckElement) {
+          switch (message.language) {
+            case 'java-junit': {
+              sendMessage({
+                uri: '/export/location',
+                verb: 'get',
+                payload: {
+                  location: target,
+                  language: message.language,
+                },
+              })
+                .then(locator => {
+                  sendResponse(`eyes.checkElement(${locator});`)
+                })
+                .catch(console.error) // eslint-disable-line no-console
+              return true
+            }
+          }
+        } else if (command === CommandIds.SetViewportSize) {
+          switch (message.language) {
+            case 'java-junit': {
+              const { width, height } = parseViewport(target)
+              return sendResponse(
+                `Eyes.setViewportSize(driver, new RectangleSize(${width}, ${height}));`
+              )
+            }
+          }
+        } else if (command === CommandIds.SetMatchLevel) {
+          switch (message.language) {
+            case 'java-junit': {
+              return sendResponse(
+                `eyes.setMatchLevel("${parseMatchLevel(target)}");`
+              )
+            }
+          }
+        } else if (command === CommandIds.SetMatchTimeout) {
+          switch (message.language) {
+            case 'java-junit': {
+              return sendResponse(`eyes.setMatchTimeout(${target});`)
+            }
+          }
+        }
+      }
+      const hasEyesCommands = message.options.tests
+        ? message.options.tests
+            .reduce((commands, test) => {
+              return [...commands, ...test.commands]
+            }, [])
+            .find(command => isEyesCommand(command))
+        : false
+      if (hasEyesCommands) {
+        switch (message.entity) {
+          case 'afterEach': {
+            switch (message.language) {
+              case 'java-junit': {
+                return sendResponse(`eyes.abortIfNotClosed();`)
+              }
+            }
+            break
+          }
+          case 'beforeEach': {
+            switch (message.language) {
+              case 'java-junit': {
+                let statement = `eyes = new Eyes();\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
+                const commands = message.options.tests
+                  ? message.options.tests.reduce(
+                      (_commands, test) => [...test.commands],
+                      []
+                    )
+                  : []
+                const baselineEnvNameCommand = commands.find(
+                  command => command.command === CommandIds.SetBaselineEnvName
+                )
+                if (baselineEnvNameCommand) {
+                  statement += `\neyes.setBaseLineEnvName("${
+                    baselineEnvNameCommand.target
+                  }");`
+                }
+                statement += '\neyes.open(driver);'
+                return sendResponse(statement)
+              }
+            }
+            break
+          }
+          case 'dependency': {
+            switch (message.language) {
+              case 'java-junit': {
+                return sendResponse(
+                  `import com.applitools.eyes.selenium.Eyes;\nimport com.applitools.eyes.RectangleSize;`
+                )
+              }
+            }
+            break
+          }
+          case 'inEachEnd': {
+            switch (message.language) {
+              case 'java-junit': {
+                return sendResponse(`eyes.close();`)
+              }
+            }
+            break
+          }
+          case 'variable': {
+            switch (message.language) {
+              case 'java-junit': {
+                return sendResponse(`private Eyes eyes;`)
+              }
+            }
+            break
+          }
+        }
+      }
+      return sendResponse(undefined)
+    }
     if (message.action === 'emit') {
       switch (message.entity) {
         case 'project': {
