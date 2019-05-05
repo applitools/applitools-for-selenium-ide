@@ -554,6 +554,10 @@ browser.runtime.onMessageExternal.addListener(
                     baselineEnvNameCommand.target
                   }");`
                 }
+                //getExtensionSettings().then(settings => {
+                //  if (settings.projectSettings.enableVisualGrid) {
+                //  }
+                //})
                 statement += '\neyes.open(driver);'
                 return sendResponse(statement)
               }
@@ -563,9 +567,15 @@ browser.runtime.onMessageExternal.addListener(
           case 'dependency': {
             switch (message.language) {
               case 'java-junit': {
-                return sendResponse(
-                  `import com.applitools.eyes.selenium.Eyes;\nimport com.applitools.eyes.RectangleSize;`
-                )
+                let result = `import com.applitools.eyes.selenium.Eyes;\nimport com.applitools.eyes.RectangleSize;`
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `\nimport com.applitools.eyes.selenium.BrowserType;\nimport com.applitools.eyes.selenium.Configuration;
+\nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.EyesRunner;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;`
+                  }
+                  return sendResponse(result)
+                })
+                return true
               }
             }
             break
