@@ -27,12 +27,14 @@ import {
   getResultsUrl,
   hasValidVisualGridSettings,
   getExtensionSettings,
+  experimentalBrowserWarningMessage,
 } from './utils/eyes'
 import { parseViewport, parseMatchLevel } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
 import manifest from '../manifest.json'
 import pluginManifest from './plugin-manifest.json'
 import { incompleteVisualGridSettings } from './modal-settings'
+import { parseBrowsers, isExperimentalBrowser } from './utils/parsers'
 
 startPolling(pluginManifest, err => {
   if (err) {
@@ -531,7 +533,14 @@ browser.runtime.onMessageExternal.addListener(
           case 'afterEach': {
             switch (message.language) {
               case 'java-junit': {
-                return sendResponse(`eyes.abortIfNotClosed();`)
+                let result = `eyes.abortIfNotClosed();`
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `\nrunner.getAllTestResults();`
+                  }
+                  return sendResponse(result)
+                })
+                return true
               }
             }
             break
@@ -539,7 +548,7 @@ browser.runtime.onMessageExternal.addListener(
           case 'beforeEach': {
             switch (message.language) {
               case 'java-junit': {
-                let statement = `eyes = new Eyes();\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
+                let result = ''
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
@@ -549,17 +558,58 @@ browser.runtime.onMessageExternal.addListener(
                 const baselineEnvNameCommand = commands.find(
                   command => command.command === CommandIds.SetBaselineEnvName
                 )
-                if (baselineEnvNameCommand) {
-                  statement += `\neyes.setBaseLineEnvName("${
-                    baselineEnvNameCommand.target
-                  }");`
-                }
-                //getExtensionSettings().then(settings => {
-                //  if (settings.projectSettings.enableVisualGrid) {
-                //  }
-                //})
-                statement += '\neyes.open(driver);'
-                return sendResponse(statement)
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `runner = new VisualGridRunner(concurrency);\neyes = new Eyes(runner);\nConfiguration config = eyes.getConfiguration();`
+                    result += `\neyes = new Eyes(runner);`
+                    const _browsers = parseBrowsers(
+                      settings.projectSettings.selectedBrowsers,
+                      settings.projectSettings.selectedViewportSizes,
+                      settings.projectSettings.selectedDevices,
+                      settings.projectSettings.selectedDeviceOrientations
+                    )
+                    let browsers = [..._browsers.matrix]
+                    if (!settings.experimentalEnabled) {
+                      browsers = browsers.filter(
+                        b => !isExperimentalBrowser(b.name)
+                      )
+                    }
+                    let isExperimentalBrowserWarningDisplayed = false
+                    browsers.forEach(browser => {
+                      if (browser.deviceName) {
+                        result += `\nconfig.addDeviceEmulation(DeviceName.${
+                          browser.deviceId
+                        }, ScreenOrientation.${browser.screenOrientation.toUpperCase()});`
+                      } else if (
+                        settings.experimentalEnabled &&
+                        isExperimentalBrowser(browser.name) &&
+                        _browsers.didRemoveResolution &&
+                        !isExperimentalBrowserWarningDisplayed
+                      ) {
+                        result += `\n// ${experimentalBrowserWarningMessage}`
+                        isExperimentalBrowserWarningDisplayed = true
+                      } else {
+                        result += `\nconfig.addBrowser(${browser.width}, ${
+                          browser.height
+                        }, BrowserType.${browser.name.toUpperCase()});`
+                      }
+                    })
+                    result += `\neyes.setConfiguration(config);`
+                  } else {
+                    result += `eyes = new Eyes();`
+                  }
+                  result += `\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
+                  if (baselineEnvNameCommand) {
+                    result += `\neyes.setBaseLineEnvName("${
+                      baselineEnvNameCommand.target
+                    }");`
+                  }
+                  result += `\neyes.open(driver, "${
+                    message.options.project.name
+                  }", "${message.options.name}");`
+                  return sendResponse(result)
+                })
+                return true
               }
             }
             break
@@ -591,7 +641,14 @@ browser.runtime.onMessageExternal.addListener(
           case 'variable': {
             switch (message.language) {
               case 'java-junit': {
-                return sendResponse(`private Eyes eyes;`)
+                let result = `private Eyes eyes;`
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `\nprivate EyesRunner runner;\nfinal int concurrency = 5;`
+                  }
+                  return sendResponse(result)
+                })
+                return true
               }
             }
             break
