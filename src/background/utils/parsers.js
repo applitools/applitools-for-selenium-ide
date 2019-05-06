@@ -1,3 +1,4 @@
+import { deviceIds } from '../../app/components/VisualGridOptionSelector/options'
 import UAParser from 'ua-parser-js'
 const parser = new UAParser()
 
@@ -38,6 +39,7 @@ export function parseBrowsers(
       matrix.push({
         screenOrientation: orientation.toLowerCase(),
         deviceName: device,
+        deviceId: deviceIds[device],
       })
     })
   })
@@ -48,7 +50,8 @@ export function parseBrowsers(
 }
 
 export function isExperimentalBrowser(browser) {
-  return experimentalBrowsers.includes(browser)
+  if (!browser) return
+  return experimentalBrowsers.includes(browser.toLowerCase())
 }
 
 function isBiggerResolution(res1, res2) {

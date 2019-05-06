@@ -59,8 +59,16 @@ describe('parsers', () => {
       expect(result).toEqual([
         { width: 800, height: 600, name: 'chrome' },
         { width: 1024, height: 768, name: 'chrome' },
-        { screenOrientation: 'portrait', deviceName: 'iPhone 4' },
-        { screenOrientation: 'landscape', deviceName: 'iPhone 4' },
+        {
+          screenOrientation: 'portrait',
+          deviceName: 'iPhone 4',
+          deviceId: 'iPhone_4',
+        },
+        {
+          screenOrientation: 'landscape',
+          deviceName: 'iPhone 4',
+          deviceId: 'iPhone_4',
+        },
       ])
     })
 
