@@ -3,6 +3,7 @@ import UAParser from 'ua-parser-js'
 const parser = new UAParser()
 
 export const experimentalBrowsers = ['ie10', 'ie11', 'edge']
+const experimentalBrowserIds = { ie10: 'IE_10', ie11: 'IE_11' }
 export const maxExperimentalResolution = '1280x1024'
 const parsedMax = parseViewport(maxExperimentalResolution)
 
@@ -24,10 +25,12 @@ export function parseBrowsers(
           isBiggerResolution(parseViewport(viewport), parsedMax)
         )
       ) {
+        const id = experimentalBrowserIds[name]
         matrix.push({
           width,
           height,
           name,
+          id,
         })
       } else {
         didRemoveResolution = true
