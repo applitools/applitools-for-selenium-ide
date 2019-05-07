@@ -589,9 +589,12 @@ browser.runtime.onMessageExternal.addListener(
                         result += `\n// ${experimentalBrowserWarningMessage}`
                         isExperimentalBrowserWarningDisplayed = true
                       } else {
+                        const browserId = browser.id
+                          ? browser.id
+                          : browser.name.toUpperCase()
                         result += `\nconfig.addBrowser(${browser.width}, ${
                           browser.height
-                        }, BrowserType.${browser.name.toUpperCase()});`
+                        }, BrowserType.${browserId});`
                       }
                     })
                     result += `\neyes.setConfiguration(config);`
@@ -633,7 +636,14 @@ browser.runtime.onMessageExternal.addListener(
           case 'inEachEnd': {
             switch (message.language) {
               case 'java-junit': {
-                return sendResponse(`eyes.close();`)
+                getExtensionSettings().then(settings => {
+                  if (!settings.projectSettings.enableVisualGrid) {
+                    return sendResponse(`eyes.close();`)
+                  } else {
+                    return sendResponse(undefined)
+                  }
+                })
+                return true
               }
             }
             break
