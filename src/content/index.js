@@ -37,3 +37,43 @@ function getElementRect(request, _sender, sendResponse) {
 // foo().then(sendResponse); return true
 // PASTE THIS IN EVERY PLACE THAT LISTENS TO onMessage!!
 browser.runtime.onMessage.addListener(getElementRect)
+
+window.__eyes = {}
+window.__eyes.promises = {}
+
+function execDomScript(id, scriptType) {
+  const p = new Promise((res, rej) => {
+    window.__eyes.promises[id] = { res, rej }
+  })
+  window.postMessage(
+    {
+      scriptType,
+      direction: 'from-eyes-content-script',
+      id,
+    },
+    '*'
+  )
+  return p
+}
+
+window.execDomScript = execDomScript
+
+window.addEventListener('message', event => {
+  if (
+    event.source == window &&
+    event.data &&
+    event.data.direction == 'from-page' &&
+    event.data.id
+  ) {
+    if (event.data.error) {
+      window.__eyes.promises[event.data.id].rej(new Error(event.data.message))
+    } else {
+      window.__eyes.promises[event.data.id].res(event.data.result)
+    }
+    delete window.__eyes.promises[event.data.id]
+  }
+})
+
+const elementForInjectingScript = document.createElement('script')
+elementForInjectingScript.src = browser.runtime.getURL('/assets/pageScripts.js')
+window.document.body.appendChild(elementForInjectingScript)

@@ -1,20 +1,14 @@
 import browser from 'webextension-polyfill'
 
-let domCapture, domSnapshot
-if (process.env.NODE_ENV !== 'test') {
-  domCapture = require('raw-loader!@applitools/dom-capture/dist/captureDom.js') // dom diffs for rca
-  domSnapshot = require('raw-loader!@applitools/dom-snapshot/dist/processPage.js') // cdt for vg pkg chnage @a/{cap,dom-snapshot}
-}
-
 export async function getDomCapture(tabId) {
   const enableDomCapture = await isDomCaptureEnabled()
   if (!enableDomCapture) return false
 
-  return parseOutExternalFrames(await runDomScript(tabId, domCapture))
+  return parseOutExternalFrames(await runDomScript(tabId, 'domCapture'))
 }
 
 export async function getDomSnapshot(tabId) {
-  return (await runDomScript(tabId, domSnapshot))[0]
+  return (await runDomScript(tabId, 'domSnapshot'))[0]
 }
 
 export async function isDomCaptureEnabled() {
@@ -27,11 +21,11 @@ export async function isDomCaptureEnabled() {
 
 let scriptCount = 0
 
-async function runDomScript(tabId, script) {
+async function runDomScript(tabId, scriptType) {
   scriptCount++
   const id = scriptCount
   browser.tabs.executeScript(tabId, {
-    code: `(${script})().then(result => { window.__eyes__${id} = result; }).catch()`,
+    code: `window.execDomScript(${id}, ${scriptType}).then(result => { window.__eyes__${id} = result; }).catch()`,
   })
 
   return new Promise((res, rej) => {

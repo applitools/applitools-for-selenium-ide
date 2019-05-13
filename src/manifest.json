@@ -30,6 +30,9 @@
     "debugger",
     "<all_urls>"
   ],
+  "web_accessible_resources": [
+    "assets/pageScripts.js"
+  ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "externally_connectable": {
     "ids": ["*"]
