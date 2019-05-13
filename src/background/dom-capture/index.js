@@ -25,7 +25,7 @@ async function runDomScript(tabId, scriptType) {
   scriptCount++
   const id = scriptCount
   browser.tabs.executeScript(tabId, {
-    code: `window.execDomScript(${id}, ${scriptType}).then(result => { window.__eyes__${id} = result; }).catch()`,
+    code: `window.execDomScript(${id}, '${scriptType}').then(result => { window.__eyes__${id} = result; }).catch()`,
   })
 
   return new Promise((res, rej) => {

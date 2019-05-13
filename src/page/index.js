@@ -6,9 +6,9 @@
       if (event.data.scriptType) {
         let p
         if (event.data.scriptType == 'domCapture') {
-          p = eval(`(() => ${domCapture})()`)
+          p = eval(`(${domCapture})()`)
         } else if (event.data.scriptType == 'domSnapshot') {
-          p = eval(`(() => ${domSnapshot})()`)
+          p = eval(`(${domSnapshot})()`)
         }
         p.then(result => {
           event.source.postMessage(
