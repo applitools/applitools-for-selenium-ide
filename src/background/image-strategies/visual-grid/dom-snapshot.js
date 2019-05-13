@@ -3,12 +3,24 @@ import { getDomSnapshot } from '../../dom-capture'
 export async function getSnapshot(tabId) {
   const snapshot = await getDomSnapshot(tabId)
   removeCrossOriginIframes(snapshot.cdt, snapshot.frames)
-  snapshot.resourceContents = snapshot.blobs.map(r => ({
+  snapshot.resourceContents = mapResourceContents(snapshot)
+  mapFrameResourceContents(snapshot.frames)
+
+  return snapshot
+}
+
+function mapFrameResourceContents(frames) {
+  frames.forEach(frame => {
+    frame.resourceContents = mapResourceContents(frame)
+    mapFrameResourceContents(frame.frames)
+  })
+}
+
+function mapResourceContents(snapshot) {
+  return snapshot.blobs.map(r => ({
     ...r,
     value: Buffer.from(r.value),
   }))
-
-  return snapshot
 }
 
 function removeCrossOriginIframes(cdt, frames) {

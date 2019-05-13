@@ -2,8 +2,8 @@ import browser from 'webextension-polyfill'
 
 let domCapture, domSnapshot
 if (process.env.NODE_ENV !== 'test') {
-  domCapture = require('raw-loader!@applitools/dom-capture/dist/captureDom.js')
-  domSnapshot = require('raw-loader!@applitools/dom-capture/dist/processPage.js')
+  domCapture = require('raw-loader!@applitools/dom-capture/dist/captureDom.js') // dom diffs for rca
+  domSnapshot = require('raw-loader!@applitools/dom-snapshot/dist/processPage.js') // cdt for vg pkg chnage @a/{cap,dom-snapshot}
 }
 
 export async function getDomCapture(tabId) {
@@ -35,9 +35,10 @@ async function runDomScript(tabId, script) {
   })
 
   return new Promise((res, rej) => {
-    let count = 0
+    let startTime = new Date()
     const domCapRetry = setInterval(() => {
-      if (count >= 300000) {
+      let elapsed = new Date() - startTime
+      if (elapsed >= 300000) {
         clearInterval(domCapRetry)
         rej('Unable to capture DOM within the timeout specified')
       }
@@ -48,7 +49,7 @@ async function runDomScript(tabId, script) {
         .then(result => {
           // eslint-disable-next-line
           console.log(
-            `[${count}ms]: ${
+            `[${elapsed}ms]: ${
               result && result[0] ? result : 'No DOM Capture result yet'
             }`
           )
@@ -60,16 +61,32 @@ async function runDomScript(tabId, script) {
             res(result)
           }
         })
-      count += 100
     }, 100)
   })
 }
 
 export function parseOutExternalFrames(input = []) {
   if (input && input[0]) {
-    return input[0]
-      .replace(/@@@@@(.|\n)*-----/, '')
-      .replace(/@@@@@.*?@@@@@/g, '')
-      .trim()
+    const cap = input[0]
+    const firstLineEnd = cap.indexOf('\n')
+    const meta = JSON.parse(cap.substr(0, firstLineEnd))
+    const sepLength = (meta.separator + '\n').length
+    const rest = cap.substr(cap.indexOf(meta.separator + '\n') + sepLength)
+    const sepLocation = rest.indexOf(meta.separator + '\n')
+    const frames = rest
+      .substr(0, sepLocation)
+      .split('\n')
+      .filter(f => !!f)
+    const snapshot = rest.substr(sepLocation + sepLength)
+    let result = snapshot
+
+    frames.forEach(frame => {
+      result = result.replace(
+        `${meta.iframeStartToken}${frame}${meta.iframeEndToken}`,
+        ''
+      )
+    })
+
+    return result
   }
 }

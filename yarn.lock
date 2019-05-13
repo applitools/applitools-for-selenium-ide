@@ -2,12 +2,19 @@
 # yarn lockfile v1
 
 
-"@applitools/dom-capture@^6.1.1":
-  version "6.1.5"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-6.1.5.tgz#cc6090e22149e9cebe395cc6f200e5357a7d5687"
-  integrity sha512-4+bQee8VG4UWXXjyDPVsHZ+nqrNA090cqPp22CwBoNLvv3qBSr3f5J2+cG05j+xNI0BOu70WSBSCdUxFWC28cg==
+"@applitools/dom-capture@^7.0.8":
+  version "7.0.8"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-7.0.8.tgz#8ce65ac1622766b57a6d56a74d7c10757e55443c"
+  integrity sha512-8Xq+ptbOyfXRd3V0UBnQX91utguqI7oCUFuiWcv35EqcM4VDxLttPUIujHHvt/I1PB6Y49JMdnVkXsRvTYA6Og==
   dependencies:
     "@applitools/functional-commons" "^1.0.27"
+
+"@applitools/dom-snapshot@^1.1.9":
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-1.1.9.tgz#bb5c6509a8e27f7b8f816dd50db980632d259679"
+  integrity sha512-h/kIn7skHKa9NItmiCqAhlXJ5HuxXq09BU84lNLZ4bxerIGbo+sa/Z9/nbz7Wh8MvvilCRDw52cJMfX7cUBV1A==
+  dependencies:
+    "@applitools/functional-commons" "^1.3.7"
 
 "@applitools/eyes-common@^1.3.0":
   version "1.3.0"
@@ -46,6 +53,11 @@
   version "1.0.39"
   resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.0.39.tgz#c73208a17125ba1719c609495a42baf3521ff5fa"
   integrity sha512-yX5kFPCs968NYemgWlYpHW4WuleQ2FN/KT1LMJBwAlUkMgN41w1r2XD2/egXpi8rPYq6ehqfk2fzT/FOFwS5aw==
+
+"@applitools/functional-commons@^1.3.7":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@applitools/functional-commons/-/functional-commons-1.4.1.tgz#4c2fb38c749d120a49f0d774019126795917c912"
+  integrity sha512-fdujyjZNzG5vxtWC8JZY0Kc6pIybpI3k3ookOBMKmntejKGzKZbufRRNG3okyj10OD+a9DtnHtl3lEkDPlB+Ug==
 
 "@applitools/http-commons@^1.2.3":
   version "1.2.5"
@@ -1663,10 +1675,10 @@ buffer@^4.3.0:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-buffer@^5.0.8:
-  version "5.0.8"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.0.8.tgz#84daa52e7cf2fa8ce4195bc5cf0f7809e0930b24"
-  integrity sha512-xXvjQhVNz50v2nPeoOsNqWCLGfiv4ji/gXZM28jnVwdLJxH4mFyqgqCKfaK9zf1KUbG6zTkjLOy7ou+jSMarGA==
+buffer@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.2.1.tgz#dd57fa0f109ac59c602479044dca7b8b3d0b71d6"
+  integrity sha512-c+Ko0loDaFfuPWiL02ls9Xd3GO3cPVmUobQ6t3rXNUk304u6hGq+8N/kFi+QEIKhzK3uwolVhLzszmfLmMLnqg==
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
@@ -5138,10 +5150,10 @@ js-yaml@^3.12.0:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-js-yaml@^3.12.1, js-yaml@^3.9.0:
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.1.tgz#295c8632a18a23e054cf5c9d3cecafe678167600"
-  integrity sha512-um46hB9wNOKlwkHgiuyEVAybXBjwFUV0Z/RaHJblRd9DXltue9FTYvzCr9ErQrK9Adz5MU4gHWVaNUfdmrC8qA==
+js-yaml@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
+  integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -5150,6 +5162,14 @@ js-yaml@^3.4.3, js-yaml@^3.7.0:
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.10.0.tgz#2e78441646bd4682e963f22b6e92823c309c62dc"
   integrity sha512-O2v52ffjLa9VeM43J4XocZE//WT9N0IiwDa3KSHH7Tu8CtH+1qM8SIZvnsTh6v+4yFy5KUY3BHUVwjpfAWsjIA==
+  dependencies:
+    argparse "^1.0.7"
+    esprima "^4.0.0"
+
+js-yaml@^3.9.0:
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.1.tgz#295c8632a18a23e054cf5c9d3cecafe678167600"
+  integrity sha512-um46hB9wNOKlwkHgiuyEVAybXBjwFUV0Z/RaHJblRd9DXltue9FTYvzCr9ErQrK9Adz5MU4gHWVaNUfdmrC8qA==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"

@@ -5,34 +5,54 @@ describe('dom-capture', () => {
     expect(parseOutExternalFrames(undefined)).toEqual(undefined)
   })
 
-  it('removes external frames header', () => {
+  it('parses dom capture', () => {
     const input = [
-      `@@@@@
-      HTML[1]/BODY[1]/IFRAME[1]
-      HTML[1]/BODY[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/IFRAME[1]
-      HTML[1]/BODY[1]/DIV[1]/DIV[3]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[2]/IFRAME[1]
-      HTML[1]/BODY[1]/DIV[1]/DIV[3]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[1]/DIV[2]/DIV[2]/DIV[1]/SPAN[1]/IFRAME[1]
-      -----`,
-    ]
-    expect(parseOutExternalFrames(input)).toEqual('')
-  })
-
-  it('replaces frame tokens with empty strings', () => {
-    const input = [
-      `"childNodes":["@@@@@HTML[1]/BODY[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/IFRAME[1]@@@@@"],
-       "childNodes":["@@@@@HTML[1]/BODY[1]/DIV[1]/DIV[2]/DIV[1]/DIV[1]/IFRAME[2]@@@@@"]`,
+      `{"separator":"-----","cssStartToken":"#####","cssEndToken":"#####","iframeStartToken":"\\"@@@@@","iframeEndToken":"@@@@@\\""}
+http://url/to/css/1
+http://url/to/css/2
+http://url/to/css/3
+-----
+html[1]/body[1]/iframe[2],html[1]/body[1]/iframe[1]
+html[1]/body[1]/div[10]/div[3]/iframe[2],html[1]/body[1]/div[4]/iframe[6]
+-----
+{"tagName":"HTML","style":{...},"rect":{...},"childNodes":[
+  {"tagName":"BODY","style":{...},"rect":{...},"childNodes":[
+    {"tagName":"DIV","style":{...},"rect":{...},"childNodes":[
+      {"tagName":"#text","text":"hello"}]},
+    {"tagName":"IFRAME","style":{...},"rect":{...},"attributes":{"src":"some/url.html"},"childNodes":[
+      {"tagName":"HTML","style":{...},"rect":{...},"childNodes":[
+        {"tagName":"BODY","style":{...},"rect":{...},"childNodes":[
+          {"tagName":"IFRAME","style":{...},"rect":{...},"attributes":{"src":"http://localhost:7272/iframe.html","width":"200","height":"100"},"childNodes":["@@@@@html[1]/body[1]/iframe[2],html[1]/body[1]/iframe[1]@@@@@"]}],
+      "css":"","images":{}}]}]}],
+  "css":\`/** http://some/url.css **/
+         div{border: 5px solid salmon;}
+         /** http://url/to/css/1 **/
+         #####http://url/to/css/1#####
+         /** http://url/to/css/2 **/
+         #####http://url/to/css/2#####
+         /** http://url/to/css/3 **/
+         #####http://url/to/css/3#####\`,
+  "images":{}}`,
     ]
     expect(parseOutExternalFrames(input)).toEqual(
-      `"childNodes":[""],
-       "childNodes":[""]`
+      `{"tagName":"HTML","style":{...},"rect":{...},"childNodes":[
+  {"tagName":"BODY","style":{...},"rect":{...},"childNodes":[
+    {"tagName":"DIV","style":{...},"rect":{...},"childNodes":[
+      {"tagName":"#text","text":"hello"}]},
+    {"tagName":"IFRAME","style":{...},"rect":{...},"attributes":{"src":"some/url.html"},"childNodes":[
+      {"tagName":"HTML","style":{...},"rect":{...},"childNodes":[
+        {"tagName":"BODY","style":{...},"rect":{...},"childNodes":[
+          {"tagName":"IFRAME","style":{...},"rect":{...},"attributes":{"src":"http://localhost:7272/iframe.html","width":"200","height":"100"},"childNodes":[]}],
+      "css":"","images":{}}]}]}],
+  "css":\`/** http://some/url.css **/
+         div{border: 5px solid salmon;}
+         /** http://url/to/css/1 **/
+         #####http://url/to/css/1#####
+         /** http://url/to/css/2 **/
+         #####http://url/to/css/2#####
+         /** http://url/to/css/3 **/
+         #####http://url/to/css/3#####\`,
+  "images":{}}`
     )
-  })
-
-  it('removes leading newline and whitespace', () => {
-    const input = [
-      `
-      blah`,
-    ]
-    expect(parseOutExternalFrames(input)).toEqual('blah')
   })
 })

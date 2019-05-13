@@ -680,7 +680,7 @@ browser.runtime.onMessageExternal.addListener(
         }
         case 'config': {
           return sendResponse(
-            `const { Eyes, Target } = configuration.params.eyesRendering ? require('@applitools/eyes-rendering') : require('@applitools/eyes-selenium');global.Target = Target;const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes-sdk-core');let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
+            `const { Eyes, Target } = require('@applitools/eyes-selenium');global.Target = Target;const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes-sdk-core');let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
               message.project.name
             }", batchId = configuration.runId, batchName;`
           )
@@ -695,7 +695,7 @@ browser.runtime.onMessageExternal.addListener(
           if (hasEyesCommands) {
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
-              before: `global.eyes = new Eyes(serverUrl, configuration.params.eyesDisabled);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => ("eyes.seleniumide.runner ${
+              before: `global.eyes = Eyes.fromBrowserInfo(serverUrl, configuration.params.eyesDisabled, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : undefined);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => ("eyes.seleniumide.runner ${
                 manifest.version
               } " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setAgentId("eyes.seleniumide.runner ${
                 manifest.version
@@ -720,7 +720,7 @@ browser.runtime.onMessageExternal.addListener(
             return sendResponse({
               setup: `${baselineEnvName}const _driver = driver;driver = await eyes.open(driver, appName, "${
                 message.test.name
-              }", null, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : null);`,
+              }");`,
               teardown: 'driver = _driver;',
             })
           }
