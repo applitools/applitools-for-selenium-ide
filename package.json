@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --hot",
     "build": "webpack",
-    "build:prod": "rm -rf build && env NODE_ENV=production yarn build",
+    "build:prod": "rm -rf build && env NODE_ENV=production yarn build && yarn build:page",
+    "build:page": "webpack --config webpack.config.page.babel.js",
     "test": "jest",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package"
