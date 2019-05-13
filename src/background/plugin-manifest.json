@@ -69,7 +69,7 @@
     }
   ],
   "dependencies": {
-    "@applitools/eyes-selenium": "4.16.6"
+    "@applitools/eyes-selenium": "4.16.7"
   },
   "jest": {
     "extraGlobals": ["Math"]
