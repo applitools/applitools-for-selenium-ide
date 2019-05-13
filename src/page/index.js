@@ -1,6 +1,6 @@
 ;(() => {
   const domCapture = require('raw-loader!@applitools/dom-capture/dist/captureDom.js')
-  const domSnapshot = require('raw-loader!@applitools/dom-capture/dist/processPage.js')
+  const domSnapshot = require('raw-loader!@applitools/dom-snapshot/dist/processPage.js')
   window.addEventListener('message', event => {
     if (event.data && event.data.direction == 'from-eyes-content-script') {
       if (event.data.scriptType) {
