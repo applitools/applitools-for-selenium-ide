@@ -1,6 +1,9 @@
 {
   "name": "Applitools",
   "version": "1.0.0",
+  "exports": {
+    "languages": ["java-junit"]
+  },
   "commands": [
     {
       "id": "eyesCheckWindow",
