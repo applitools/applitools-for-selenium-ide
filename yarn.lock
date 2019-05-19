@@ -2,17 +2,17 @@
 # yarn lockfile v1
 
 
-"@applitools/dom-capture@^7.0.8":
-  version "7.0.8"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-7.0.8.tgz#8ce65ac1622766b57a6d56a74d7c10757e55443c"
-  integrity sha512-8Xq+ptbOyfXRd3V0UBnQX91utguqI7oCUFuiWcv35EqcM4VDxLttPUIujHHvt/I1PB6Y49JMdnVkXsRvTYA6Og==
+"@applitools/dom-capture@^7.0.9":
+  version "7.0.9"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-capture/-/dom-capture-7.0.9.tgz#404e5b57d9e1da3ae272cd028387e986d618ac50"
+  integrity sha512-k79uEC9Lh49oa0zpAE4Ozy3YeWoboZWAvTXyOef3LB6fPOvvRNiGslV0J5uV/spCGKXnaLwt00xvNtWj7EFOjw==
   dependencies:
     "@applitools/functional-commons" "^1.0.27"
 
-"@applitools/dom-snapshot@^1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-1.1.9.tgz#bb5c6509a8e27f7b8f816dd50db980632d259679"
-  integrity sha512-h/kIn7skHKa9NItmiCqAhlXJ5HuxXq09BU84lNLZ4bxerIGbo+sa/Z9/nbz7Wh8MvvilCRDw52cJMfX7cUBV1A==
+"@applitools/dom-snapshot@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@applitools/dom-snapshot/-/dom-snapshot-1.2.4.tgz#bb60d1e291a90e312899f22832f121f40c37b5a9"
+  integrity sha512-5m6WQcfU7oEaf+k8YLz61HJL0qRFbYy/fZkTeRRnFfgxWJ/Z0QfF2iXbcflIo6Xd7a/hkxoN5+qjOaV8PATDEg==
   dependencies:
     "@applitools/functional-commons" "^1.3.7"
 

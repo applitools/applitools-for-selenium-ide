@@ -58,8 +58,8 @@
     "webpack-dev-server": "^2.8.2"
   },
   "dependencies": {
-    "@applitools/dom-capture": "^7.0.8",
-    "@applitools/dom-snapshot": "^1.1.9",
+    "@applitools/dom-capture": "^7.0.9",
+    "@applitools/dom-snapshot": "^1.2.4",
     "@applitools/eyes-images": "^4.8.0",
     "@applitools/visual-grid-client": "11.1.0",
     "buffer": "^5.2.1",
