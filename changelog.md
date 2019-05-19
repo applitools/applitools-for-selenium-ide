@@ -1,3 +1,6 @@
+## v1.1.4
+- Underlying SDK upgrade which removes the need to use eval for domCapture and domSnapshot
+
 ## v1.1.3
 - Re-enabled code export for java-junit
 
