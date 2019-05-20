@@ -243,8 +243,8 @@ async function createVisualGridEyes(
     agentId: `eyes.seleniumide.${browserName.toLowerCase()} ${
       manifest.version
     } visualgrid`,
-  }).openEyes({
     showLogs: true,
+  }).openEyes({
     appName,
     batchName,
     batchId,
