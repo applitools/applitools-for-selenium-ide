@@ -1,3 +1,6 @@
+## v1.1.5
+- Added verbose logging when running against the visual grid
+
 ## v1.1.4
 - Underlying SDK upgrade which removes the need to use eval for domCapture and domSnapshot
 
