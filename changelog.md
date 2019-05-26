@@ -1,3 +1,6 @@
+## v.1.2.0
+- Added a new option under the experimental feature toggle, to enable legacy DOM snapshotting for the visual grid
+
 ## v1.1.5
 - Added verbose logging when running against the visual grid
 
