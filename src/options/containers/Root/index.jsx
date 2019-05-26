@@ -34,6 +34,7 @@ class Options extends React.Component {
       .get([
         'enableDomCapture',
         'enableVisualCheckpoints',
+        'enableLegacyDomSnapshot',
         'openUrls',
         'apiKey',
         'eyesServer',
@@ -44,6 +45,7 @@ class Options extends React.Component {
         ({
           enableDomCapture,
           enableVisualCheckpoints,
+          enableLegacyDomSnapshot,
           openUrls,
           apiKey,
           eyesServer,
@@ -58,6 +60,7 @@ class Options extends React.Component {
             eyesServer: eyesServer || '',
             seideId: seideId || '',
             experimentalEnabled: experimentalEnabled || false,
+            enableLegacyDomSnapshot: enableLegacyDomSnapshot || false,
           })
         }
       )
@@ -87,6 +90,7 @@ class Options extends React.Component {
         eyesServer: this.state.eyesServer,
         seideId: this.state.seideId,
         experimentalEnabled: this.state.experimentalEnabled,
+        enableLegacyDomSnapshot: this.state.enableLegacyDomSnapshot,
       })
       .then(() => {
         browser.runtime.sendMessage({
@@ -137,6 +141,22 @@ class Options extends React.Component {
                   checked={this.state.openUrls}
                   onChange={this.handleCheckboxChange.bind(this, 'openUrls')}
                 />
+                {this.state.experimentalEnabled ? (
+                  <Checkbox
+                    id="enable-legacy-dom-snapshot"
+                    className="checkbox"
+                    name="enable-legacy-dom-snapshot"
+                    label="Enable legacy DOM snapshot for the visual grid"
+                    checked={this.state.enableLegacyDomSnapshot}
+                    onChange={this.handleCheckboxChange.bind(
+                      this,
+                      'enableLegacyDomSnapshot'
+                    )}
+                    disclaimer="(not supported in the SIDE command-line-runner)"
+                  />
+                ) : (
+                  undefined
+                )}
               </React.Fragment>
             )}
             {this.state.tab === Tabs.ACCOUNT && (

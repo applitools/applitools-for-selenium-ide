@@ -11,6 +11,7 @@ export default class Checkbox extends React.Component {
     checked: PropTypes.bool,
     isChecked: PropTypes.func,
     onChange: PropTypes.func.isRequired,
+    disclaimer: PropTypes.string,
   }
   render() {
     const checked =
@@ -30,6 +31,11 @@ export default class Checkbox extends React.Component {
         <label key="label" htmlFor={this.props.id}>
           <span>{checked ? '✓' : ''}</span>
           <div>{this.props.label}</div>
+          {this.props.disclaimer ? (
+            <div className="disclaimer">{this.props.disclaimer}</div>
+          ) : (
+            undefined
+          )}
         </label>
       </div>
     )

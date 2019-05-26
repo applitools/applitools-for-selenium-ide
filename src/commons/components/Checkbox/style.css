@@ -40,3 +40,7 @@ input[type='checkbox'].checkbox + label:active span {
 input[type='checkbox'].checkbox + label > div {
   display: inline-block;
 }
+
+.checkbox + label .disclaimer {
+  padding-left: 25px;
+}

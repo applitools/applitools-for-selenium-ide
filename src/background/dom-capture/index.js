@@ -4,11 +4,19 @@ export async function getDomCapture(tabId) {
   const enableDomCapture = await isDomCaptureEnabled()
   if (!enableDomCapture) return false
 
-  return parseOutExternalFrames(await runDomScript(tabId, 'domCapture'))
+  return parseOutExternalFrames(
+    await runDomScript(tabId, { name: 'domCapture' })
+  )
 }
 
 export async function getDomSnapshot(tabId) {
-  return (await runDomScript(tabId, 'domSnapshot'))[0]
+  const enableLegacyDomSnapshot = await isLegacyDomSnapshotEnabled()
+  const script = enableLegacyDomSnapshot
+    ? {
+        script: require('raw-loader!@applitools/dom-snapshot/dist/processPage.js'),
+      }
+    : { name: 'domSnapshot' }
+  return (await runDomScript(tabId, script))[0]
 }
 
 export async function isDomCaptureEnabled() {
@@ -19,14 +27,32 @@ export async function isDomCaptureEnabled() {
   return enableDomCapture
 }
 
+export async function isLegacyDomSnapshotEnabled() {
+  const { enableLegacyDomSnapshot } = await browser.storage.local.get([
+    'enableLegacyDomSnapshot',
+  ])
+
+  return enableLegacyDomSnapshot
+}
+
 let scriptCount = 0
 
-async function runDomScript(tabId, scriptType) {
+async function runDomScript(tabId, script) {
   scriptCount++
   const id = scriptCount
-  browser.tabs.executeScript(tabId, {
-    code: `window.execDomScript(${id}, '${scriptType}').then(result => { window.__eyes__${id} = result; }).catch()`,
-  })
+  if (script.name) {
+    browser.tabs.executeScript(tabId, {
+      code: `window.execDomScript(${id}, '${
+        script.name
+      }').then(result => { window.__eyes__${id} = result; }).catch()`,
+    })
+  } else if (script.script) {
+    browser.tabs.executeScript(tabId, {
+      code: `(${
+        script.script
+      })().then(result => { window.__eyes__${id} = result; }).catch()`,
+    })
+  }
 
   return new Promise((res, rej) => {
     let startTime = new Date()
