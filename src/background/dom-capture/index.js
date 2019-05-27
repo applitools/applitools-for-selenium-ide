@@ -28,11 +28,15 @@ export async function isDomCaptureEnabled() {
 }
 
 export async function isLegacyDomSnapshotEnabled() {
-  const { enableLegacyDomSnapshot } = await browser.storage.local.get([
+  const {
+    enableLegacyDomSnapshot,
+    experimentalEnabled,
+  } = await browser.storage.local.get([
     'enableLegacyDomSnapshot',
+    'experimentalEnabled',
   ])
 
-  return enableLegacyDomSnapshot
+  return !!(enableLegacyDomSnapshot && experimentalEnabled)
 }
 
 let scriptCount = 0
