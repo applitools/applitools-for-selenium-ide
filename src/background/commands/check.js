@@ -231,14 +231,14 @@ export function endTest(id) {
             // check if at least one of the tests step failed
             state = results.find(
               result =>
-                result._stepsInfo[index]
+                result._stepsInfo && result._stepsInfo[index]
                   ? result._stepsInfo[index]._isDifferent
                   : true // returning true in case the image never made it to eyes for processing, thus is should fail
             )
               ? 'failed'
               : 'passed'
           } else {
-            if (results._stepsInfo[index]) {
+            if (results._stepsInfo && results._stepsInfo[index]) {
               state = results._stepsInfo[index]._isDifferent
                 ? 'failed'
                 : 'passed'
