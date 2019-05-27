@@ -160,6 +160,14 @@ async function createImagesEyes(
   eyes.setBatch(batchName, batchId)
   if (baselineEnvName) eyes.setBaselineEnvName(baselineEnvName)
   decorateEyes(eyes)
+
+  if (await isPatternsDomEnabled()) {
+    eyes.setMatchLevel(parseMatchLevel('Layout'))
+    eyes.setEnablePatterns(true)
+    eyes.setUseDom(true)
+    eyes.setSendDom(true)
+  }
+
   await eyes.open(appName, testName)
   return eyes
 }
@@ -193,6 +201,13 @@ export function hasValidVisualGridSettings(settings) {
     default:
       return false
   }
+}
+
+export async function isPatternsDomEnabled() {
+  const settings = await getExtensionSettings()
+  return !!(
+    settings.projectSettings.enablePatternsDom && settings.experimentalEnabled
+  )
 }
 
 async function createVisualGridEyes(
@@ -237,6 +252,15 @@ async function createVisualGridEyes(
       )
     }
   }
+
+  let useDom
+  let enablePatterns
+
+  if (await isPatternsDomEnabled()) {
+    useDom = true
+    enablePatterns = true
+  }
+
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
@@ -244,6 +268,8 @@ async function createVisualGridEyes(
       manifest.version
     } visualgrid`,
     showLogs: true,
+    useDom,
+    enablePatterns,
   }).openEyes({
     appName,
     batchName,
@@ -255,7 +281,7 @@ async function createVisualGridEyes(
     browser: matrix,
     baselineEnvName,
   })
-  decorateVisualEyes(
+  await decorateVisualEyes(
     eyes,
     batchId,
     appName,
@@ -351,7 +377,7 @@ function decorateEyes(eyes) {
   }
 }
 
-function decorateVisualEyes(
+async function decorateVisualEyes(
   eyes,
   _batchId,
   appName,
@@ -362,6 +388,7 @@ function decorateVisualEyes(
   branchName,
   _parentBranchName
 ) {
+  if (await isPatternsDomEnabled()) eyes.matchLevel = parseMatchLevel('Layout')
   eyes.isVisualGrid = true
   eyes.commands = []
   eyes.getMatchLevel = () => eyes.matchLevel
@@ -378,7 +405,7 @@ function decorateVisualEyes(
 }
 
 function verifyMatchLevel(level) {
-  if (!/^(Layout|Content|Strict|Exact)$/i.test(level)) {
+  if (!/^(Layout|Layout2|Content|Strict|Exact)$/i.test(level)) {
     throw new Error(
       'Match level must be one of: Exact, Strict, Content or Layout.'
     )

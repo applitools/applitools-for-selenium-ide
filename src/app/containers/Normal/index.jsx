@@ -37,13 +37,14 @@ export default class Normal extends React.Component {
     browser.runtime.openOptionsPage()
   }
   handleCheckboxChange(name, e) {
-    if (name === 'enableVisualGrid') {
+    if (name) {
       const { checked } = e.target
       this.setProjectSettings().then(() =>
-        this.handleInputChange('enableVisualGrid', checked)
+        this.handleInputChange(name, checked)
       )
-    } else if (this.props.visualCheckpointsChanged)
+    } else {
       this.props.visualCheckpointsChanged(e.target.checked)
+    }
   }
   handleInputChange(name, value) {
     // used for branches and visual grid checkbox
@@ -85,6 +86,7 @@ export default class Normal extends React.Component {
                   branch: '',
                   parentBranch: '',
                   enableVisualGrid: false,
+                  enablePatternsDom: false,
                   selectedBrowsers: ['Chrome'],
                   selectedViewportSizes: ['1920x1080'],
                   customViewportSizes: [],
@@ -179,6 +181,17 @@ export default class Normal extends React.Component {
                   isExperimental={this.state.isExperimental}
                 />
               )}
+            {this.state.isExperimental && (
+              <Checkbox
+                id="enable-patterns-dom"
+                label="Enable advanced pattern matching"
+                checked={this.state.projectSettings.enablePatternsDom}
+                onChange={this.handleCheckboxChange.bind(
+                  this,
+                  'enablePatternsDom'
+                )}
+              />
+            )}
           </React.Fragment>
         )}
         <hr />

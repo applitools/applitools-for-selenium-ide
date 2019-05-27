@@ -1,7 +1,12 @@
 import browser from 'webextension-polyfill'
 import Modes from '../../commons/modes'
 import { sendMessage } from '../../IO/message-port'
-import { getEyes, closeEyes, getCommandsForEyes } from '../utils/eyes'
+import {
+  getEyes,
+  closeEyes,
+  getCommandsForEyes,
+  isPatternsDomEnabled,
+} from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
@@ -205,7 +210,7 @@ async function checkWithVisualGrid(
 
   await checkFunction({
     tag: stepName || pathname,
-    sendDOM: await isDomCaptureEnabled(),
+    sendDOM: (await isDomCaptureEnabled()) || (await isPatternsDomEnabled()),
     matchLevel: eyes.getMatchLevel() || 'Strict',
     ...params,
   })
