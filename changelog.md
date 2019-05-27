@@ -1,4 +1,9 @@
-## v.1.2.0
+## v1.3.0
+- Underlying SDK upgrade
+- Added support for enablePatterns and useDom, through an expermiental feature toggle in the UI
+- Fixed a bug in result parsing when dealing with an incomplete results object
+
+## v1.2.0
 - Added a new option under the experimental feature toggle, to enable legacy DOM snapshotting for the visual grid
 
 ## v1.1.5
