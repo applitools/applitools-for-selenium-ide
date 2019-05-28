@@ -10,7 +10,8 @@
     "build:page": "webpack --config webpack.config.page.babel.js",
     "test": "jest",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "release": "git push --tags && npx ./gh-release.js"
   },
   "jest": {
     "moduleNameMapper": {
@@ -50,12 +51,14 @@
     "postcss-loader": "^2.0.6",
     "postinstall-postinstall": "^2.0.0",
     "prettier": "^1.14.3",
+    "putasset": "^4.3.2",
     "raw-loader": "^0.5.1",
     "react-hot-loader": "^3.0.0-beta.7",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.5.6",
-    "webpack-dev-server": "^2.8.2"
+    "webpack-dev-server": "^2.8.2",
+    "grizzly": "^4.0.1"
   },
   "dependencies": {
     "@applitools/dom-capture": "^7.0.9",
