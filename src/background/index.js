@@ -377,6 +377,11 @@ browser.runtime.onMessageExternal.addListener(
             !getExternalState().enableVisualCheckpoints ||
             message.options.isNested
           ) {
+            if (message.options.isNested) {
+              ideLogger.log(
+                'Visual checkpoints are disabled when running inside of a nested test case'
+              )
+            }
             return sendResponse(true)
           } else if (message.options.runId) {
             getViewportSize(message.options.tabId).then(viewport => {
@@ -414,6 +419,11 @@ browser.runtime.onMessageExternal.addListener(
             !getExternalState().enableVisualCheckpoints ||
             message.options.isNested
           ) {
+            if (message.options.isNested) {
+              ideLogger.log(
+                'Visual checkpoints are disabled when running inside of a nested test case'
+              )
+            }
             return sendResponse(true)
           } else if (message.options.runId) {
             sendMessage({
