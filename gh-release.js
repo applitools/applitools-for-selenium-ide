@@ -25,7 +25,7 @@ const changelog = exec(
 ).trim()
 
 // zip build dir
-exec('zip -r build/applitools-for-selenium-ide.zip build/')
+exec('cd build;zip -r applitools-for-selenium-ide.zip *')
 log('Zipped build directory')
 
 // create release with changelog
