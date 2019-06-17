@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.4.0
+- Added Python code export support
+
 ## v1.3.0
 - Underlying SDK upgrade
 - Added support for enablePatterns and useDom, through an expermiental feature toggle in the UI
