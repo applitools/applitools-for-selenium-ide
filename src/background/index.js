@@ -487,6 +487,13 @@ browser.runtime.onMessageExternal.addListener(
                   : `eyes.checkWindow();`
               )
             }
+            case 'python-pytest': {
+              return sendResponse(
+                target
+                  ? `self.eyes.check_window("${target}")`
+                  : `self.eyes.check_window()`
+              )
+            }
           }
         } else if (command === CommandIds.CheckElement) {
           switch (message.language) {
@@ -505,6 +512,21 @@ browser.runtime.onMessageExternal.addListener(
                 .catch(console.error) // eslint-disable-line no-console
               return true
             }
+            case 'python-pytest': {
+              sendMessage({
+                uri: '/export/location',
+                verb: 'get',
+                payload: {
+                  location: target,
+                  language: message.language,
+                },
+              })
+                .then(locator => {
+                  sendResponse(`self.eyes.check_element(${locator})`)
+                })
+                .catch(console.error) // eslint-disable-line no-console
+              return true
+            }
           }
         } else if (command === CommandIds.SetViewportSize) {
           switch (message.language) {
@@ -512,6 +534,12 @@ browser.runtime.onMessageExternal.addListener(
               const { width, height } = parseViewport(target)
               return sendResponse(
                 `Eyes.setViewportSize(driver, new RectangleSize(${width}, ${height}));`
+              )
+            }
+            case 'python-pytest': {
+              const { width, height } = parseViewport(target)
+              return sendResponse(
+                `self.eyes.viewport_size = {'width': ${width}, 'height': ${height}}`
               )
             }
           }
@@ -522,11 +550,19 @@ browser.runtime.onMessageExternal.addListener(
                 `eyes.setMatchLevel("${parseMatchLevel(target)}");`
               )
             }
+            case 'python-pytest': {
+              return sendResponse(
+                `self.eyes.match_level("${parseMatchLevel(target)}")`
+              )
+            }
           }
         } else if (command === CommandIds.SetMatchTimeout) {
           switch (message.language) {
             case 'java-junit': {
               return sendResponse(`eyes.setMatchTimeout(${target});`)
+            }
+            case 'python-pytest': {
+              return sendResponse(`self.eyes.match_timeout(${target})`)
             }
           }
         }
@@ -549,6 +585,16 @@ browser.runtime.onMessageExternal.addListener(
                     result += `\nrunner.getAllTestResults();`
                   }
                   return sendResponse(result)
+                })
+                return true
+              }
+              case 'python-pytest': {
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    return sendResponse(`self.vg_runner.get_all_test_results()`)
+                  } else {
+                    return sendResponse(`self.eyes.abort_if_not_closed()`)
+                  }
                 })
                 return true
               }
@@ -624,17 +670,96 @@ browser.runtime.onMessageExternal.addListener(
                 })
                 return true
               }
+              case 'python-pytest': {
+                let result = ''
+                const commands = message.options.tests
+                  ? message.options.tests.reduce(
+                      (_commands, test) => [...test.commands],
+                      []
+                    )
+                  : []
+                const baselineEnvNameCommand = commands.find(
+                  command => command.command === CommandIds.SetBaselineEnvName
+                )
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `concurrency = 10\n`
+                    result += `self.vg_runner = VisualGridRunner(concurrency)\n`
+                    result += `self.eyes = Eyes(self.vg_runner)\n`
+                    result += `config = Configuration()`
+                    const _browsers = parseBrowsers(
+                      settings.projectSettings.selectedBrowsers,
+                      settings.projectSettings.selectedViewportSizes,
+                      settings.projectSettings.selectedDevices,
+                      settings.projectSettings.selectedDeviceOrientations
+                    )
+                    let browsers = [..._browsers.matrix]
+                    if (!settings.experimentalEnabled) {
+                      browsers = browsers.filter(
+                        b => !isExperimentalBrowser(b.name)
+                      )
+                    }
+                    let isExperimentalBrowserWarningDisplayed = false
+                    browsers.forEach(browser => {
+                      if (browser.deviceName) {
+                        result += `\nconfig.add_device_emulation(DeviceName.${
+                          browser.deviceId
+                        }, ScreenOrientation.${browser.screenOrientation.toUpperCase()});`
+                      } else if (
+                        settings.experimentalEnabled &&
+                        isExperimentalBrowser(browser.name) &&
+                        _browsers.didRemoveResolution &&
+                        !isExperimentalBrowserWarningDisplayed
+                      ) {
+                        result += `\n// ${experimentalBrowserWarningMessage}`
+                        isExperimentalBrowserWarningDisplayed = true
+                      } else {
+                        const browserId = browser.id
+                          ? browser.id
+                          : browser.name.toUpperCase()
+                        result += `\nconfig.add_browser(${browser.width}, ${
+                          browser.height
+                        }, BrowserType.${browserId});`
+                      }
+                    })
+                    result += `\nself.eyes.configuration = config`
+                  } else {
+                    result += `self.eyes = Eyes()`
+                  }
+                  result += `\nself.eyes.api_key = os.environ["APPLITOOLS_API_KEY"]`
+                  if (baselineEnvNameCommand) {
+                    result += `\neyes.baseline_env_name = "${
+                      baselineEnvNameCommand.target
+                    }"`
+                  }
+                  result += `\nself.eyes.open(self.driver, "${
+                    message.options.project.name
+                  }", "${message.options.name}");`
+                  return sendResponse(result)
+                })
+                return true
+              }
             }
             break
           }
           case 'dependency': {
             switch (message.language) {
               case 'java-junit': {
-                let result = `import com.applitools.eyes.selenium.Eyes;\nimport com.applitools.eyes.RectangleSize;`
+                let result = `\nimport com.applitools.eyes.selenium.Eyes;\nimport com.applitools.eyes.RectangleSize;`
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
                     result += `\nimport com.applitools.eyes.selenium.BrowserType;\nimport com.applitools.eyes.selenium.Configuration;
 \nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.EyesRunner;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;`
+                  }
+                  return sendResponse(result)
+                })
+                return true
+              }
+              case 'python-pytest': {
+                let result = `import os\nfrom applitools.selenium import Eyes\n`
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `from applitools.selenium import (Configuration, BrowserType, DeviceName, ScreenOrientation)\nfrom applitools.selenium.visual_grid import VisualGridRunner\n`
                   }
                   return sendResponse(result)
                 })
@@ -651,6 +776,16 @@ browser.runtime.onMessageExternal.addListener(
                     return sendResponse(`eyes.close();`)
                   } else {
                     return sendResponse(undefined)
+                  }
+                })
+                return true
+              }
+              case 'python-pytest': {
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    return sendResponse(`self.eyes.close_async()`)
+                  } else {
+                    return sendResponse(`self.eyes.close()`)
                   }
                 })
                 return true
