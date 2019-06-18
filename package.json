@@ -11,7 +11,8 @@
     "test": "jest",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package",
-    "release": "git push --tags && npx ./gh-release.js"
+    "version": "node scripts/version.js && git add src/manifest.json",
+    "release": "git push --tags && node scripts/gh-release.js"
   },
   "jest": {
     "moduleNameMapper": {
