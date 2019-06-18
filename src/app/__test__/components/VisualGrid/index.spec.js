@@ -1,4 +1,4 @@
-import { cleanup, render, waitForElement } from 'react-testing-library'
+import { cleanup, render, waitForElement } from '@testing-library/react'
 import {
   click,
   findElement,

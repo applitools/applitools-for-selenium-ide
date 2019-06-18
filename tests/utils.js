@@ -1,4 +1,4 @@
-import { fireEvent } from 'react-testing-library'
+import { fireEvent } from '@testing-library/react'
 
 function click(selector) {
   fireEvent.click(findElement(selector))
