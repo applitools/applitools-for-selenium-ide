@@ -648,9 +648,7 @@ browser.runtime.onMessageExternal.addListener(
                         const browserId = browser.id
                           ? browser.id
                           : browser.name.toUpperCase()
-                        result += `\nconfig.addBrowser(${browser.width}, ${
-                          browser.height
-                        }, BrowserType.${browserId});`
+                        result += `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browserId});`
                       }
                     })
                     result += `\neyes.setConfiguration(config);`
@@ -659,13 +657,9 @@ browser.runtime.onMessageExternal.addListener(
                   }
                   result += `\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
                   if (baselineEnvNameCommand) {
-                    result += `\neyes.setBaseLineEnvName("${
-                      baselineEnvNameCommand.target
-                    }");`
+                    result += `\neyes.setBaseLineEnvName("${baselineEnvNameCommand.target}");`
                   }
-                  result += `\neyes.open(driver, "${
-                    message.options.project.name
-                  }", "${message.options.name}");`
+                  result += `\neyes.open(driver, "${message.options.project.name}", "${message.options.name}");`
                   return sendResponse(result)
                 })
                 return true
@@ -717,9 +711,7 @@ browser.runtime.onMessageExternal.addListener(
                         const browserId = browser.id
                           ? browser.id
                           : browser.name.toUpperCase()
-                        result += `\nconfig.add_browser(${browser.width}, ${
-                          browser.height
-                        }, BrowserType.${browserId});`
+                        result += `\nconfig.add_browser(${browser.width}, ${browser.height}, BrowserType.${browserId});`
                       }
                     })
                     result += `\nself.eyes.configuration = config`
@@ -728,13 +720,9 @@ browser.runtime.onMessageExternal.addListener(
                   }
                   result += `\nself.eyes.api_key = os.environ["APPLITOOLS_API_KEY"]`
                   if (baselineEnvNameCommand) {
-                    result += `\neyes.baseline_env_name = "${
-                      baselineEnvNameCommand.target
-                    }"`
+                    result += `\neyes.baseline_env_name = "${baselineEnvNameCommand.target}"`
                   }
-                  result += `\nself.eyes.open(self.driver, "${
-                    message.options.project.name
-                  }", "${message.options.name}");`
+                  result += `\nself.eyes.open(self.driver, "${message.options.project.name}", "${message.options.name}");`
                   return sendResponse(result)
                 })
                 return true
@@ -825,9 +813,7 @@ browser.runtime.onMessageExternal.addListener(
         }
         case 'config': {
           return sendResponse(
-            `const { Eyes, Target } = require('@applitools/eyes-selenium');global.Target = Target;const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes-sdk-core');let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${
-              message.project.name
-            }", batchId = configuration.runId, batchName;`
+            `const { Eyes, Target } = require('@applitools/eyes-selenium');global.Target = Target;const { ConsoleLogHandler, BatchInfo } = require('@applitools/eyes-sdk-core');let apiKey = process.env.APPLITOOLS_API_KEY, serverUrl = process.env.APPLITOOLS_SERVER_URL, appName = "${message.project.name}", batchId = configuration.runId, batchName;`
           )
         }
         case 'suite': {
@@ -840,11 +826,7 @@ browser.runtime.onMessageExternal.addListener(
           if (hasEyesCommands) {
             return sendResponse({
               beforeAll: `batchName = "${message.suite.name}";`,
-              before: `global.eyes = Eyes.fromBrowserInfo(serverUrl, configuration.params.eyesDisabled, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : undefined);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => ("eyes.seleniumide.runner ${
-                manifest.version
-              } " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setAgentId("eyes.seleniumide.runner ${
-                manifest.version
-              } " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.eyesDomUploadEnabled === undefined ? true : configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}`,
+              before: `global.eyes = Eyes.fromBrowserInfo(serverUrl, configuration.params.eyesDisabled, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : undefined);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => ("eyes.seleniumide.runner ${manifest.version} " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setAgentId("eyes.seleniumide.runner ${manifest.version} " + (eyes._isVisualGrid ? "visualgrid" : "local"));eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode("CSS");}eyes.setSendDom(configuration.params.eyesDomUploadEnabled === undefined ? true : configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}`,
               after:
                 'if (eyes._isOpen) {eyes.getEyesRunner ? await eyes.getEyesRunner().getAllResults() : await eyes.close();}',
             })
@@ -858,14 +840,10 @@ browser.runtime.onMessageExternal.addListener(
               command => command.command === CommandIds.SetBaselineEnvName
             )
             if (baselineEnvNameCommand) {
-              baselineEnvName = `eyes.setBaselineEnvName("${
-                baselineEnvNameCommand.target
-              }" || null);`
+              baselineEnvName = `eyes.setBaselineEnvName("${baselineEnvNameCommand.target}" || null);`
             }
             return sendResponse({
-              setup: `${baselineEnvName}const _driver = driver;driver = await eyes.open(driver, appName, "${
-                message.test.name
-              }");`,
+              setup: `${baselineEnvName}const _driver = driver;driver = await eyes.open(driver, appName, "${message.test.name}");`,
               teardown: 'driver = _driver;',
             })
           }

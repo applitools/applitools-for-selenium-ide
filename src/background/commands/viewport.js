@@ -52,9 +52,7 @@ export function getSizeCompensation(tabId, windowId) {
 function fixInaccuracies(sizes, playbackOptions, retries = 3) {
   if (!retries)
     return Promise.reject(
-      `Unable to set viewport size as requested, set as ${
-        sizes.actualSize.width
-      }x${sizes.actualSize.height} instead`
+      `Unable to set viewport size as requested, set as ${sizes.actualSize.width}x${sizes.actualSize.height} instead`
     )
   return getViewportSize(playbackOptions.tabId).then(actualSize => {
     if (

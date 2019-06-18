@@ -114,14 +114,14 @@ export default class Panel extends React.Component {
           </SpinnerBanner>
         )}
         {this.state.mode === Modes.RECORD && (
-          <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Recording test: ${
-            this.state.record.testName
-          }`}</SpinnerBanner>
+          <SpinnerBanner
+            state={SpinnerStates.SUCCESS}
+          >{`Recording test: ${this.state.record.testName}`}</SpinnerBanner>
         )}
         {this.state.mode === Modes.PLAYBACK && (
-          <SpinnerBanner state={SpinnerStates.SUCCESS}>{`Running test: ${
-            this.state.playback.testName
-          }`}</SpinnerBanner>
+          <SpinnerBanner
+            state={SpinnerStates.SUCCESS}
+          >{`Running test: ${this.state.playback.testName}`}</SpinnerBanner>
         )}
         <div className="container">
           {this.state.mode === Modes.DISCONNECTED && <Disconnect />}

@@ -47,8 +47,8 @@ function calculateMode(newState) {
     return newState.mode
       ? newState.mode
       : state.mode
-        ? state.mode
-        : Modes.NORMAL
+      ? state.mode
+      : Modes.NORMAL
   }
 }
 
@@ -69,7 +69,7 @@ export function resetMode() {
       verificationMode !== Modes.NORMAL
         ? verificationMode
         : state.isConnected
-          ? state.normalMode
-          : Modes.DISCONNECTED,
+        ? state.normalMode
+        : Modes.DISCONNECTED,
   })
 }

@@ -8,8 +8,8 @@ export function sendMessage(payload) {
 export const DEFAULT_ID = isChrome
   ? 'mooikfkahbdckldjjndioackbalphokd'
   : isFirefox
-    ? '{a6fd85ed-e919-4a43-a5af-8da18bda539f}'
-    : '' // eslint-disable-line indent
+  ? '{a6fd85ed-e919-4a43-a5af-8da18bda539f}'
+  : '' // eslint-disable-line indent
 
 function bundledId() {
   let id = process.env.SIDE_ID

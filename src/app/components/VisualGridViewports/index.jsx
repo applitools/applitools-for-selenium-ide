@@ -162,9 +162,8 @@ class ViewportSelectionModal extends React.Component {
     width = this.findNumber(width)
     height = this.findNumber(height)
     this.setState({
-      ['customViewportSizes']: this.state.customViewportSizes.map(
-        viewport =>
-          viewport.id === id ? { id, width, height, selected } : viewport
+      ['customViewportSizes']: this.state.customViewportSizes.map(viewport =>
+        viewport.id === id ? { id, width, height, selected } : viewport
       ),
     })
   }

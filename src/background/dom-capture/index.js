@@ -46,15 +46,11 @@ async function runDomScript(tabId, script) {
   const id = scriptCount
   if (script.name) {
     browser.tabs.executeScript(tabId, {
-      code: `window.execDomScript(${id}, '${
-        script.name
-      }').then(result => { window.__eyes__${id} = result; }).catch()`,
+      code: `window.execDomScript(${id}, '${script.name}').then(result => { window.__eyes__${id} = result; }).catch()`,
     })
   } else if (script.script) {
     browser.tabs.executeScript(tabId, {
-      code: `(${
-        script.script
-      })().then(result => { window.__eyes__${id} = result; }).catch()`,
+      code: `(${script.script})().then(result => { window.__eyes__${id} = result; }).catch()`,
     })
   }
 
