@@ -12,7 +12,7 @@
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package",
     "version": "node scripts/version.js && git add src/manifest.json",
-    "release": "git push --tags && node scripts/gh-release.js"
+    "release": "yarn version && git push --tags && node scripts/gh-release.js"
   },
   "jest": {
     "moduleNameMapper": {
