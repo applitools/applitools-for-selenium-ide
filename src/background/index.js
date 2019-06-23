@@ -494,6 +494,13 @@ browser.runtime.onMessageExternal.addListener(
                   : `self.eyes.check_window()`
               )
             }
+            case 'javascript-mocha': {
+              return sendResponse(
+                target
+                  ? `await eyes.checkWindow("${target}")`
+                  : `await eyes.checkWindow()`
+              )
+            }
           }
         } else if (command === CommandIds.CheckElement) {
           switch (message.language) {
@@ -527,6 +534,21 @@ browser.runtime.onMessageExternal.addListener(
                 .catch(console.error) // eslint-disable-line no-console
               return true
             }
+            case 'javascript-mocha': {
+              sendMessage({
+                uri: '/export/location',
+                verb: 'get',
+                payload: {
+                  location: target,
+                  language: message.language,
+                },
+              })
+                .then(locator => {
+                  sendResponse(`await eyes.checkElement(${locator})`)
+                })
+                .catch(console.error) // eslint-disable-line no-console
+              return true
+            }
           }
         } else if (command === CommandIds.SetViewportSize) {
           switch (message.language) {
@@ -542,6 +564,12 @@ browser.runtime.onMessageExternal.addListener(
                 `self.eyes.viewport_size = {'width': ${width}, 'height': ${height}}`
               )
             }
+            case 'javascript-mocha': {
+              const { width, height } = parseViewport(target)
+              return sendResponse(
+                `await eyes.setViewportSize({ width: ${width}, height: ${height} })`
+              )
+            }
           }
         } else if (command === CommandIds.SetMatchLevel) {
           switch (message.language) {
@@ -555,6 +583,11 @@ browser.runtime.onMessageExternal.addListener(
                 `self.eyes.match_level("${parseMatchLevel(target)}")`
               )
             }
+            case 'javascript-mocha': {
+              return sendResponse(
+                `await eyes.setMatchLevel("${parseMatchLevel(target)}");`
+              )
+            }
           }
         } else if (command === CommandIds.SetMatchTimeout) {
           switch (message.language) {
@@ -563,6 +596,9 @@ browser.runtime.onMessageExternal.addListener(
             }
             case 'python-pytest': {
               return sendResponse(`self.eyes.match_timeout(${target})`)
+            }
+            case 'javascript-mocha': {
+              return sendResponse(`eyes.setMatchTimeout(${target})`)
             }
           }
         }
@@ -595,6 +631,18 @@ browser.runtime.onMessageExternal.addListener(
                   } else {
                     return sendResponse(`self.eyes.abort_if_not_closed()`)
                   }
+                })
+                return true
+              }
+              case 'javascript-mocha': {
+                getExtensionSettings().then(settings => {
+                  let result = ''
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `const results = await eyes.getRunner().getAllTestResults()\n`
+                    result += `console.log(results)\n`
+                  }
+                  result += `eyes.abortIfNotClosed()`
+                  return sendResponse(result)
                 })
                 return true
               }
@@ -698,7 +746,7 @@ browser.runtime.onMessageExternal.addListener(
                       if (browser.deviceName) {
                         result += `\nconfig.add_device_emulation(DeviceName.${
                           browser.deviceId
-                        }, ScreenOrientation.${browser.screenOrientation.toUpperCase()});`
+                        }, ScreenOrientation.${browser.screenOrientation.toUpperCase()})`
                       } else if (
                         settings.experimentalEnabled &&
                         isExperimentalBrowser(browser.name) &&
@@ -711,7 +759,7 @@ browser.runtime.onMessageExternal.addListener(
                         const browserId = browser.id
                           ? browser.id
                           : browser.name.toUpperCase()
-                        result += `\nconfig.add_browser(${browser.width}, ${browser.height}, BrowserType.${browserId});`
+                        result += `\nconfig.add_browser(${browser.width}, ${browser.height}, BrowserType.${browserId})`
                       }
                     })
                     result += `\nself.eyes.configuration = config`
@@ -722,7 +770,69 @@ browser.runtime.onMessageExternal.addListener(
                   if (baselineEnvNameCommand) {
                     result += `\neyes.baseline_env_name = "${baselineEnvNameCommand.target}"`
                   }
-                  result += `\nself.eyes.open(self.driver, "${message.options.project.name}", "${message.options.name}");`
+                  result += `\nself.eyes.open(self.driver, "${message.options.project.name}", "${message.options.name}")`
+                  return sendResponse(result)
+                })
+                return true
+              }
+              case 'javascript-mocha': {
+                let result = ''
+                const commands = message.options.tests
+                  ? message.options.tests.reduce(
+                      (_commands, test) => [...test.commands],
+                      []
+                    )
+                  : []
+                const baselineEnvNameCommand = commands.find(
+                  command => command.command === CommandIds.SetBaselineEnvName
+                )
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `eyes = new Eyes(new VisualGridRunner())\n`
+                    result += `const config = new Configuration()\n`
+                    result += 'config.setConcurrentSessions(10)'
+                    const _browsers = parseBrowsers(
+                      settings.projectSettings.selectedBrowsers,
+                      settings.projectSettings.selectedViewportSizes,
+                      settings.projectSettings.selectedDevices,
+                      settings.projectSettings.selectedDeviceOrientations
+                    )
+                    let browsers = [..._browsers.matrix]
+                    if (!settings.experimentalEnabled) {
+                      browsers = browsers.filter(
+                        b => !isExperimentalBrowser(b.name)
+                      )
+                    }
+                    let isExperimentalBrowserWarningDisplayed = false
+                    browsers.forEach(browser => {
+                      if (browser.deviceName) {
+                        result += `\nconfig.addDeviceEmulation(DeviceName.${
+                          browser.deviceId
+                        }, ScreenOrientation.${browser.screenOrientation.toUpperCase()})`
+                      } else if (
+                        settings.experimentalEnabled &&
+                        isExperimentalBrowser(browser.name) &&
+                        _browsers.didRemoveResolution &&
+                        !isExperimentalBrowserWarningDisplayed
+                      ) {
+                        result += `\n// ${experimentalBrowserWarningMessage}`
+                        isExperimentalBrowserWarningDisplayed = true
+                      } else {
+                        const browserId = browser.id
+                          ? browser.id
+                          : browser.name.toUpperCase()
+                        result += `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browserId})`
+                      }
+                    })
+                    result += `\neyes.setConfiguration(config)`
+                  } else {
+                    result += `eyes = new Eyes()`
+                  }
+                  result += `\neyes.setApiKey(process.env["APPLITOOLS_API_KEY"])`
+                  if (baselineEnvNameCommand) {
+                    result += `\neyes.setBaselineEnvName("${baselineEnvNameCommand.target}")`
+                  }
+                  result += `\nawait eyes.open(driver, "${message.options.project.name}", "${message.options.name}")`
                   return sendResponse(result)
                 })
                 return true
@@ -753,6 +863,16 @@ browser.runtime.onMessageExternal.addListener(
                 })
                 return true
               }
+              case 'javascript-mocha': {
+                let result = `const { Eyes } = require('@applitools/eyes-selenium')`
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `\nconst { Configuration, VisualGridRunner, BrowserType, DeviceName, ScreenOrientation } = require('@applitools/eyes-selenium')`
+                  }
+                  return sendResponse(result)
+                })
+                return true
+              }
             }
             break
           }
@@ -778,6 +898,16 @@ browser.runtime.onMessageExternal.addListener(
                 })
                 return true
               }
+              case 'javascript-mocha': {
+                getExtensionSettings().then(settings => {
+                  if (!settings.projectSettings.enableVisualGrid) {
+                    return sendResponse(`await eyes.close()`)
+                  } else {
+                    return sendResponse(undefined)
+                  }
+                })
+                return true
+              }
             }
             break
           }
@@ -792,6 +922,9 @@ browser.runtime.onMessageExternal.addListener(
                   return sendResponse(result)
                 })
                 return true
+              }
+              case 'javascript-mocha': {
+                return sendResponse(`let eyes`)
               }
             }
             break

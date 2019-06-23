@@ -2,7 +2,7 @@
   "name": "Applitools",
   "version": "1.0.0",
   "exports": {
-    "languages": ["java-junit", "python-pytest"]
+    "languages": ["java-junit", "javascript-mocha", "python-pytest"]
   },
   "commands": [
     {
