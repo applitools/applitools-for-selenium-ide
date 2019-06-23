@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.5.0
+- Added JavaScript code export support
+
 ## v1.4.0
 - Added Python code export support
 
