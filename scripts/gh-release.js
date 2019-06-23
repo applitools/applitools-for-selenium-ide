@@ -4,7 +4,7 @@ const putasset = require('putasset')
 const token = process.env.GH_TOKEN
 const owner = 'applitools'
 const repo = 'applitools-for-selenium-ide'
-const manifest = require('./src/manifest.json')
+const manifest = require('../src/manifest.json')
 const tag = 'v' + manifest.version
 
 function log(message) {
