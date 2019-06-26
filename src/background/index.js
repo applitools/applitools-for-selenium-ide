@@ -997,7 +997,7 @@ browser.runtime.onMessageExternal.addListener(
               baselineEnvName = `eyes.setBaselineEnvName("${baselineEnvNameCommand.target}" || null);`
             }
             return sendResponse({
-              setup: `${baselineEnvName}const _driver = driver;driver = await eyes.open(driver, appName, "${message.test.name}");`,
+              setup: `${baselineEnvName}const _driver = driver;driver = await eyes.open(driver, appName, "${message.test.name}");global.preRenderHook = "";`,
               teardown: 'driver = _driver;',
             })
           }
@@ -1007,7 +1007,7 @@ browser.runtime.onMessageExternal.addListener(
           const { command, target, value } = message.command // eslint-disable-line no-unused-vars
           if (command === CommandIds.CheckWindow) {
             return sendResponse(
-              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().fully(true));}`
+              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true));}`
             )
           } else if (command === CommandIds.CheckElement) {
             sendMessage({
@@ -1019,11 +1019,15 @@ browser.runtime.onMessageExternal.addListener(
             })
               .then(locator => {
                 sendResponse(
-                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}));}`
+                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook));}`
                 )
               })
               .catch(console.error) // eslint-disable-line no-console
             return true
+          } else if (command === CommandIds.SetPreRenderScreenshotHook) {
+            return sendResponse(
+              `if (eyes._isVisualGrid) preRenderHook = "${target}"`
+            )
           } else if (command === CommandIds.SetMatchLevel) {
             return sendResponse(
               `eyes.setMatchLevel("${parseMatchLevel(target)}");`
