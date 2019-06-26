@@ -504,22 +504,22 @@ browser.runtime.onMessageExternal.addListener(
             case 'java-junit': {
               return sendResponse(
                 target
-                  ? `eyes.checkWindow("${target}");`
-                  : `eyes.checkWindow();`
+                  ? `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook).withName("${target}"));`
+                  : `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));`
               )
             }
             case 'python-pytest': {
               return sendResponse(
-                target
-                  ? `self.eyes.check_window("${target}")`
-                  : `self.eyes.check_window()`
+                value
+                  ? `settings = Target.window().fully(True)\nsettings.script_hooks[settings.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check("${value}", settings)`
+                  : `settings = Target.window().fully(True)\nsettings.script_hooks[settings.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check(urlparse(driver.current_url).path, settings)`
               )
             }
             case 'javascript-mocha': {
               return sendResponse(
                 target
-                  ? `await eyes.checkWindow("${target}")`
-                  : `await eyes.checkWindow()`
+                  ? `await eyes.check("${target}", Target.window().webHook(preRenderHook).fully(true))`
+                  : `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true))`
               )
             }
           }
@@ -535,7 +535,11 @@ browser.runtime.onMessageExternal.addListener(
                 },
               })
                 .then(locator => {
-                  sendResponse(`eyes.checkElement(${locator});`)
+                  sendResponse(
+                    value
+                      ? `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook).withName("${value}"));`
+                      : `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook));`
+                  )
                 })
                 .catch(console.error) // eslint-disable-line no-console
               return true
@@ -550,7 +554,11 @@ browser.runtime.onMessageExternal.addListener(
                 },
               })
                 .then(locator => {
-                  sendResponse(`self.eyes.check_element(${locator})`)
+                  sendResponse(
+                    value
+                      ? `settings = Target.region(${locator})\nsettings.values.script_hooks[settings.values.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check("${value}", settings)`
+                      : `settings = Target.region(${locator})\nsettings.values.script_hooks[settings.values.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check(urlparse(self.driver.current_url).path, settings)`
+                  )
                 })
                 .catch(console.error) // eslint-disable-line no-console
               return true
@@ -565,7 +573,11 @@ browser.runtime.onMessageExternal.addListener(
                 },
               })
                 .then(locator => {
-                  sendResponse(`await eyes.checkElement(${locator})`)
+                  sendResponse(
+                    value
+                      ? `await eyes.check("${value}", Target.region(${locator}).webHook(preRenderHook))`
+                      : `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook))`
+                  )
                 })
                 .catch(console.error) // eslint-disable-line no-console
               return true
@@ -622,6 +634,42 @@ browser.runtime.onMessageExternal.addListener(
               return sendResponse(`eyes.setMatchTimeout(${target})`)
             }
           }
+        } else if (command === CommandIds.SetPreRenderScreenshotHook) {
+          switch (message.language) {
+            case 'java-junit': {
+              getExtensionSettings().then(settings => {
+                let result = ''
+                if (settings.projectSettings.enableVisualGrid)
+                  result += target
+                    ? `preRenderHook = "${target}";`
+                    : `preRenderHook = "";`
+                return sendResponse(result)
+              })
+              return true
+            }
+            case 'python-pytest': {
+              getExtensionSettings().then(settings => {
+                let result = ''
+                if (settings.projectSettings.enableVisualGrid)
+                  result += target
+                    ? `self.pre_render_hook = "${target}"`
+                    : `self.pre_render_hook = ""`
+                return sendResponse(result)
+              })
+              return true
+            }
+            case 'javascript-mocha': {
+              getExtensionSettings().then(settings => {
+                let result = ''
+                if (settings.projectSettings.enableVisualGrid)
+                  result += target
+                    ? `preRenderHook = "${target}"`
+                    : `preRenderHook = ""`
+                return sendResponse(result)
+              })
+              return true
+            }
+          }
         }
       }
       const hasEyesCommands = message.options.tests
@@ -674,6 +722,7 @@ browser.runtime.onMessageExternal.addListener(
             switch (message.language) {
               case 'java-junit': {
                 let result = ''
+                result = 'preRenderHook = "";\n'
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
@@ -735,6 +784,7 @@ browser.runtime.onMessageExternal.addListener(
               }
               case 'python-pytest': {
                 let result = ''
+                result += 'self.pre_render_hook = ""\n'
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
@@ -798,6 +848,7 @@ browser.runtime.onMessageExternal.addListener(
               }
               case 'javascript-mocha': {
                 let result = ''
+                result += `preRenderHook = ""\n`
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
@@ -868,14 +919,14 @@ browser.runtime.onMessageExternal.addListener(
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
                     result += `\nimport com.applitools.eyes.selenium.BrowserType;\nimport com.applitools.eyes.selenium.Configuration;
-\nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.EyesRunner;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;`
+\nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.EyesRunner;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;\nimport com.applitools.eyes.selenium.fluent.Target;`
                   }
                   return sendResponse(result)
                 })
                 return true
               }
               case 'python-pytest': {
-                let result = `import os\nfrom applitools.selenium import Eyes\n`
+                let result = `import os\nfrom urllib.parse import urlparse\nfrom applitools.selenium import (Eyes, Target)\n`
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
                     result += `from applitools.selenium import (Configuration, BrowserType, DeviceName, ScreenOrientation)\nfrom applitools.selenium.visual_grid import VisualGridRunner\n`
@@ -885,7 +936,7 @@ browser.runtime.onMessageExternal.addListener(
                 return true
               }
               case 'javascript-mocha': {
-                let result = `const { Eyes } = require('@applitools/eyes-selenium')`
+                let result = `const { Eyes, Target } = require('@applitools/eyes-selenium')`
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
                     result += `\nconst { Configuration, VisualGridRunner, BrowserType, DeviceName, ScreenOrientation } = require('@applitools/eyes-selenium')`
@@ -938,14 +989,14 @@ browser.runtime.onMessageExternal.addListener(
                 let result = `private Eyes eyes;`
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
-                    result += `\nprivate EyesRunner runner;\nfinal int concurrency = 5;`
+                    result += `\nprivate EyesRunner runner;\nfinal int concurrency = 5;\nprivate String preRenderHook;`
                   }
                   return sendResponse(result)
                 })
                 return true
               }
               case 'javascript-mocha': {
-                return sendResponse(`let eyes`)
+                return sendResponse(`let eyes\nlet preRenderHook`)
               }
             }
             break
