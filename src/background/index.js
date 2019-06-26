@@ -316,6 +316,27 @@ browser.runtime.onMessageExternal.addListener(
           // this command gets hoisted
           return sendResponse(true)
         }
+        case CommandIds.SetPreRenderScreenshotHook: {
+          getEyes(`${message.options.runId}${message.options.testId}`)
+            .then(eyes => {
+              if (!eyes.isVisualGrid) {
+                return ideLogger.log(
+                  "'eyes set pre render screenshot hook' only works on tests run on the Visual Grid."
+                )
+              } else {
+                return eyes.setPreRenderHook(message.command.target)
+              }
+            })
+            .then(() => {
+              return sendResponse(true)
+            })
+            .catch(error => {
+              return sendResponse(
+                error instanceof Error ? { error: error.message } : { error }
+              )
+            })
+          return true
+        }
         case CommandIds.SetMatchLevel: {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {

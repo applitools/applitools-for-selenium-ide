@@ -42,6 +42,9 @@ export async function checkWindow(
         buildCheckUsingVisualGrid(eyes, tabId),
         {
           sizeMode: 'full-page',
+          scriptHooks: {
+            beforeCaptureScreenshot: eyes.getPreRenderHook(),
+          },
         }
       )
     : check(
@@ -132,6 +135,9 @@ export async function checkElement(
         selector: {
           type: 'xpath',
           selector: elementXPath,
+        },
+        scriptHooks: {
+          beforeCaptureScreenshot: eyes.getPreRenderHook(),
         },
       }
     )

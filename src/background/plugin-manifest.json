@@ -66,6 +66,17 @@
           "description": "The name of the the baseline environment to use during test execution."
         }
       }
+    },
+    {
+      "id": "eyesSetPreRenderScreenshotHook",
+      "name": "eyes set pre render screenshot hook",
+      "docs": {
+        "description": "Runs a snippet of JavaScript before check commands to assist with page rendering (Visual Grid ONLY).",
+        "target": {
+          "name": "before render screenshot hook",
+          "description": "JavaScript snippet to assist with page render."
+        }
+      }
     }
   ],
   "dependencies": {

@@ -391,6 +391,8 @@ async function decorateVisualEyes(
   if (await isPatternsDomEnabled()) eyes.matchLevel = parseMatchLevel('Layout')
   eyes.isVisualGrid = true
   eyes.commands = []
+  eyes.getPreRenderHook = () => eyes.preRenderHook
+  eyes.setPreRenderHook = snippet => (eyes.preRenderHook = snippet)
   eyes.getMatchLevel = () => eyes.matchLevel
   eyes.setMatchLevel = level => {
     verifyMatchLevel(level)
