@@ -919,7 +919,7 @@ browser.runtime.onMessageExternal.addListener(
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
                     result += `\nimport com.applitools.eyes.selenium.BrowserType;\nimport com.applitools.eyes.selenium.Configuration;
-\nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.EyesRunner;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;\nimport com.applitools.eyes.selenium.fluent.Target;`
+\nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;\nimport com.applitools.eyes.selenium.fluent.Target;`
                   }
                   return sendResponse(result)
                 })
