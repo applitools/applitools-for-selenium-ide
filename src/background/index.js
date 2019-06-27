@@ -684,11 +684,12 @@ browser.runtime.onMessageExternal.addListener(
           case 'afterEach': {
             switch (message.language) {
               case 'java-junit': {
-                let result = `eyes.abortIfNotClosed();`
                 getExtensionSettings().then(settings => {
+                  let result = ''
                   if (settings.projectSettings.enableVisualGrid) {
-                    result += `\nrunner.getAllTestResults();`
+                    result += `runner.getAllTestResults();\n`
                   }
+                  result += `eyes.abortIfNotClosed();`
                   return sendResponse(result)
                 })
                 return true
@@ -989,7 +990,7 @@ browser.runtime.onMessageExternal.addListener(
                 let result = `private Eyes eyes;`
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
-                    result += `\nprivate EyesRunner runner;\nfinal int concurrency = 5;\nprivate String preRenderHook;`
+                    result += `\nprivate VisualGridRunner runner;\nfinal int concurrency = 5;\nprivate String preRenderHook;`
                   }
                   return sendResponse(result)
                 })
