@@ -556,8 +556,8 @@ browser.runtime.onMessageExternal.addListener(
                 .then(locator => {
                   sendResponse(
                     value
-                      ? `settings = Target.region(${locator})\nsettings.values.script_hooks[settings.values.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check("${value}", settings)`
-                      : `settings = Target.region(${locator})\nsettings.values.script_hooks[settings.values.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check(urlparse(self.driver.current_url).path, settings)`
+                      ? `self.eyes.check("${value}", Target.region(${locator}))`
+                      : `self.eyes.check(urlparse(self.driver.current_url).path, Target.region(${locator}))`
                   )
                 })
                 .catch(console.error) // eslint-disable-line no-console
@@ -647,17 +647,17 @@ browser.runtime.onMessageExternal.addListener(
               })
               return true
             }
-            //case 'python-pytest': {
-            //  getExtensionSettings().then(settings => {
-            //    let result = ''
-            //    if (settings.projectSettings.enableVisualGrid)
-            //      result += target
-            //        ? `self.pre_render_hook = "${target}"`
-            //        : `self.pre_render_hook = ""`
-            //    return sendResponse(result)
-            //  })
-            //  return true
-            //}
+            case 'python-pytest': {
+              //getExtensionSettings().then(settings => {
+              //  let result = ''
+              //  if (settings.projectSettings.enableVisualGrid)
+              //    result += target
+              //      ? `self.pre_render_hook = "${target}"`
+              //      : `self.pre_render_hook = ""`
+              //  return sendResponse(result)
+              //})
+              return sendResponse('')
+            }
             case 'javascript-mocha': {
               getExtensionSettings().then(settings => {
                 let result = ''
@@ -785,7 +785,7 @@ browser.runtime.onMessageExternal.addListener(
               }
               case 'python-pytest': {
                 let result = ''
-                result += 'self.pre_render_hook = ""\n'
+                //result += 'self.pre_render_hook = ""\n'
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
