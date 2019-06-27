@@ -511,8 +511,8 @@ browser.runtime.onMessageExternal.addListener(
             case 'python-pytest': {
               return sendResponse(
                 value
-                  ? `settings = Target.window().fully(True)\nsettings.script_hooks[settings.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check("${value}", settings)`
-                  : `settings = Target.window().fully(True)\nsettings.script_hooks[settings.BEFORE_CAPTURE_SCREENSHOT] = self.pre_render_hook\nself.eyes.check(urlparse(driver.current_url).path, settings)`
+                  ? `self.eyes.check("${value}", Target.window().fully(True))`
+                  : `self.eyes.check(urlparse(driver.current_url).path, Target.window().fully(True))`
               )
             }
             case 'javascript-mocha': {
@@ -647,17 +647,17 @@ browser.runtime.onMessageExternal.addListener(
               })
               return true
             }
-            case 'python-pytest': {
-              getExtensionSettings().then(settings => {
-                let result = ''
-                if (settings.projectSettings.enableVisualGrid)
-                  result += target
-                    ? `self.pre_render_hook = "${target}"`
-                    : `self.pre_render_hook = ""`
-                return sendResponse(result)
-              })
-              return true
-            }
+            //case 'python-pytest': {
+            //  getExtensionSettings().then(settings => {
+            //    let result = ''
+            //    if (settings.projectSettings.enableVisualGrid)
+            //      result += target
+            //        ? `self.pre_render_hook = "${target}"`
+            //        : `self.pre_render_hook = ""`
+            //    return sendResponse(result)
+            //  })
+            //  return true
+            //}
             case 'javascript-mocha': {
               getExtensionSettings().then(settings => {
                 let result = ''
