@@ -12,6 +12,7 @@ describe('parsers', () => {
       expect(result.width).toBeTruthy()
       expect(result.height).toBeTruthy()
       expect(result.name).toBeTruthy()
+      expect(result.id).toBeUndefined()
     })
 
     it('parses browsers and viewports', () => {

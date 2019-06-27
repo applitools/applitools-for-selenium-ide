@@ -25,13 +25,14 @@ export function parseBrowsers(
           isBiggerResolution(parseViewport(viewport), parsedMax)
         )
       ) {
-        const id = experimentalBrowserIds[name]
-        matrix.push({
+        const result = {
           width,
           height,
           name,
-          id,
-        })
+        }
+        const id = experimentalBrowserIds[name]
+        if (id) result.id = id
+        matrix.push(result)
       } else {
         didRemoveResolution = true
       }
