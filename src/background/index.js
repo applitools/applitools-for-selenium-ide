@@ -554,11 +554,18 @@ browser.runtime.onMessageExternal.addListener(
                 },
               })
                 .then(locator => {
-                  sendResponse(
-                    value
-                      ? `self.eyes.check("${value}", Target.region(${locator}))`
-                      : `self.eyes.check(urlparse(self.driver.current_url).path, Target.region(${locator}))`
-                  )
+                  let result
+                  if (locator.includes('By.CSS')) {
+                    const _target = target.replace(/^css=/, '')
+                    result = value
+                      ? `self.eyes.check("${value}", Target.region("${_target}"))`
+                      : `self.eyes.check(urlparse(self.driver.current_url).path, Target.region("${_target}"))`
+                  } else {
+                    result = value
+                      ? `self.eyes.check("${value}", Target.region([${locator}]))`
+                      : `self.eyes.check(urlparse(self.driver.current_url).path, Target.region([${locator}]))`
+                  }
+                  sendResponse(result)
                 })
                 .catch(console.error) // eslint-disable-line no-console
               return true
