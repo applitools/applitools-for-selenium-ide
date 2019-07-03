@@ -16,16 +16,20 @@ describe('parsers', () => {
     })
 
     it('parses browsers and viewports', () => {
-      const result = parseBrowsers(['Firefox'], ['800x600', '1024x768']).matrix
+      const result = parseBrowsers(['Firefox', 'IE10'], ['800x600', '1024x768'])
+        .matrix
       expect(result[0].width).toEqual(800)
       expect(result[0].height).toEqual(600)
       expect(result[0].name).toEqual('firefox')
       expect(result[1].width).toEqual(1024)
       expect(result[1].height).toEqual(768)
       expect(result[1].name).toEqual('firefox')
+      expect(result[2].id).toEqual('IE_10')
+      expect(result[3].id).toEqual('IE_10')
     })
 
-    it('parses experimental browsers', () => {
+    // no experimental browsers, and no viewport resolution limit
+    it.skip('parses experimental browsers', () => {
       const { matrix, didRemoveResolution } = parseBrowsers(
         ['Edge'],
         ['800x600', '1324x768']

@@ -1,9 +1,11 @@
-import { deviceIds } from '../../app/components/VisualGridOptionSelector/options'
+import {
+  deviceIds,
+  experimentalBrowsers,
+  browserIds,
+} from '../../app/components/VisualGridOptionSelector/options'
 import UAParser from 'ua-parser-js'
 const parser = new UAParser()
 
-export const experimentalBrowsers = ['ie10', 'ie11', 'edge']
-const experimentalBrowserIds = { ie10: 'IE_10', ie11: 'IE_11' }
 export const maxExperimentalResolution = '1280x1024'
 const parsedMax = parseViewport(maxExperimentalResolution)
 
@@ -30,7 +32,7 @@ export function parseBrowsers(
           height,
           name,
         }
-        const id = experimentalBrowserIds[name]
+        const id = browserIds[name.toLowerCase()]
         if (id) result.id = id
         matrix.push(result)
       } else {

@@ -1,5 +1,6 @@
-export const browsers = ['Chrome', 'Firefox']
-export const experimentalBrowsers = ['IE10', 'IE11', 'Edge']
+export const browsers = ['Chrome', 'Firefox', 'IE10', 'IE11', 'Edge']
+export const browserIds = { ie10: 'IE_10', ie11: 'IE_11' }
+export const experimentalBrowsers = []
 
 export const viewportSizes = [
   '2560x1440',
