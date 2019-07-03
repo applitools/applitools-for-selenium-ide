@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.0
+- Added a new command - `eyes set pre render hook`
+- Updated the underlying SDK for the visual grid
+
 ## v1.5.0
 - Added JavaScript code export support
 
