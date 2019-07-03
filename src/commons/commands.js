@@ -9,7 +9,7 @@ export const CommandIds = {
   SetMatchTimeout: 'eyesSetMatchTimeout',
   SetViewportSize: 'eyesSetViewportSize',
   SetBaselineEnvName: 'eyesSetBaselineEnvName',
-  SetPreRenderScreenshotHook: 'eyesSetPreRenderScreenshotHook',
+  SetPreRenderHook: 'eyesSetPreRenderHook',
 }
 
 const CommandNames = Object.values(CommandIds)

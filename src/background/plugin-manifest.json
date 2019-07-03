@@ -68,8 +68,8 @@
       }
     },
     {
-      "id": "eyesSetPreRenderScreenshotHook",
-      "name": "eyes set pre render screenshot hook",
+      "id": "eyesSetPreRenderHook",
+      "name": "eyes set pre render hook",
       "docs": {
         "description": "Runs a snippet of JavaScript before check commands to assist with page rendering (Visual Grid ONLY).",
         "target": {
@@ -80,7 +80,7 @@
     }
   ],
   "dependencies": {
-    "@applitools/eyes-selenium": "4.20.4"
+    "@applitools/eyes-selenium": "4.22.1"
   },
   "jest": {
     "extraGlobals": ["Math"]

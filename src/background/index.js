@@ -316,7 +316,7 @@ browser.runtime.onMessageExternal.addListener(
           // this command gets hoisted
           return sendResponse(true)
         }
-        case CommandIds.SetPreRenderScreenshotHook: {
+        case CommandIds.SetPreRenderHook: {
           getEyes(`${message.options.runId}${message.options.testId}`)
             .then(eyes => {
               if (!eyes.isVisualGrid) {
@@ -504,15 +504,15 @@ browser.runtime.onMessageExternal.addListener(
             case 'java-junit': {
               return sendResponse(
                 target
-                  ? `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook).withName("${target}"));`
-                  : `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));`
+                  ? `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook).withName("${target}"));`
+                  : `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));`
               )
             }
             case 'python-pytest': {
               return sendResponse(
                 value
                   ? `self.eyes.check("${value}", Target.window().fully(True))`
-                  : `self.eyes.check(urlparse(driver.current_url).path, Target.window().fully(True))`
+                  : `self.eyes.check(urlparse(self.driver.current_url).path, Target.window().fully(True))`
               )
             }
             case 'javascript-mocha': {
@@ -537,8 +537,8 @@ browser.runtime.onMessageExternal.addListener(
                 .then(locator => {
                   sendResponse(
                     value
-                      ? `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook).withName("${value}"));`
-                      : `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook));`
+                      ? `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook).withName("${value}"));`
+                      : `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook));`
                   )
                 })
                 .catch(console.error) // eslint-disable-line no-console
@@ -634,7 +634,7 @@ browser.runtime.onMessageExternal.addListener(
               return sendResponse(`eyes.setMatchTimeout(${target})`)
             }
           }
-        } else if (command === CommandIds.SetPreRenderScreenshotHook) {
+        } else if (command === CommandIds.SetPreRenderHook) {
           switch (message.language) {
             case 'java-junit': {
               getExtensionSettings().then(settings => {
@@ -1076,7 +1076,7 @@ browser.runtime.onMessageExternal.addListener(
               })
               .catch(console.error) // eslint-disable-line no-console
             return true
-          } else if (command === CommandIds.SetPreRenderScreenshotHook) {
+          } else if (command === CommandIds.SetPreRenderHook) {
             return sendResponse(
               `if (eyes._isVisualGrid) preRenderHook = "${target}"`
             )
