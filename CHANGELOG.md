@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.7.0
+- Moved IE & Edge as selectable browsers for the visual grid out from behind the experimental feature toggle
+- Fixed Python's code export for `check element` commands when they use a CSS selector
+- Updated the underlying SDK for local image processing
+
 ## v1.6.0
 - Added a new command - `eyes set pre render hook`
 - Updated the underlying SDK for the visual grid
