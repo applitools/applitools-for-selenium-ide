@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.1
+- Updated underlying dependencies
+
 ## v1.7.0
 - Moved IE & Edge as selectable browsers for the visual grid out from behind the experimental feature toggle
 - Fixed Python's code export for `check element` commands when they use a CSS selector
