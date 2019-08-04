@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.7.2
+- Updated visual-grid-client SDK version
+- Updated transitive dependencies to resolve audit warnings
+
 ## v1.7.1
 - Updated underlying dependencies
 
