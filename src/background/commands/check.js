@@ -275,8 +275,12 @@ export function endTest(id) {
                   error: `Diffs were found in visual tests,\nresults: ${firstFailingResultOrLast._appUrls._session}`,
                 }
           } else {
+            const _msg = firstFailingResultOrLast.message
+            const formattedMessage = _msg
+              ? _msg.charAt(0).toUpperCase() + _msg.substring(1)
+              : 'Failed to run visual test'
             return {
-              error: 'Failed to run visual test',
+              error: formattedMessage,
             }
           }
         }
