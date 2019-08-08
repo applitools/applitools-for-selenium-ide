@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.3
+- Updated visual-grid-client SDK & React version
+
 ## v1.7.2
 - Updated visual-grid-client SDK version
 - Updated transitive dependencies to resolve audit warnings
