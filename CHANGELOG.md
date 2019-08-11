@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.4
+- Added new devices to visual grid device selection
+
 ## v1.7.3
 - Updated visual-grid-client SDK & React version
 
