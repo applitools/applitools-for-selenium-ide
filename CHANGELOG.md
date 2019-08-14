@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.5
+- Updated visual-grid-client and related dependencies
+
 ## v1.7.4
 - Added new devices to visual grid device selection
 
