@@ -7,7 +7,7 @@ import {
   ReadOnlyPropertyHandler,
   EyesSimpleScreenshotFactory,
   Region,
-} from '@applitools/eyes-sdk-core'
+} from '@applitools/eyes-images'
 import ScrollPositionProvider from './ScrollPositionProvider'
 import CSSTranslatePositionProvider from './CSSTranslatePositionProvider'
 import WebExtensionImageProvider from './WebExtensionImageProvider'

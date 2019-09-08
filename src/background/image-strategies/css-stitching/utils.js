@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill'
-import { RectangleSize, Location } from '@applitools/eyes-sdk-core'
+import { RectangleSize, Location } from '@applitools/eyes-images'
 
 const JS_GET_CURRENT_SCROLL_POSITION =
   'var doc = document.documentElement; ' +

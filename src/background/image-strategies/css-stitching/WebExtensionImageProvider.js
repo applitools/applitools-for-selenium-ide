@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill'
-import { ImageProvider, MutableImage } from '@applitools/eyes-sdk-core'
+import { ImageProvider, MutableImage } from '@applitools/eyes-images'
 
 export default class WebExtensionImageProvider extends ImageProvider {
   constructor(tabId) {

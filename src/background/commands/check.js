@@ -11,8 +11,7 @@ import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
 import ideLogger from '../utils/ide-logger'
 import { getDomCapture, isDomCaptureEnabled } from '../dom-capture'
-import { ImageProvider } from '@applitools/eyes-sdk-core'
-import { Target } from '@applitools/eyes-images'
+import { Target, ImageProvider } from '@applitools/eyes-images'
 import {
   buildCheckWindowFullFunction,
   buildCheckRegionFunction,

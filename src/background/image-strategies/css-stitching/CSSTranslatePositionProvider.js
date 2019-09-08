@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill'
-import { PositionProvider } from '@applitools/eyes-sdk-core'
+import { PositionProvider } from '@applitools/eyes-images'
 import CSSTranslatePositionMemento from './CSSTranslatePositionMemento'
 import { getEntirePageSize } from './utils.js'
 

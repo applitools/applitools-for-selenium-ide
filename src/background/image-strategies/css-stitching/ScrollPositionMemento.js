@@ -1,4 +1,4 @@
-import { PositionMemento, Location } from '@applitools/eyes-sdk-core'
+import { PositionMemento, Location } from '@applitools/eyes-images'
 
 export default class ScrollPositionMemento extends PositionMemento {
   constructor(position) {

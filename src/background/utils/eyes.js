@@ -1,5 +1,4 @@
-import { Eyes } from '@applitools/eyes-images'
-import { ConsoleLogHandler } from '@applitools/eyes-sdk-core'
+import { ConsoleLogHandler, Eyes } from '@applitools/eyes-images'
 import { makeVisualGridClient } from '@applitools/visual-grid-client'
 import { parseApiServer } from './parsers.js'
 import { browserName } from './userAgent'

@@ -1,4 +1,4 @@
-import { PositionMemento } from '@applitools/eyes-sdk-core'
+import { PositionMemento } from '@applitools/eyes-images'
 
 export default class CssTranslatePositionMemento extends PositionMemento {
   constructor(transforms, position) {

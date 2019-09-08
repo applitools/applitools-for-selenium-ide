@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill'
-import { PositionProvider, Location } from '@applitools/eyes-sdk-core'
+import { PositionProvider, Location } from '@applitools/eyes-images'
 import ScrollPositionMemento from './ScrollPositionMemento'
 import { getEntirePageSize, getCurrentScrollPosition } from './utils'
 
