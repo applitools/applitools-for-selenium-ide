@@ -12,7 +12,9 @@
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package",
     "version": "node scripts/version.js && git add src/manifest.json",
-    "release": "yarn version && git push && git push --tags && yarn build:prod && node scripts/gh-release.js"
+    "release": "./scripts/deploy.js && node scripts/gh-release.js && yarn release:amo && yarn relase:cws",
+    "release:amo": "cd build && web-ext-submit",
+    "release:cws": "cd build && webstore upload --auto-publish"
   },
   "jest": {
     "moduleNameMapper": {
@@ -38,6 +40,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "browser-process-hrtime": "^1.0.0",
+    "chrome-webstore-upload-cli": "^1.2.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.7",
     "eslint": "^5.8.0",
@@ -58,8 +61,10 @@
     "putasset": "^4.3.2",
     "raw-loader": "^0.5.1",
     "react-hot-loader": "^3.0.0-beta.7",
+    "semver": "^6.3.0",
     "style-loader": "^0.18.2",
     "url-loader": "^2.0.1",
+    "web-ext-submit": "^3.1.1",
     "webpack": "^3.5.6",
     "webpack-dev-server": "^2.8.2"
   },

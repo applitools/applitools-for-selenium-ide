@@ -14,3 +14,4 @@ script:
   - selenium-side-runner tests/*.side --server http://localhost:4444/wd/hub
   - yarn lint
   - yarn test
+  - yarn release

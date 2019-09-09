@@ -1,6 +1,7 @@
 const exec = require('child_process').execSync
 const grizzly = require('grizzly')
 const putasset = require('putasset')
+
 const token = process.env.GH_TOKEN
 const owner = 'applitools'
 const repo = 'applitools-for-selenium-ide'
@@ -25,7 +26,9 @@ const changelog = exec(
 ).trim()
 
 // zip build dir
-exec('cd build;zip -r applitools-for-selenium-ide.zip *')
+exec(
+  'cd build;zip -r applitools-for-selenium-ide.zip *;mv applitools-for-selenium-ide.zip ../'
+)
 log('Zipped build directory')
 
 // create release with changelog
@@ -46,7 +49,7 @@ grizzly(token, {
       owner,
       repo,
       tag,
-      filename: 'build/applitools-for-selenium-ide.zip',
+      filename: 'applitools-for-selenium-ide.zip',
     })
       .then(url => {
         log(`Upload success, download url: ${url}`)
