@@ -11,7 +11,7 @@ before_install:
   - docker run -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome:3.11.0-antimony
   - yarn global add selenium-side-runner
 script:
-  - selenium-side-runner tests/*.side --server http://localhost:4444/wd/hub
   - yarn lint
   - yarn test
+  - yarn build:prod
   - yarn release
