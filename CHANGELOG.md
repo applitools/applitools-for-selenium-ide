@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.8
+- Updated underlying Applitools SDKs
+
 ## v1.7.7
 - Testing new publishing mechanism
 
