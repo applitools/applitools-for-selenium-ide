@@ -55,6 +55,10 @@ async function versionAndTag() {
   await spawnAsync('yarn', ['version', '--patch'])
 }
 
+async function amendCommit() {
+  await spawnAsync('git', ['commit', '--amend', '--no-edit'])
+}
+
 async function pushCommit() {
   await spawnAsync('git', ['push', 'origin', 'master', '--tags'])
 }
@@ -63,16 +67,14 @@ async function pushCommit() {
   if (isCwdCorrect()) {
     console.log('upgrading SDKs')
     await Promise.all([upgradeEyesSeleniumSdk(), upgradeSDKs()])
-    console.log('writing changelog')
-    await writeChangelog()
     console.log('preparing commit')
-    await stageFiles([
-      'yarn.lock',
-      'CHANGELOG.md',
-      'src/background/plugin-manifest.json',
-    ])
+    await stageFiles(['yarn.lock', 'src/background/plugin-manifest.json'])
     console.log('commiting and creating tags')
     await versionAndTag()
+    console.log('writing changelog')
+    await writeChangelog()
+    await stageFiles(['CHANGELOG.md'])
+    await amendCommit()
     console.log('pushing...')
     await pushCommit()
     console.log('done CI will publish to the stores shortly')
