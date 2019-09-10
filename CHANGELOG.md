@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.7.7
+- Testing new publishing mechanism
+
 ## v1.7.6
 - Testing new publishing mechanism
 

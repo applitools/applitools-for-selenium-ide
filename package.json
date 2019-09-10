@@ -1,6 +1,6 @@
 {
   "name": "applitools-for-selenium-ide",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "repository": "git@github.com:applitools/applitools-for-selenium-ide.git",
   "private": true,
   "scripts": {
