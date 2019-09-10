@@ -14,4 +14,9 @@ script:
   - yarn lint
   - yarn test
   - yarn build:prod
-  - yarn release
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: yarn release
+  on:
+    branch: master
