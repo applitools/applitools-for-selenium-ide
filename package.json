@@ -12,6 +12,7 @@
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package",
     "version": "node scripts/version.js && git add src/manifest.json",
+    "upgrade:sdks": "node scripts/update-sdks.js",
     "release": "(./scripts/deploy.js && node scripts/gh-release.js && yarn release:amo && yarn release:cws);exit 0;",
     "release:amo": "cd build && web-ext-submit",
     "release:cws": "cd build && webstore upload --auto-publish"
