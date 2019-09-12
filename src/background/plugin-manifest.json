@@ -12,7 +12,8 @@
         "description": "Sets a visual checkpoint on the entire window. This will scroll throughout the page, and build a screenshot of it.",
         "target": {
           "name": "step name",
-          "description": "A name to display at the test results, defaults to url."
+          "description": "A name to display at the test results, defaults to url.",
+          "isOptional": true
         }
       }
     },
@@ -25,7 +26,8 @@
         "target": "locator",
         "value": {
           "name": "step name",
-          "description": "A name to display at the test results, defaults to url."
+          "description": "A name to display at the test results, defaults to url.",
+          "isOptional": true
         }
       }
     },
