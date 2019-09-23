@@ -1,0 +1,27 @@
+.combobox {
+    border: 1px solid #dcdcdc;
+    border-radius: 2px;
+    color: inherit;
+    padding: 2px 5px;
+}
+
+.combobox.disabled {
+    cursor: not-allowed;
+    color: gray;
+}
+
+.combobox-content {
+    list-style: none;
+}
+
+.combobox-item {
+    color: inherit;
+    display: block;
+    padding: 5px 15px;
+    background: white;
+    transition: all 250ms;
+}
+
+.combobox-item:hover {
+    background: #e6f7ff;
+}

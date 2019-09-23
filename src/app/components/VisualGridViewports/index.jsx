@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Modal from '../Modal'
+import Modal from '../../../commons/components/Modal'
 import CustomViewportSize from '../VisualGridCustomViewportSize'
 import VisualGridSelectedOptions from '../VisualGridSelectedOptions'
 import AddButton from '../ActionButtons/AddButton'

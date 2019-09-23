@@ -3,6 +3,7 @@ import storage from '../../../IO/storage'
 import React from 'react'
 import PropTypes from 'prop-types'
 import Checkbox from '../../../commons/components/Checkbox'
+import Combobox from '../../../commons/components/Combobox'
 import Input from '../../../commons/components/Input'
 import MoreInfo from '../../components/MoreInfo'
 import Link from '../../../commons/components/Link'
@@ -182,15 +183,48 @@ export default class Normal extends React.Component {
                 />
               )}
             {this.state.isExperimental && (
-              <Checkbox
-                id="enable-patterns-dom"
-                label="Enable advanced pattern matching"
-                checked={this.state.projectSettings.enablePatternsDom}
-                onChange={this.handleCheckboxChange.bind(
-                  this,
-                  'enablePatternsDom'
-                )}
-              />
+              <React.Fragment>
+                <Checkbox
+                  id="enable-patterns-dom"
+                  label="Enable advanced pattern matching"
+                  checked={this.state.projectSettings.enablePatternsDom}
+                  onChange={this.handleCheckboxChange.bind(
+                    this,
+                    'enablePatternsDom'
+                  )}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'baseline',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Checkbox
+                    id="enable-accessibility-validations"
+                    label="Enable accessibility validations"
+                    checked={
+                      this.state.projectSettings.enableAccessibilityValidations
+                    }
+                    onChange={this.handleCheckboxChange.bind(
+                      this,
+                      'enableAccessibilityValidations'
+                    )}
+                  />
+                  <Combobox
+                    items={['AA', 'AAA']}
+                    selectedItem={this.state.projectSettings.accessibilityLevel}
+                    disabled={
+                      !this.state.projectSettings.enableAccessibilityValidations
+                    }
+                    onChange={this.handleInputChange.bind(
+                      this,
+                      'accessibilityLevel'
+                    )}
+                  />
+                </div>
+              </React.Fragment>
             )}
           </React.Fragment>
         )}

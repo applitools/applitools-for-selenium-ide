@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Modal from '../Modal'
+import Modal from '../../../commons/components/Modal'
 import CheckList from '../../../commons/components/CheckList'
 import FlatButton from '../../../commons/components/FlatButton'
 import Input from '../../../commons/components/Input'

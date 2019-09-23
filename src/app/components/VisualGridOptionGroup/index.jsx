@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
-import Arrow from '../../assets/images/arrow_sm.svg'
+import ArrowIndicator from '../../../commons/components/ArrowIndicator'
 import './style.css'
 
 export default class VisualGridOptionGroup extends React.Component {
@@ -37,16 +37,5 @@ export default class VisualGridOptionGroup extends React.Component {
         )}
       </div>
     )
-  }
-}
-
-class ArrowIndicator extends React.Component {
-  generateStyle() {
-    let radian
-    this.props.directionIsUp ? (radian = 270) : (radian = 90)
-    return { transform: `rotate(${radian}deg)` }
-  }
-  render() {
-    return <img src={Arrow} alt="arrow" style={this.generateStyle()} />
   }
 }

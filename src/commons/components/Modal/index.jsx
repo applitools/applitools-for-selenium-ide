@@ -8,7 +8,6 @@ export default class Modal extends React.Component {
     customStyles: PropTypes.object,
     modalIsOpen: PropTypes.bool,
     onRequestClose: PropTypes.func,
-    onKeyDown: PropTypes.func,
   }
   handleKeyDown(event) {
     if (event.nativeEvent.key === 'Escape') {

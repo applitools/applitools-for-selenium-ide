@@ -20,7 +20,7 @@
   font-weight: normal;
   font-size: 14px;
   text-transform: none;
-  color: black;
+  color: inherit;
   flex-basis: 100%;
   padding-top: 3px;
 }
