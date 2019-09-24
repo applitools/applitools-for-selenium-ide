@@ -6,6 +6,7 @@ import {
   closeEyes,
   getCommandsForEyes,
   isPatternsDomEnabled,
+  getAccessibilityLevel,
 } from '../utils/eyes'
 import { getExternalState, setExternalState } from '../external-state'
 import { parseEnvironment } from '../utils/parsers'
@@ -192,6 +193,7 @@ async function check(
     target.withDom(domCap)
     if (location) target.withLocation(location)
   }
+  target.accessibilityLevel(await getAccessibilityLevel())
   const imageResult = await eyes.check(stepName || pathname, target)
   return imageResult ? true : { status: 'undetermined' }
 }
@@ -217,6 +219,7 @@ async function checkWithVisualGrid(
     tag: stepName || pathname,
     sendDOM: (await isDomCaptureEnabled()) || (await isPatternsDomEnabled()),
     matchLevel: eyes.getMatchLevel() || 'Strict',
+    accessibilityLevel: await getAccessibilityLevel(),
     ...params,
   })
 

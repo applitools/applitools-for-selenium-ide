@@ -161,7 +161,6 @@ async function createImagesEyes(
   decorateEyes(eyes)
 
   if (await isPatternsDomEnabled()) {
-    eyes.setMatchLevel(parseMatchLevel('Layout'))
     eyes.setEnablePatterns(true)
     eyes.setUseDom(true)
     eyes.setSendDom(true)
@@ -207,6 +206,14 @@ export async function isPatternsDomEnabled() {
   return !!(
     settings.projectSettings.enablePatternsDom && settings.experimentalEnabled
   )
+}
+
+export async function getAccessibilityLevel() {
+  const settings = await getExtensionSettings()
+  return settings.experimentalEnabled &&
+    settings.projectSettings.enableAccessibilityValidations
+    ? settings.projectSettings.accessibilityLevel || 'AA'
+    : 'None'
 }
 
 async function createVisualGridEyes(
@@ -387,7 +394,6 @@ async function decorateVisualEyes(
   branchName,
   _parentBranchName
 ) {
-  if (await isPatternsDomEnabled()) eyes.matchLevel = parseMatchLevel('Layout')
   eyes.isVisualGrid = true
   eyes.commands = []
   eyes.getPreRenderHook = () => eyes.preRenderHook
