@@ -1066,7 +1066,7 @@ browser.runtime.onMessageExternal.addListener(
           const { command, target, value } = message.command // eslint-disable-line no-unused-vars
           if (command === CommandIds.CheckWindow) {
             return sendResponse(
-              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true));}`
+              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityLevel(configuration.params.eyesAccessibilityLevel || "None").fully(true));}`
             )
           } else if (command === CommandIds.CheckElement) {
             sendMessage({
@@ -1078,7 +1078,7 @@ browser.runtime.onMessageExternal.addListener(
             })
               .then(locator => {
                 sendResponse(
-                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook));}`
+                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook).accessibilityLevel(configuration.params.eyesAccessibilityLevel || "None"));}`
                 )
               })
               .catch(console.error) // eslint-disable-line no-console
