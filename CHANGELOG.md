@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.0
+- Added experimental accessibility validations
+
 ## v1.7.7
 - Testing new publishing mechanism
 
