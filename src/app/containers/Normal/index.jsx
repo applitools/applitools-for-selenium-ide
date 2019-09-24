@@ -93,6 +93,8 @@ export default class Normal extends React.Component {
                   customViewportSizes: [],
                   selectedDevices: [],
                   selectedDeviceOrientations: [],
+                  enableAccessibilityValidations: false,
+                  accessibilityLevel: 'AA',
                 }
           if (
             !experimentalEnabled &&
