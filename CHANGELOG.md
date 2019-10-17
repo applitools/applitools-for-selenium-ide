@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.8.1
+- GUI Fixes
+
 ## v1.8.0
 - Added experimental accessibility validations
 

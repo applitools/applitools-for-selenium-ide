@@ -205,7 +205,7 @@ export default class Normal extends React.Component {
                 >
                   <Checkbox
                     id="enable-accessibility-validations"
-                    label="Enable accessibility validations"
+                    label="Accessibility: Check contrast"
                     checked={
                       this.state.projectSettings.enableAccessibilityValidations
                     }
