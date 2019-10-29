@@ -365,7 +365,12 @@ browser.runtime.onMessageExternal.addListener(
           return true
         }
         case CommandIds.CheckWindow: {
-          if (
+          if (!getExternalState().enableVisualCheckpoints) {
+            ideLogger.log('Skipping command.').then(() => {
+              return sendResponse(true)
+            })
+            return true
+          } else if (
             getExternalState().enableVisualCheckpoints &&
             !!message.options.runId
           ) {
@@ -414,7 +419,12 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case CommandIds.CheckElement: {
-          if (
+          if (!getExternalState().enableVisualCheckpoints) {
+            ideLogger.log('Skipping command.').then(() => {
+              return sendResponse(true)
+            })
+            return true
+          } else if (
             getExternalState().enableVisualCheckpoints &&
             message.options.runId
           ) {
