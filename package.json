@@ -70,9 +70,9 @@
   },
   "dependencies": {
     "@applitools/dom-capture": "^7.0.17",
-    "@applitools/dom-snapshot": "^2.2.3",
+    "@applitools/dom-snapshot": "^3.0.5",
     "@applitools/eyes-images": "^4.12.15",
-    "@applitools/visual-grid-client": "^12.32.5",
+    "@applitools/visual-grid-client": "^13.0.1",
     "buffer": "^5.2.1",
     "classnames": "^2.2.5",
     "fuse.js": "^3.3.0",
