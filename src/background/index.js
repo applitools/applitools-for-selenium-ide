@@ -127,7 +127,14 @@ browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 })
 
-let useNativeOverride = undefined
+function makePlaybackInfo() {
+  return {
+    useNativeOverride: undefined,
+    baselineEnvNameCommand: undefined,
+  }
+}
+
+let playbackInfo = makePlaybackInfo()
 
 // BEWARE CONVOLUTED API AHEAD!!!
 // When using onMessage or onMessageExternal listeners only one response can
@@ -173,13 +180,13 @@ browser.runtime.onMessageExternal.addListener(
         getExtensionSettings()
           .then(settings => {
             if (
-              (settings.projectSettings.enableVisualGrid &&
-                (!settings.isFree && !settings.eulaSignDate)) ||
+              settings.projectSettings.enableVisualGrid &&
+              (!settings.isFree && !settings.eulaSignDate) &&
               !hasValidVisualGridSettings(settings.projectSettings)
             ) {
               popup(incompleteVisualGridSettings).then(result => {
                 if (result) {
-                  useNativeOverride = true
+                  playbackInfo.useNativeOverride = true
                   return sendResponse(true)
                 } else {
                   return sendResponse({
@@ -200,61 +207,22 @@ browser.runtime.onMessageExternal.addListener(
     }
     if (message.event === 'playbackStarted' && message.options.runId) {
       const commands = message.options.test.commands
-      if (
-        containsEyesCommands(commands, [CommandIds.SetViewportSize]) &&
-        getExternalState().enableVisualCheckpoints
-      ) {
-        const baselineEnvNameCommand = commands.find(
+      Object.assign(playbackInfo, message.options)
+      if (getExternalState().enableVisualCheckpoints) {
+        playbackInfo.baselineEnvNameCommand = commands.find(
           command => command.command === CommandIds.SetBaselineEnvName
         )
-        makeEyes(
-          `${message.options.runId}${message.options.testId}`,
-          message.options.runId,
-          message.options.projectName,
-          message.options.suiteName,
-          message.options.testName,
-          {
-            baselineEnvName: baselineEnvNameCommand
-              ? baselineEnvNameCommand.target
-              : undefined,
-            useNativeOverride,
-          }
-        )
-          .then(() => {
-            return sendResponse(true)
-          })
-          .catch(error => {
-            let modalSettings
-            switch (error.message) {
-              case 'Incomplete visual grid settings': {
-                modalSettings = incompleteVisualGridSettings
-                break
-              }
-              default: {
-                return sendResponse({
-                  message: error.message,
-                  status: 'fatal',
-                })
-              }
-            }
-            if (modalSettings) {
-              popup(modalSettings).then(result => {
+        getExtensionSettings()
+          .then(settings => {
+            if (
+              settings.projectSettings.enableVisualGrid &&
+              (!settings.isFree && !settings.eulaSignDate) &&
+              !hasValidVisualGridSettings(settings.projectSettings)
+            ) {
+              popup(incompleteVisualGridSettings).then(result => {
                 if (result) {
-                  makeEyes(
-                    `${message.options.runId}${message.options.testId}`,
-                    message.options.runId,
-                    message.options.projectName,
-                    message.options.suiteName,
-                    message.options.testName,
-                    {
-                      baselineEnvName: baselineEnvNameCommand
-                        ? baselineEnvNameCommand.target
-                        : undefined,
-                      useNativeOverride: true,
-                    }
-                  ).then(() => {
-                    return sendResponse(true)
-                  })
+                  playbackInfo.useNativeOverride = true
+                  return sendResponse(true)
                 } else {
                   return sendResponse({
                     message: 'User aborted playback.',
@@ -262,8 +230,11 @@ browser.runtime.onMessageExternal.addListener(
                   })
                 }
               })
+            } else {
+              return sendResponse(true)
             }
           })
+          .catch(sendResponse) // eslint-disable-line
       } else {
         ideLogger.log('Visual checkpoints are disabled').then(() => {
           return sendResponse(true)
@@ -307,7 +278,7 @@ browser.runtime.onMessageExternal.addListener(
           sendResponse(true)
         })
         .catch(sendResponse)
-      useNativeOverride = undefined
+      playbackInfo = makePlaybackInfo()
       return true
     }
     if (message.action === 'execute') {
@@ -395,36 +366,43 @@ browser.runtime.onMessageExternal.addListener(
         }
         case CommandIds.CheckWindow: {
           if (
-            !getExternalState().enableVisualCheckpoints ||
-            message.options.isNested
+            getExternalState().enableVisualCheckpoints &&
+            !!message.options.runId
           ) {
-            if (message.options.isNested) {
-              ideLogger.log(
-                'Visual checkpoints are disabled when running inside of a nested test case'
-              )
-            }
-            return sendResponse(true)
-          } else if (message.options.runId) {
-            getViewportSize(message.options.tabId).then(viewport => {
-              checkWindow(
-                message.options.runId,
-                message.options.testId,
-                message.options.commandId,
-                message.options.tabId,
-                message.options.windowId,
-                message.command.target,
-                viewport
-              )
-                .then(results => {
-                  sendResponse(results)
-                })
-                .catch(error => {
-                  sendResponse(
-                    error instanceof Error
-                      ? { error: error.message }
-                      : { error }
-                  )
-                })
+            makeEyes(
+              `${playbackInfo.runId}${message.options.originalTestId}`,
+              playbackInfo.runId,
+              playbackInfo.projectName,
+              playbackInfo.suiteName,
+              playbackInfo.testName,
+              {
+                baselineEnvName: playbackInfo.baselineEnvNameCommand
+                  ? playbackInfo.baselineEnvNameCommand.target
+                  : undefined,
+                useNativeOverride: playbackInfo.useNativeOverride,
+              }
+            ).then(() => {
+              getViewportSize(message.options.tabId).then(viewport => {
+                checkWindow(
+                  message.options.runId,
+                  message.options.originalTestId,
+                  message.options.commandId,
+                  message.options.tabId,
+                  message.options.windowId,
+                  message.command.target,
+                  viewport
+                )
+                  .then(results => {
+                    sendResponse(results)
+                  })
+                  .catch(error => {
+                    sendResponse(
+                      error instanceof Error
+                        ? { error: error.message }
+                        : { error }
+                    )
+                  })
+              })
             })
             return true
           } else {
@@ -437,16 +415,9 @@ browser.runtime.onMessageExternal.addListener(
         }
         case CommandIds.CheckElement: {
           if (
-            !getExternalState().enableVisualCheckpoints ||
-            message.options.isNested
+            getExternalState().enableVisualCheckpoints &&
+            message.options.runId
           ) {
-            if (message.options.isNested) {
-              ideLogger.log(
-                'Visual checkpoints are disabled when running inside of a nested test case'
-              )
-            }
-            return sendResponse(true)
-          } else if (message.options.runId) {
             sendMessage({
               uri: '/playback/location',
               verb: 'get',
@@ -457,28 +428,42 @@ browser.runtime.onMessageExternal.addListener(
               if (target.error) {
                 sendResponse({ error: target.error })
               } else {
-                getViewportSize(message.options.tabId).then(viewport => {
-                  checkElement(
-                    message.options.runId,
-                    message.options.testId,
-                    message.options.commandId,
-                    message.options.frameId,
-                    message.options.tabId,
-                    message.options.windowId,
-                    target,
-                    message.command.value,
-                    viewport
-                  )
-                    .then(results => {
-                      sendResponse(results)
-                    })
-                    .catch(error => {
-                      sendResponse(
-                        error instanceof Error
-                          ? { error: error.message }
-                          : { error }
-                      )
-                    })
+                makeEyes(
+                  `${playbackInfo.runId}${message.options.originalTestId}`,
+                  playbackInfo.runId,
+                  playbackInfo.projectName,
+                  playbackInfo.suiteName,
+                  playbackInfo.testName,
+                  {
+                    baselineEnvName: playbackInfo.baselineEnvNameCommand
+                      ? playbackInfo.baselineEnvNameCommand.target
+                      : undefined,
+                    useNativeOverride: playbackInfo.useNativeOverride,
+                  }
+                ).then(() => {
+                  getViewportSize(message.options.tabId).then(viewport => {
+                    checkElement(
+                      message.options.runId,
+                      message.options.originalTestId,
+                      message.options.commandId,
+                      message.options.frameId,
+                      message.options.tabId,
+                      message.options.windowId,
+                      target,
+                      message.command.value,
+                      viewport
+                    )
+                      .then(results => {
+                        sendResponse(results)
+                      })
+                      .catch(error => {
+                        sendResponse(
+                          error instanceof Error
+                            ? { error: error.message }
+                            : { error }
+                        )
+                      })
+                  })
                 })
               }
             })

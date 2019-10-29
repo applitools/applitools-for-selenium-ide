@@ -193,7 +193,7 @@ async function check(
     target.withDom(domCap)
     if (location) target.withLocation(location)
   }
-  target.accessibilityLevel(await getAccessibilityLevel())
+  target.accessibilityValidation(await getAccessibilityLevel())
   const imageResult = await eyes.check(stepName || pathname, target)
   return imageResult ? true : { status: 'undetermined' }
 }

@@ -66,6 +66,7 @@ export async function makeEyes(
   testName,
   options = {}
 ) {
+  if (hasEyes(id)) return eyes[id]
   if (lastResults.batchId !== batchId) {
     lastResults.batchId = batchId
     lastResults.url = ''
