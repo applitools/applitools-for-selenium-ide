@@ -517,6 +517,13 @@ browser.runtime.onMessageExternal.addListener(
                   : `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true))`
               )
             }
+            case 'ruby-rspec': {
+              return sendResponse(
+                value
+                  ? `@eyes.check("${value}", Applitools::Selenium::Target.window.fully)`
+                  : `@eyes.check(URI.parse(driver.current_url).path, Applitools::Selenium::Target.window.fully)`
+              )
+            }
           }
         } else if (command === CommandIds.CheckElement) {
           switch (message.language) {
@@ -584,6 +591,25 @@ browser.runtime.onMessageExternal.addListener(
                 .catch(console.error) // eslint-disable-line no-console
               return true
             }
+            case 'ruby-rspec': {
+              sendMessage({
+                uri: '/export/location',
+                verb: 'get',
+                payload: {
+                  location: target,
+                  language: message.language,
+                },
+              })
+                .then(locator => {
+                  sendResponse(
+                    value
+                      ? `@eyes.check("${value}", Applitools::Selenium::Target.region(${locator}).script_hook(preRenderHook))`
+                      : `@eyes.check(URI.parse(driver.current_url).path, Applitools::Selenium::Target.region(${locator}).script_hook(preRenderHook))`
+                  )
+                })
+                .catch(console.error) // eslint-disable-line no-console
+              return true
+            }
           }
         } else if (command === CommandIds.SetViewportSize) {
           switch (message.language) {
@@ -605,6 +631,12 @@ browser.runtime.onMessageExternal.addListener(
                 `await eyes.setViewportSize({ width: ${width}, height: ${height} })`
               )
             }
+            case 'ruby-rspec': {
+              const { width, height } = parseViewport(target)
+              return sendResponse(
+                `@eyes.set_viewport_size({ width: ${width}, height: ${height} })`
+              )
+            }
           }
         } else if (command === CommandIds.SetMatchLevel) {
           switch (message.language) {
@@ -623,6 +655,11 @@ browser.runtime.onMessageExternal.addListener(
                 `await eyes.setMatchLevel("${parseMatchLevel(target)}");`
               )
             }
+            case 'ruby-rspec': {
+              return sendResponse(
+                `@eyes.match_level("${parseMatchLevel(target)}")`
+              )
+            }
           }
         } else if (command === CommandIds.SetMatchTimeout) {
           switch (message.language) {
@@ -634,6 +671,9 @@ browser.runtime.onMessageExternal.addListener(
             }
             case 'javascript-mocha': {
               return sendResponse(`eyes.setMatchTimeout(${target})`)
+            }
+            case 'ruby-rspec': {
+              return sendResponse(`@eyes.match_timeout(${target})`)
             }
           }
         } else if (command === CommandIds.SetPreRenderHook) {
@@ -667,6 +707,17 @@ browser.runtime.onMessageExternal.addListener(
                   result += target
                     ? `preRenderHook = "${target}"`
                     : `preRenderHook = ""`
+                return sendResponse(result)
+              })
+              return true
+            }
+            case 'ruby-rspec': {
+              getExtensionSettings().then(settings => {
+                let result = ''
+                if (settings.projectSettings.enableVisualGrid)
+                  result += target
+                    ? `@preRenderHook = "${target}"`
+                    : `@preRenderHook = ""`
                 return sendResponse(result)
               })
               return true
@@ -715,6 +766,18 @@ browser.runtime.onMessageExternal.addListener(
                   }
                   result += `eyes.abortIfNotClosed()`
                   return sendResponse(result)
+                })
+                return true
+              }
+              case 'ruby-rspec': {
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    return sendResponse(
+                      `@visual_grid_runner.get_all_test_results`
+                    )
+                  } else {
+                    return sendResponse(`@eyes.abort_if_not_closed`)
+                  }
                 })
                 return true
               }
@@ -912,6 +975,74 @@ browser.runtime.onMessageExternal.addListener(
                 })
                 return true
               }
+              case 'ruby-rspec': {
+                let result = ''
+                result += `@preRenderHook = ""\n`
+                const commands = message.options.tests
+                  ? message.options.tests.reduce(
+                      (_commands, test) => [...test.commands],
+                      []
+                    )
+                  : []
+                const baselineEnvNameCommand = commands.find(
+                  command => command.command === CommandIds.SetBaselineEnvName
+                )
+                getExtensionSettings().then(settings => {
+                  if (settings.projectSettings.enableVisualGrid) {
+                    result += `@visual_grid_runner = Applitools::Selenium::VisualGridRunner.new(10)\n`
+                    result += `@eyes = Applitools::Selenium::Eyes.new(visual_grid_runner: @visual_grid_runner)\n`
+                    result += `config = Applitools::Selenium::Configuration.new.tap do |c|\n`
+                    result += `c.api_key = ENV['APPLITOOLS_API_KEY']\n`
+                    result += `c.app_name = ${message.options.project.name}\n`
+                    result += `c.test_name = ${message.options.name}\n`
+                    const _browsers = parseBrowsers(
+                      settings.projectSettings.selectedBrowsers,
+                      settings.projectSettings.selectedViewportSizes,
+                      settings.projectSettings.selectedDevices,
+                      settings.projectSettings.selectedDeviceOrientations
+                    )
+                    let browsers = [..._browsers.matrix]
+                    if (!settings.experimentalEnabled) {
+                      browsers = browsers.filter(
+                        b => !isExperimentalBrowser(b.name)
+                      )
+                    }
+                    let isExperimentalBrowserWarningDisplayed = false
+                    browsers.forEach(browser => {
+                      if (browser.deviceName) {
+                        result += `\nc.add_device_emulation(Devices::${
+                          browser.deviceId
+                        }, Orientations::${browser.screenOrientation.toUpperCase()})`
+                      } else if (
+                        settings.experimentalEnabled &&
+                        isExperimentalBrowser(browser.name) &&
+                        _browsers.didRemoveResolution &&
+                        !isExperimentalBrowserWarningDisplayed
+                      ) {
+                        result += `\n# ${experimentalBrowserWarningMessage}`
+                        isExperimentalBrowserWarningDisplayed = true
+                      } else {
+                        const browserId = browser.id
+                          ? browser.id
+                          : browser.name.toUpperCase()
+                        result += `\nc.add_browser(${browser.width}, ${browser.height}, BrowserTypes::${browserId})`
+                      }
+                    })
+                    result += `\nend`
+                    result += `\n@eyes.config = config`
+                  } else {
+                    result += `@eyes = Applitools::Selenium::Eyes.new`
+                  }
+                  result += `\n@eyes.api_key = ENV["APPLITOOLS_API_KEY"]`
+                  if (baselineEnvNameCommand) {
+                    //result += `\neyes.set_baseline_env_name("${baselineEnvNameCommand.target}")`
+                    // TODO
+                  }
+                  result += `\n@eyes.open(driver, "${message.options.project.name}", "${message.options.name}")`
+                  return sendResponse(result)
+                })
+                return true
+              }
             }
             break
           }
@@ -948,6 +1079,9 @@ browser.runtime.onMessageExternal.addListener(
                 })
                 return true
               }
+              case 'ruby-rspec': {
+                return sendResponse("require 'eyes_selenium'")
+              }
             }
             break
           }
@@ -983,6 +1117,9 @@ browser.runtime.onMessageExternal.addListener(
                 })
                 return true
               }
+              case 'ruby-rspec': {
+                return sendResponse(`@eyes.close(false)`)
+              }
             }
             break
           }
@@ -1000,6 +1137,16 @@ browser.runtime.onMessageExternal.addListener(
               }
               case 'javascript-mocha': {
                 return sendResponse(`let eyes\nlet preRenderHook`)
+              }
+              case 'ruby-rspec': {
+                let result = `@eyes\n`
+                getExtensionSettings().then(settings => {
+                  if (!settings.projectSettings.enableVisualGrid) {
+                    result += `@preRenderHook\n@visual_grid_runner`
+                  }
+                  return sendResponse(result)
+                })
+                return true
               }
             }
             break
