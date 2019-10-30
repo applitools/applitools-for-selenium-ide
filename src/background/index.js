@@ -127,14 +127,14 @@ browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   }
 })
 
-function makePlaybackInfo() {
+function makePlaybackOptions() {
   return {
     useNativeOverride: undefined,
     baselineEnvNameCommand: undefined,
   }
 }
 
-let playbackInfo = makePlaybackInfo()
+let playbackOptions = makePlaybackOptions()
 
 // BEWARE CONVOLUTED API AHEAD!!!
 // When using onMessage or onMessageExternal listeners only one response can
@@ -186,7 +186,7 @@ browser.runtime.onMessageExternal.addListener(
             ) {
               popup(incompleteVisualGridSettings).then(result => {
                 if (result) {
-                  playbackInfo.useNativeOverride = true
+                  playbackOptions.useNativeOverride = true
                   return sendResponse(true)
                 } else {
                   return sendResponse({
@@ -207,9 +207,9 @@ browser.runtime.onMessageExternal.addListener(
     }
     if (message.event === 'playbackStarted' && message.options.runId) {
       const commands = message.options.test.commands
-      Object.assign(playbackInfo, message.options)
+      Object.assign(playbackOptions, message.options)
       if (getExternalState().enableVisualCheckpoints) {
-        playbackInfo.baselineEnvNameCommand = commands.find(
+        playbackOptions.baselineEnvNameCommand = commands.find(
           command => command.command === CommandIds.SetBaselineEnvName
         )
         getExtensionSettings()
@@ -221,7 +221,7 @@ browser.runtime.onMessageExternal.addListener(
             ) {
               popup(incompleteVisualGridSettings).then(result => {
                 if (result) {
-                  playbackInfo.useNativeOverride = true
+                  playbackOptions.useNativeOverride = true
                   return sendResponse(true)
                 } else {
                   return sendResponse({
@@ -278,7 +278,7 @@ browser.runtime.onMessageExternal.addListener(
           sendResponse(true)
         })
         .catch(sendResponse)
-      playbackInfo = makePlaybackInfo()
+      playbackOptions = makePlaybackOptions()
       return true
     }
     if (message.action === 'execute') {
@@ -365,26 +365,26 @@ browser.runtime.onMessageExternal.addListener(
           return true
         }
         case CommandIds.CheckWindow: {
-          if (!getExternalState().enableVisualCheckpoints) {
-            ideLogger.log('Skipping command.').then(() => {
-              return sendResponse(true)
-            })
-            return true
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.assertionsDisabled
+          ) {
+            return sendResponse(true)
           } else if (
             getExternalState().enableVisualCheckpoints &&
             !!message.options.runId
           ) {
             makeEyes(
-              `${playbackInfo.runId}${message.options.originalTestId}`,
-              playbackInfo.runId,
-              playbackInfo.projectName,
-              playbackInfo.suiteName,
-              playbackInfo.testName,
+              `${playbackOptions.runId}${message.options.originalTestId}`,
+              playbackOptions.runId,
+              playbackOptions.projectName,
+              playbackOptions.suiteName,
+              playbackOptions.testName,
               {
-                baselineEnvName: playbackInfo.baselineEnvNameCommand
-                  ? playbackInfo.baselineEnvNameCommand.target
+                baselineEnvName: playbackOptions.baselineEnvNameCommand
+                  ? playbackOptions.baselineEnvNameCommand.target
                   : undefined,
-                useNativeOverride: playbackInfo.useNativeOverride,
+                useNativeOverride: playbackOptions.useNativeOverride,
               }
             ).then(() => {
               getViewportSize(message.options.tabId).then(viewport => {
@@ -419,11 +419,11 @@ browser.runtime.onMessageExternal.addListener(
           }
         }
         case CommandIds.CheckElement: {
-          if (!getExternalState().enableVisualCheckpoints) {
-            ideLogger.log('Skipping command.').then(() => {
-              return sendResponse(true)
-            })
-            return true
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.assertionsDisabled
+          ) {
+            return sendResponse(true)
           } else if (
             getExternalState().enableVisualCheckpoints &&
             message.options.runId
@@ -439,16 +439,16 @@ browser.runtime.onMessageExternal.addListener(
                 sendResponse({ error: target.error })
               } else {
                 makeEyes(
-                  `${playbackInfo.runId}${message.options.originalTestId}`,
-                  playbackInfo.runId,
-                  playbackInfo.projectName,
-                  playbackInfo.suiteName,
-                  playbackInfo.testName,
+                  `${playbackOptions.runId}${message.options.originalTestId}`,
+                  playbackOptions.runId,
+                  playbackOptions.projectName,
+                  playbackOptions.suiteName,
+                  playbackOptions.testName,
                   {
-                    baselineEnvName: playbackInfo.baselineEnvNameCommand
-                      ? playbackInfo.baselineEnvNameCommand.target
+                    baselineEnvName: playbackOptions.baselineEnvNameCommand
+                      ? playbackOptions.baselineEnvNameCommand.target
                       : undefined,
-                    useNativeOverride: playbackInfo.useNativeOverride,
+                    useNativeOverride: playbackOptions.useNativeOverride,
                   }
                 ).then(() => {
                   getViewportSize(message.options.tabId).then(viewport => {
