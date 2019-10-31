@@ -992,9 +992,9 @@ browser.runtime.onMessageExternal.addListener(
                     result += `@visual_grid_runner = Applitools::Selenium::VisualGridRunner.new(10)\n`
                     result += `@eyes = Applitools::Selenium::Eyes.new(visual_grid_runner: @visual_grid_runner)\n`
                     result += `config = Applitools::Selenium::Configuration.new.tap do |c|\n`
-                    result += `c.api_key = ENV['APPLITOOLS_API_KEY']\n`
-                    result += `c.app_name = ${message.options.project.name}\n`
-                    result += `c.test_name = ${message.options.name}\n`
+                    result += `  c.api_key = ENV['APPLITOOLS_API_KEY']\n`
+                    result += `  c.app_name = ${message.options.project.name}\n`
+                    result += `  c.test_name = ${message.options.name}`
                     const _browsers = parseBrowsers(
                       settings.projectSettings.selectedBrowsers,
                       settings.projectSettings.selectedViewportSizes,
@@ -1010,9 +1010,13 @@ browser.runtime.onMessageExternal.addListener(
                     let isExperimentalBrowserWarningDisplayed = false
                     browsers.forEach(browser => {
                       if (browser.deviceName) {
-                        result += `\nc.add_device_emulation(Devices::${
-                          browser.deviceId
-                        }, Orientations::${browser.screenOrientation.toUpperCase()})`
+                        let deviceName = browser.deviceId.replace(/_/g, '')
+                        result += `\n  c.add_device_emulation(Devices::${deviceName
+                          .charAt(0)
+                          .toUpperCase() +
+                          deviceName.substring(
+                            1
+                          )}, Orientations::${browser.screenOrientation.toUpperCase()})`
                       } else if (
                         settings.experimentalEnabled &&
                         isExperimentalBrowser(browser.name) &&
@@ -1025,7 +1029,7 @@ browser.runtime.onMessageExternal.addListener(
                         const browserId = browser.id
                           ? browser.id
                           : browser.name.toUpperCase()
-                        result += `\nc.add_browser(${browser.width}, ${browser.height}, BrowserTypes::${browserId})`
+                        result += `\n  c.add_browser(${browser.width}, ${browser.height}, BrowserTypes::${browserId})`
                       }
                     })
                     result += `\nend`
@@ -1139,10 +1143,10 @@ browser.runtime.onMessageExternal.addListener(
                 return sendResponse(`let eyes\nlet preRenderHook`)
               }
               case 'ruby-rspec': {
-                let result = `@eyes\n`
+                let result = `@eyes`
                 getExtensionSettings().then(settings => {
                   if (!settings.projectSettings.enableVisualGrid) {
-                    result += `@preRenderHook\n@visual_grid_runner`
+                    result += `\n@preRenderHook\n@visual_grid_runner`
                   }
                   return sendResponse(result)
                 })
