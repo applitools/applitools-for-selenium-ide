@@ -520,8 +520,8 @@ browser.runtime.onMessageExternal.addListener(
             case 'ruby-rspec': {
               return sendResponse(
                 value
-                  ? `@eyes.check("${value}", Applitools::Selenium::Target.window.fully)`
-                  : `@eyes.check(URI.parse(driver.current_url).path, Applitools::Selenium::Target.window.fully)`
+                  ? `@eyes.check("${value}", Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))`
+                  : `@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))`
               )
             }
           }
@@ -603,8 +603,8 @@ browser.runtime.onMessageExternal.addListener(
                 .then(locator => {
                   sendResponse(
                     value
-                      ? `@eyes.check("${value}", Applitools::Selenium::Target.region(${locator}).script_hook(preRenderHook))`
-                      : `@eyes.check(URI.parse(driver.current_url).path, Applitools::Selenium::Target.region(${locator}).script_hook(preRenderHook))`
+                      ? `@eyes.check("${value}", Applitools::Selenium::Target.region(${locator}).script_hook(@pre_render_hook))`
+                      : `@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.region(${locator}).script_hook(@pre_render_hook))`
                   )
                 })
                 .catch(console.error) // eslint-disable-line no-console
@@ -632,10 +632,7 @@ browser.runtime.onMessageExternal.addListener(
               )
             }
             case 'ruby-rspec': {
-              const { width, height } = parseViewport(target)
-              return sendResponse(
-                `@eyes.set_viewport_size({ width: ${width}, height: ${height} })`
-              )
+              return sendResponse(true)
             }
           }
         } else if (command === CommandIds.SetMatchLevel) {
@@ -716,8 +713,8 @@ browser.runtime.onMessageExternal.addListener(
                 let result = ''
                 if (settings.projectSettings.enableVisualGrid)
                   result += target
-                    ? `@preRenderHook = "${target}"`
-                    : `@preRenderHook = ""`
+                    ? `@pre_render_hook = '${target}'`
+                    : `@pre_render_hook = ''`
                 return sendResponse(result)
               })
               return true
@@ -977,7 +974,7 @@ browser.runtime.onMessageExternal.addListener(
               }
               case 'ruby-rspec': {
                 let result = ''
-                result += `@preRenderHook = ""\n`
+                result += `@pre_render_hook = ''\n`
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
@@ -987,14 +984,23 @@ browser.runtime.onMessageExternal.addListener(
                 const baselineEnvNameCommand = commands.find(
                   command => command.command === CommandIds.SetBaselineEnvName
                 )
+                let setViewportSizeCommand = commands.find(
+                  command => command.command === CommandIds.SetViewportSize
+                )
+                setViewportSizeCommand = setViewportSizeCommand
+                  ? setViewportSizeCommand
+                  : { target: '1024x768' }
                 getExtensionSettings().then(settings => {
                   if (settings.projectSettings.enableVisualGrid) {
                     result += `@visual_grid_runner = Applitools::Selenium::VisualGridRunner.new(10)\n`
                     result += `@eyes = Applitools::Selenium::Eyes.new(visual_grid_runner: @visual_grid_runner)\n`
                     result += `config = Applitools::Selenium::Configuration.new.tap do |c|\n`
                     result += `  c.api_key = ENV['APPLITOOLS_API_KEY']\n`
-                    result += `  c.app_name = ${message.options.project.name}\n`
-                    result += `  c.test_name = ${message.options.name}`
+                    result += `  c.app_name = '${message.options.project.name}'\n`
+                    result += `  c.test_name = '${message.options.name}'\n`
+                    result += `  c.viewport_size = Applitools::RectangleSize.for('${setViewportSizeCommand.target}')`
+                    if (baselineEnvNameCommand)
+                      result += `\n  c.baseline_env_name = '${baselineEnvNameCommand.target}'`
                     const _browsers = parseBrowsers(
                       settings.projectSettings.selectedBrowsers,
                       settings.projectSettings.selectedViewportSizes,
@@ -1034,15 +1040,14 @@ browser.runtime.onMessageExternal.addListener(
                     })
                     result += `\nend`
                     result += `\n@eyes.config = config`
+                    result += `\n@eyes.open(driver: @driver)`
                   } else {
                     result += `@eyes = Applitools::Selenium::Eyes.new`
+                    result += `\n@eyes.api_key = ENV['APPLITOOLS_API_KEY']`
+                    if (baselineEnvNameCommand)
+                      result += `\n@eyes.baseline_env_name = '${baselineEnvNameCommand.target}'`
+                    result += `\n@eyes.open(driver: @driver, app_name: '${message.options.project.name}', test_name: '${message.options.name}', viewport_size: '${setViewportSizeCommand.target}')`
                   }
-                  result += `\n@eyes.api_key = ENV["APPLITOOLS_API_KEY"]`
-                  if (baselineEnvNameCommand) {
-                    //result += `\neyes.set_baseline_env_name("${baselineEnvNameCommand.target}")`
-                    // TODO
-                  }
-                  result += `\n@eyes.open(driver, "${message.options.project.name}", "${message.options.name}")`
                   return sendResponse(result)
                 })
                 return true
@@ -1141,16 +1146,6 @@ browser.runtime.onMessageExternal.addListener(
               }
               case 'javascript-mocha': {
                 return sendResponse(`let eyes\nlet preRenderHook`)
-              }
-              case 'ruby-rspec': {
-                let result = `@eyes`
-                getExtensionSettings().then(settings => {
-                  if (!settings.projectSettings.enableVisualGrid) {
-                    result += `\n@preRenderHook\n@visual_grid_runner`
-                  }
-                  return sendResponse(result)
-                })
-                return true
               }
             }
             break
