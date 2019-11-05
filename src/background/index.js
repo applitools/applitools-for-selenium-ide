@@ -27,14 +27,13 @@ import {
   getResultsUrl,
   hasValidVisualGridSettings,
   getExtensionSettings,
-  experimentalBrowserWarningMessage,
 } from './utils/eyes'
 import { parseViewport, parseMatchLevel } from './utils/parsers'
 import { setupOptions } from './utils/options.js'
 import manifest from '../manifest.json'
 import pluginManifest from './plugin-manifest.json'
 import { incompleteVisualGridSettings } from './modal-settings'
-import { parseBrowsers, isExperimentalBrowser } from './utils/parsers'
+import { parseBrowsers } from './utils/parsers'
 import {
   emitCheckWindow,
   emitCheckElement,
