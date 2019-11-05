@@ -262,7 +262,7 @@ exports[`code-export ruby-rspec commands setPreRenderHook 1`] = `"preRenderHook 
 
 exports[`code-export ruby-rspec commands setPreRenderHook 2`] = `"preRenderHook = ''"`;
 
-exports[`code-export ruby-rspec commands setViewportSize 1`] = `undefined`;
+exports[`code-export ruby-rspec commands setViewportSize 1`] = `""`;
 
 exports[`code-export ruby-rspec hooks afterEach 1`] = `"@visual_grid_runner.get_all_test_results"`;
 

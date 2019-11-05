@@ -105,6 +105,8 @@ export function emitSetViewportSize(language, width, height) {
       return `await eyes.setViewportSize({ width: ${width}, height: ${height} })`
     case 'python-pytest':
       return `self.eyes.viewport_size = {'width': ${width}, 'height': ${height}}`
+    case 'ruby-rspec':
+      return '' // handled in beforeEach
   }
 }
 
