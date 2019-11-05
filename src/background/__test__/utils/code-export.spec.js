@@ -13,12 +13,13 @@ import {
 } from '../../../background/utils/code-export'
 
 // TODO: a11y
-// NOTE: baselineEnvName used in setup, does not have its own emitter
+// NOTE: baselineEnvName is used in setup, it does not have its own emitter
 describe('code-export', () => {
   const languages = [
     'java-junit',
-    //'javascript-mocha',
-    //'ruby-rspec',
+    'javascript-mocha',
+    'python-pytest',
+    'ruby-rspec',
     //'csharp-nunit',
     //'csharp-xunit',
   ]
@@ -104,7 +105,7 @@ describe('code-export', () => {
           expect(emitInEachEnd(language)).toMatchSnapshot()
           expect(
             emitInEachEnd(language, { isVisualGridEnabled: true })
-          ).toBeUndefined()
+          ).toMatchSnapshot()
         })
         it('variable', () => {
           expect(

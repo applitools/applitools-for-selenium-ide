@@ -57,8 +57,7 @@ eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 `;
 
 exports[`code-export java-junit hooks dependency 1`] = `
-"
-import com.applitools.eyes.selenium.Eyes;
+"import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.selenium.BrowserType;
 import com.applitools.eyes.selenium.Configuration;
@@ -69,12 +68,13 @@ import com.applitools.eyes.selenium.fluent.Target;"
 `;
 
 exports[`code-export java-junit hooks dependency 2`] = `
-"
-import com.applitools.eyes.selenium.Eyes;
+"import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.RectangleSize;"
 `;
 
 exports[`code-export java-junit hooks inEachEnd 1`] = `"eyes.close();"`;
+
+exports[`code-export java-junit hooks inEachEnd 2`] = `undefined`;
 
 exports[`code-export java-junit hooks variable 1`] = `
 "private Eyes eyes;
@@ -84,3 +84,239 @@ private String preRenderHook;"
 `;
 
 exports[`code-export java-junit hooks variable 2`] = `"private Eyes eyes;"`;
+
+exports[`code-export javascript-mocha commands checkElement 1`] = `"await eyes.check(\\"blah\\", Target.region(By.id(\\"blah\\")).webHook(preRenderHook))"`;
+
+exports[`code-export javascript-mocha commands checkElement 2`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(By.id(\\"blah\\")).webHook(preRenderHook))"`;
+
+exports[`code-export javascript-mocha commands checkWindow 1`] = `"await eyes.check(\\"blah\\", Target.window().webHook(preRenderHook).fully(true))"`;
+
+exports[`code-export javascript-mocha commands checkWindow 2`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true))"`;
+
+exports[`code-export javascript-mocha commands setMatchLevel 1`] = `"await eyes.setMatchLevel(\\"Layout\\");"`;
+
+exports[`code-export javascript-mocha commands setMatchTimeout 1`] = `"eyes.setMatchTimeout(10000)"`;
+
+exports[`code-export javascript-mocha commands setPreRenderHook 1`] = `"preRenderHook = \\"console.log(\\"blah\\");\\""`;
+
+exports[`code-export javascript-mocha commands setPreRenderHook 2`] = `"preRenderHook = \\"\\""`;
+
+exports[`code-export javascript-mocha commands setViewportSize 1`] = `"await eyes.setViewportSize({ width: 1024, height: 768 })"`;
+
+exports[`code-export javascript-mocha hooks afterEach 1`] = `
+"const results = await eyes.getRunner().getAllTestResults()
+console.log(results)
+eyes.abortIfNotClosed()"
+`;
+
+exports[`code-export javascript-mocha hooks afterEach 2`] = `"eyes.abortIfNotClosed()"`;
+
+exports[`code-export javascript-mocha hooks beforeEach 1`] = `
+"eyes = new Eyes()
+eyes.setApiKey(process.env[\\"APPLITOOLS_API_KEY\\"])
+await eyes.open(driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export javascript-mocha hooks beforeEach 2`] = `
+"eyes = new Eyes()
+eyes.setApiKey(process.env[\\"APPLITOOLS_API_KEY\\"])
+eyes.setBaselineEnvName(\\"blah\\")
+await eyes.open(driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export javascript-mocha hooks beforeEach 3`] = `
+"eyes = new Eyes(new VisualGridRunner())
+const config = new Configuration()
+config.setConcurrentSessions(10)
+config.addDeviceEmulation(DeviceName.IPAD, ScreenOrientation.PORTRAIT)
+eyes.setConfiguration(config)
+eyes.setApiKey(process.env[\\"APPLITOOLS_API_KEY\\"])
+await eyes.open(driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export javascript-mocha hooks beforeEach 4`] = `
+"eyes = new Eyes(new VisualGridRunner())
+const config = new Configuration()
+config.setConcurrentSessions(10)
+config.addBrowser(100, 100, BrowserType.CHROME)
+eyes.setConfiguration(config)
+eyes.setApiKey(process.env[\\"APPLITOOLS_API_KEY\\"])
+await eyes.open(driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export javascript-mocha hooks dependency 1`] = `
+"const { Eyes, Target } = require('@applitools/eyes-selenium')
+const { Configuration, VisualGridRunner, BrowserType, DeviceName, ScreenOrientation } = require('@applitools/eyes-selenium')"
+`;
+
+exports[`code-export javascript-mocha hooks dependency 2`] = `"const { Eyes, Target } = require('@applitools/eyes-selenium')"`;
+
+exports[`code-export javascript-mocha hooks inEachEnd 1`] = `"await eyes.close()"`;
+
+exports[`code-export javascript-mocha hooks inEachEnd 2`] = `undefined`;
+
+exports[`code-export javascript-mocha hooks variable 1`] = `
+"let eyes
+let preRenderHook"
+`;
+
+exports[`code-export javascript-mocha hooks variable 2`] = `
+"let eyes
+let preRenderHook"
+`;
+
+exports[`code-export python-pytest commands checkElement 1`] = `"self.eyes.check(\\"blah\\", Target.region([By.id(\\"blah\\")]))"`;
+
+exports[`code-export python-pytest commands checkElement 2`] = `"self.eyes.check(urlparse(self.driver.current_url).path, Target.region([By.id(\\"blah\\")]))"`;
+
+exports[`code-export python-pytest commands checkWindow 1`] = `"self.eyes.check(\\"blah\\", Target.window().fully(True))"`;
+
+exports[`code-export python-pytest commands checkWindow 2`] = `"self.eyes.check(urlparse(self.driver.current_url).path, Target.window().fully(True))"`;
+
+exports[`code-export python-pytest commands setMatchLevel 1`] = `"self.eyes.match_level(\\"Layout\\")"`;
+
+exports[`code-export python-pytest commands setMatchTimeout 1`] = `"self.eyes.match_timeout(10000)"`;
+
+exports[`code-export python-pytest commands setPreRenderHook 1`] = `""`;
+
+exports[`code-export python-pytest commands setPreRenderHook 2`] = `""`;
+
+exports[`code-export python-pytest commands setViewportSize 1`] = `"self.eyes.viewport_size = {'width': 1024, 'height': 768}"`;
+
+exports[`code-export python-pytest hooks afterEach 1`] = `"self.vg_runner.get_all_test_results()"`;
+
+exports[`code-export python-pytest hooks afterEach 2`] = `"self.eyes.abort_if_not_closed()"`;
+
+exports[`code-export python-pytest hooks beforeEach 1`] = `
+"self.eyes = Eyes()
+self.eyes.api_key = os.environ[\\"APPLITOOLS_API_KEY\\"]
+self.eyes.open(self.driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export python-pytest hooks beforeEach 2`] = `
+"self.eyes = Eyes()
+self.eyes.api_key = os.environ[\\"APPLITOOLS_API_KEY\\"]
+eyes.baseline_env_name = \\"blah\\"
+self.eyes.open(self.driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export python-pytest hooks beforeEach 3`] = `
+"concurrency = 10
+self.vg_runner = VisualGridRunner(concurrency)
+self.eyes = Eyes(self.vg_runner)
+config = Configuration()
+config.add_device_emulation(DeviceName.IPAD, ScreenOrientation.PORTRAIT)
+self.eyes.configuration = config
+self.eyes.api_key = os.environ[\\"APPLITOOLS_API_KEY\\"]
+self.eyes.open(self.driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export python-pytest hooks beforeEach 4`] = `
+"concurrency = 10
+self.vg_runner = VisualGridRunner(concurrency)
+self.eyes = Eyes(self.vg_runner)
+config = Configuration()
+config.add_browser(100, 100, BrowserType.CHROME)
+self.eyes.configuration = config
+self.eyes.api_key = os.environ[\\"APPLITOOLS_API_KEY\\"]
+self.eyes.open(self.driver, \\"project blah\\", \\"test blah\\")"
+`;
+
+exports[`code-export python-pytest hooks dependency 1`] = `
+"import os
+from urllib.parse import urlparse
+from applitools.selenium import (Eyes, Target)
+from applitools.selenium import (Configuration, BrowserType, DeviceName, ScreenOrientation)
+from applitools.selenium.visual_grid import VisualGridRunner
+"
+`;
+
+exports[`code-export python-pytest hooks dependency 2`] = `
+"import os
+from urllib.parse import urlparse
+from applitools.selenium import (Eyes, Target)
+"
+`;
+
+exports[`code-export python-pytest hooks inEachEnd 1`] = `"self.eyes.close()"`;
+
+exports[`code-export python-pytest hooks inEachEnd 2`] = `"self.eyes.close_async()"`;
+
+exports[`code-export python-pytest hooks variable 1`] = `""`;
+
+exports[`code-export python-pytest hooks variable 2`] = `""`;
+
+exports[`code-export ruby-rspec commands checkElement 1`] = `"@eyes.check(\\"blah\\", Applitools::Selenium::Target.region(By.id(\\"blah\\")).script_hook(@pre_render_hook))"`;
+
+exports[`code-export ruby-rspec commands checkElement 2`] = `"@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.region(By.id(\\"blah\\")).script_hook(@pre_render_hook))"`;
+
+exports[`code-export ruby-rspec commands checkWindow 1`] = `"@eyes.check(\\"blah\\", Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))"`;
+
+exports[`code-export ruby-rspec commands checkWindow 2`] = `"@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))"`;
+
+exports[`code-export ruby-rspec commands setMatchLevel 1`] = `"@eyes.match_level(\\"Layout\\")"`;
+
+exports[`code-export ruby-rspec commands setMatchTimeout 1`] = `"@eyes.match_timeout(10000)"`;
+
+exports[`code-export ruby-rspec commands setPreRenderHook 1`] = `"preRenderHook = 'console.log(\\"blah\\");'"`;
+
+exports[`code-export ruby-rspec commands setPreRenderHook 2`] = `"preRenderHook = ''"`;
+
+exports[`code-export ruby-rspec commands setViewportSize 1`] = `undefined`;
+
+exports[`code-export ruby-rspec hooks afterEach 1`] = `"@visual_grid_runner.get_all_test_results"`;
+
+exports[`code-export ruby-rspec hooks afterEach 2`] = `"@eyes.abort_if_not_closed"`;
+
+exports[`code-export ruby-rspec hooks beforeEach 1`] = `
+"@eyes = Applitools::Selenium::Eyes.new
+@eyes.api_key = ENV['APPLITOOLS_API_KEY']
+@eyes.open(driver: @driver, app_name: 'project blah', test_name: 'test blah', viewport_size: '1024x768')"
+`;
+
+exports[`code-export ruby-rspec hooks beforeEach 2`] = `
+"@eyes = Applitools::Selenium::Eyes.new
+@eyes.api_key = ENV['APPLITOOLS_API_KEY']
+@eyes.baseline_env_name = 'blah'
+@eyes.open(driver: @driver, app_name: 'project blah', test_name: 'test blah', viewport_size: '1024x768')"
+`;
+
+exports[`code-export ruby-rspec hooks beforeEach 3`] = `
+"@visual_grid_runner = Applitools::Selenium::VisualGridRunner.new(10)
+@eyes = Applitools::Selenium::Eyes.new(visual_grid_runner: @visual_grid_runner)
+config = Applitools::Selenium::Configuration.new.tap do |c|
+  c.api_key = ENV['APPLITOOLS_API_KEY']
+  c.app_name = 'project blah'
+  c.test_name = 'test blah'
+  c.viewport_size = Applitools::RectangleSize.for('1024x768')
+  c.add_device_emulation(Devices::IPAD, Orientations::PORTRAIT)
+end
+@eyes.config = config
+@eyes.open(driver: @driver)"
+`;
+
+exports[`code-export ruby-rspec hooks beforeEach 4`] = `
+"@visual_grid_runner = Applitools::Selenium::VisualGridRunner.new(10)
+@eyes = Applitools::Selenium::Eyes.new(visual_grid_runner: @visual_grid_runner)
+config = Applitools::Selenium::Configuration.new.tap do |c|
+  c.api_key = ENV['APPLITOOLS_API_KEY']
+  c.app_name = 'project blah'
+  c.test_name = 'test blah'
+  c.viewport_size = Applitools::RectangleSize.for('1024x768')
+  c.add_browser(100, 100, BrowserTypes::CHROME)
+end
+@eyes.config = config
+@eyes.open(driver: @driver)"
+`;
+
+exports[`code-export ruby-rspec hooks dependency 1`] = `"require 'eyes_selenium'"`;
+
+exports[`code-export ruby-rspec hooks dependency 2`] = `"require 'eyes_selenium'"`;
+
+exports[`code-export ruby-rspec hooks inEachEnd 1`] = `"@eyes.close(false)"`;
+
+exports[`code-export ruby-rspec hooks inEachEnd 2`] = `"@eyes.close(false)"`;
+
+exports[`code-export ruby-rspec hooks variable 1`] = `""`;
+
+exports[`code-export ruby-rspec hooks variable 2`] = `""`;
