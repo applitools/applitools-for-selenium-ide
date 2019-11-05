@@ -323,18 +323,18 @@ export function emitInEachEnd(language, { isVisualGridEnabled } = {}) {
 }
 
 export function emitVariable(language, { isVisualGridEnabled } = {}) {
-  let result = ''
   switch (language) {
     case 'java-junit':
-      result += `private Eyes eyes;`
+      let result = `private Eyes eyes;` // eslint-disable-line
       if (isVisualGridEnabled) {
         result += `\nprivate VisualGridRunner runner;\n`
         result += `final int concurrency = 5;\n`
         result += `private String preRenderHook;`
       }
-      break
+      return result
     case 'javascript-mocha':
-      result += `let eyes\nlet preRenderHook`
+      return `let eyes\nlet preRenderHook`
+    case ('python-pytest', 'ruby-rspec'):
+      return undefined
   }
-  return result
 }

@@ -242,9 +242,9 @@ exports[`code-export python-pytest hooks inEachEnd 1`] = `"self.eyes.close()"`;
 
 exports[`code-export python-pytest hooks inEachEnd 2`] = `"self.eyes.close_async()"`;
 
-exports[`code-export python-pytest hooks variable 1`] = `""`;
+exports[`code-export python-pytest hooks variable 1`] = `undefined`;
 
-exports[`code-export python-pytest hooks variable 2`] = `""`;
+exports[`code-export python-pytest hooks variable 2`] = `undefined`;
 
 exports[`code-export ruby-rspec commands checkElement 1`] = `"@eyes.check(\\"blah\\", Applitools::Selenium::Target.region(By.id(\\"blah\\")).script_hook(@pre_render_hook))"`;
 
@@ -317,6 +317,6 @@ exports[`code-export ruby-rspec hooks inEachEnd 1`] = `"@eyes.close(false)"`;
 
 exports[`code-export ruby-rspec hooks inEachEnd 2`] = `"@eyes.close(false)"`;
 
-exports[`code-export ruby-rspec hooks variable 1`] = `""`;
+exports[`code-export ruby-rspec hooks variable 1`] = `undefined`;
 
-exports[`code-export ruby-rspec hooks variable 2`] = `""`;
+exports[`code-export ruby-rspec hooks variable 2`] = `undefined`;
