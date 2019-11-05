@@ -35,6 +35,19 @@ import manifest from '../manifest.json'
 import pluginManifest from './plugin-manifest.json'
 import { incompleteVisualGridSettings } from './modal-settings'
 import { parseBrowsers, isExperimentalBrowser } from './utils/parsers'
+import {
+  emitCheckWindow,
+  emitCheckElement,
+  emitSetMatchLevel,
+  emitSetMatchTimeout,
+  emitSetPreRenderHook,
+  emitSetViewportSize,
+  emitAfterEach,
+  emitBeforeEach,
+  emitDependency,
+  emitInEachEnd,
+  emitVariable,
+} from './utils/code-export'
 
 startPolling(pluginManifest, err => {
   if (err) {
@@ -497,11 +510,7 @@ browser.runtime.onMessageExternal.addListener(
         } else if (command === CommandIds.CheckWindow) {
           switch (message.language) {
             case 'java-junit': {
-              return sendResponse(
-                target
-                  ? `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook).withName("${target}"));`
-                  : `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));`
-              )
+              return sendResponse(emitCheckWindow(message.language, target))
             }
             case 'python-pytest': {
               return sendResponse(
@@ -538,9 +547,7 @@ browser.runtime.onMessageExternal.addListener(
               })
                 .then(locator => {
                   sendResponse(
-                    value
-                      ? `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook).withName("${value}"));`
-                      : `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook));`
+                    emitCheckElement(message.language, locator, value)
                   )
                 })
                 .catch(console.error) // eslint-disable-line no-console
@@ -616,7 +623,7 @@ browser.runtime.onMessageExternal.addListener(
             case 'java-junit': {
               const { width, height } = parseViewport(target)
               return sendResponse(
-                `Eyes.setViewportSize(driver, new RectangleSize(${width}, ${height}));`
+                emitSetViewportSize(message.language, width, height)
               )
             }
             case 'python-pytest': {
@@ -638,9 +645,7 @@ browser.runtime.onMessageExternal.addListener(
         } else if (command === CommandIds.SetMatchLevel) {
           switch (message.language) {
             case 'java-junit': {
-              return sendResponse(
-                `eyes.setMatchLevel("${parseMatchLevel(target)}");`
-              )
+              return sendResponse(emitSetMatchLevel(message.language, target))
             }
             case 'python-pytest': {
               return sendResponse(
@@ -661,7 +666,7 @@ browser.runtime.onMessageExternal.addListener(
         } else if (command === CommandIds.SetMatchTimeout) {
           switch (message.language) {
             case 'java-junit': {
-              return sendResponse(`eyes.setMatchTimeout(${target});`)
+              return sendResponse(emitSetMatchTimeout(message.language, target))
             }
             case 'python-pytest': {
               return sendResponse(`self.eyes.match_timeout(${target})`)
@@ -677,12 +682,13 @@ browser.runtime.onMessageExternal.addListener(
           switch (message.language) {
             case 'java-junit': {
               getExtensionSettings().then(settings => {
-                let result = ''
-                if (settings.projectSettings.enableVisualGrid)
-                  result += target
-                    ? `preRenderHook = "${target}";`
-                    : `preRenderHook = "";`
-                return sendResponse(result)
+                const isVisualGridEnabled =
+                  settings.projectSettings.enableVisualGrid
+                return sendResponse(
+                  emitSetPreRenderHook(message.language, target, {
+                    isVisualGridEnabled,
+                  })
+                )
               })
               return true
             }
@@ -735,12 +741,11 @@ browser.runtime.onMessageExternal.addListener(
             switch (message.language) {
               case 'java-junit': {
                 getExtensionSettings().then(settings => {
-                  let result = ''
-                  if (settings.projectSettings.enableVisualGrid) {
-                    result += `runner.getAllTestResults();\n`
-                  }
-                  result += `eyes.abortIfNotClosed();`
-                  return sendResponse(result)
+                  const isVisualGridEnabled =
+                    settings.projectSettings.enableVisualGrid
+                  return sendResponse(
+                    emitAfterEach(message.language, { isVisualGridEnabled })
+                  )
                 })
                 return true
               }
@@ -784,8 +789,6 @@ browser.runtime.onMessageExternal.addListener(
           case 'beforeEach': {
             switch (message.language) {
               case 'java-junit': {
-                let result = ''
-                result = 'preRenderHook = "";\n'
                 const commands = message.options.tests
                   ? message.options.tests.reduce(
                       (_commands, test) => [...test.commands],
@@ -795,53 +798,28 @@ browser.runtime.onMessageExternal.addListener(
                 const baselineEnvNameCommand = commands.find(
                   command => command.command === CommandIds.SetBaselineEnvName
                 )
+                const baselineEnvName = baselineEnvNameCommand
+                  ? baselineEnvNameCommand.target
+                  : undefined
                 getExtensionSettings().then(settings => {
+                  let visualGridOptions
                   if (settings.projectSettings.enableVisualGrid) {
-                    result += `runner = new VisualGridRunner(concurrency);\neyes = new Eyes(runner);\nConfiguration config = eyes.getConfiguration();`
-                    result += `\neyes = new Eyes(runner);`
-                    const _browsers = parseBrowsers(
+                    const browsers = parseBrowsers(
                       settings.projectSettings.selectedBrowsers,
                       settings.projectSettings.selectedViewportSizes,
                       settings.projectSettings.selectedDevices,
                       settings.projectSettings.selectedDeviceOrientations
                     )
-                    let browsers = [..._browsers.matrix]
-                    if (!settings.experimentalEnabled) {
-                      browsers = browsers.filter(
-                        b => !isExperimentalBrowser(b.name)
-                      )
-                    }
-                    let isExperimentalBrowserWarningDisplayed = false
-                    browsers.forEach(browser => {
-                      if (browser.deviceName) {
-                        result += `\nconfig.addDeviceEmulation(DeviceName.${
-                          browser.deviceId
-                        }, ScreenOrientation.${browser.screenOrientation.toUpperCase()});`
-                      } else if (
-                        settings.experimentalEnabled &&
-                        isExperimentalBrowser(browser.name) &&
-                        _browsers.didRemoveResolution &&
-                        !isExperimentalBrowserWarningDisplayed
-                      ) {
-                        result += `\n// ${experimentalBrowserWarningMessage}`
-                        isExperimentalBrowserWarningDisplayed = true
-                      } else {
-                        const browserId = browser.id
-                          ? browser.id
-                          : browser.name.toUpperCase()
-                        result += `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browserId});`
-                      }
-                    })
-                    result += `\neyes.setConfiguration(config);`
-                  } else {
-                    result += `eyes = new Eyes();`
+                    visualGridOptions = [...browsers.matrix]
                   }
-                  result += `\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
-                  if (baselineEnvNameCommand) {
-                    result += `\neyes.setBaseLineEnvName("${baselineEnvNameCommand.target}");`
-                  }
-                  result += `\neyes.open(driver, "${message.options.project.name}", "${message.options.name}");`
-                  return sendResponse(result)
+                  return sendResponse(
+                    emitBeforeEach(
+                      message.language,
+                      message.options.project.name,
+                      message.options.name,
+                      { baselineEnvName, visualGridOptions }
+                    )
+                  )
                 })
                 return true
               }
@@ -1058,13 +1036,12 @@ browser.runtime.onMessageExternal.addListener(
           case 'dependency': {
             switch (message.language) {
               case 'java-junit': {
-                let result = `\nimport com.applitools.eyes.selenium.Eyes;\nimport com.applitools.eyes.RectangleSize;`
                 getExtensionSettings().then(settings => {
-                  if (settings.projectSettings.enableVisualGrid) {
-                    result += `\nimport com.applitools.eyes.selenium.BrowserType;\nimport com.applitools.eyes.selenium.Configuration;
-\nimport com.applitools.eyes.visualgrid.model.DeviceName;\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;\nimport com.applitools.eyes.selenium.fluent.Target;`
-                  }
-                  return sendResponse(result)
+                  const isVisualGridEnabled =
+                    settings.projectSettings.enableVisualGrid
+                  return sendResponse(
+                    emitDependency(message.language, { isVisualGridEnabled })
+                  )
                 })
                 return true
               }
@@ -1098,11 +1075,11 @@ browser.runtime.onMessageExternal.addListener(
             switch (message.language) {
               case 'java-junit': {
                 getExtensionSettings().then(settings => {
-                  if (!settings.projectSettings.enableVisualGrid) {
-                    return sendResponse(`eyes.close();`)
-                  } else {
-                    return sendResponse(undefined)
-                  }
+                  const isVisualGridEnabled =
+                    settings.projectSettings.enableVisualGrid
+                  return sendResponse(
+                    emitInEachEnd(message.language, { isVisualGridEnabled })
+                  )
                 })
                 return true
               }
@@ -1135,12 +1112,12 @@ browser.runtime.onMessageExternal.addListener(
           case 'variable': {
             switch (message.language) {
               case 'java-junit': {
-                let result = `private Eyes eyes;`
                 getExtensionSettings().then(settings => {
-                  if (settings.projectSettings.enableVisualGrid) {
-                    result += `\nprivate VisualGridRunner runner;\nfinal int concurrency = 5;\nprivate String preRenderHook;`
-                  }
-                  return sendResponse(result)
+                  const isVisualGridEnabled =
+                    settings.projectSettings.enableVisualGrid
+                  return sendResponse(
+                    emitVariable(message.language, { isVisualGridEnabled })
+                  )
                 })
                 return true
               }
