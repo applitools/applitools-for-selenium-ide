@@ -1,40 +1,82 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`code-export csharp-nunit commands checkElement 1`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).WithName(\\"blah\\").ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-nunit commands checkElement 1`] = `undefined`;
 
-exports[`code-export csharp-nunit commands checkElement 2`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-nunit commands checkElement 2`] = `undefined`;
 
-exports[`code-export csharp-nunit commands checkWindow 1`] = `"eyes.Check(Target.Window().Fully().WithName(\\"blah\\").ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-nunit commands checkWindow 1`] = `undefined`;
 
-exports[`code-export csharp-nunit commands checkWindow 2`] = `"eyes.Check(Target.Window().Fully().ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-nunit commands checkWindow 2`] = `undefined`;
 
-exports[`code-export csharp-nunit commands setMatchLevel 1`] = `""`;
+exports[`code-export csharp-nunit commands setMatchLevel 1`] = `undefined`;
 
-exports[`code-export csharp-nunit commands setMatchTimeout 1`] = `""`;
+exports[`code-export csharp-nunit commands setMatchTimeout 1`] = `undefined`;
 
-exports[`code-export csharp-nunit commands setPreRenderHook 1`] = `"preRenderHook = \\"console.log(\\"blah\\");\\";"`;
+exports[`code-export csharp-nunit commands setPreRenderHook 1`] = `undefined`;
 
-exports[`code-export csharp-nunit commands setPreRenderHook 2`] = `""`;
+exports[`code-export csharp-nunit commands setPreRenderHook 2`] = `undefined`;
 
-exports[`code-export csharp-nunit commands setViewportSize 1`] = `""`;
+exports[`code-export csharp-nunit commands setViewportSize 1`] = `undefined`;
 
-exports[`code-export csharp-nunit hooks afterEach 1`] = `
+exports[`code-export csharp-nunit hooks afterEach 1`] = `""`;
+
+exports[`code-export csharp-nunit hooks afterEach 2`] = `""`;
+
+exports[`code-export csharp-nunit hooks beforeEach 1`] = `""`;
+
+exports[`code-export csharp-nunit hooks beforeEach 2`] = `""`;
+
+exports[`code-export csharp-nunit hooks beforeEach 3`] = `""`;
+
+exports[`code-export csharp-nunit hooks beforeEach 4`] = `""`;
+
+exports[`code-export csharp-nunit hooks dependency 1`] = `""`;
+
+exports[`code-export csharp-nunit hooks dependency 2`] = `""`;
+
+exports[`code-export csharp-nunit hooks inEachEnd 1`] = `undefined`;
+
+exports[`code-export csharp-nunit hooks inEachEnd 2`] = `undefined`;
+
+exports[`code-export csharp-nunit hooks variable 1`] = `undefined`;
+
+exports[`code-export csharp-nunit hooks variable 2`] = `undefined`;
+
+exports[`code-export csharp-xunit commands checkElement 1`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).WithName(\\"blah\\").ScriptHook(preRenderHook));"`;
+
+exports[`code-export csharp-xunit commands checkElement 2`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).ScriptHook(preRenderHook));"`;
+
+exports[`code-export csharp-xunit commands checkWindow 1`] = `"eyes.Check(Target.Window().Fully().WithName(\\"blah\\").ScriptHook(preRenderHook));"`;
+
+exports[`code-export csharp-xunit commands checkWindow 2`] = `"eyes.Check(Target.Window().Fully().ScriptHook(preRenderHook));"`;
+
+exports[`code-export csharp-xunit commands setMatchLevel 1`] = `""`;
+
+exports[`code-export csharp-xunit commands setMatchTimeout 1`] = `""`;
+
+exports[`code-export csharp-xunit commands setPreRenderHook 1`] = `"preRenderHook = \\"console.log(\\"blah\\");\\";"`;
+
+exports[`code-export csharp-xunit commands setPreRenderHook 2`] = `""`;
+
+exports[`code-export csharp-xunit commands setViewportSize 1`] = `""`;
+
+exports[`code-export csharp-xunit hooks afterEach 1`] = `
 "eyes.CloseAsync();
 TestResultsSummary allTestResults = runner.GetAllTestResults();
 System.Console.WriteLine(allTestResults);"
 `;
 
-exports[`code-export csharp-nunit hooks afterEach 2`] = `
+exports[`code-export csharp-xunit hooks afterEach 2`] = `
 "eyes.AbortIfNotClosed();
 TestResultsSummary allTestResults = runner.GetAllTestResults();
 System.Console.WriteLine(allTestResults);"
 `;
 
-exports[`code-export csharp-nunit hooks beforeEach 1`] = `"eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"`;
+exports[`code-export csharp-xunit hooks beforeEach 1`] = `"eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"`;
 
-exports[`code-export csharp-nunit hooks beforeEach 2`] = `"eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"`;
+exports[`code-export csharp-xunit hooks beforeEach 2`] = `"eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"`;
 
-exports[`code-export csharp-nunit hooks beforeEach 3`] = `
+exports[`code-export csharp-xunit hooks beforeEach 3`] = `
 "runner = new VisualGridRunner(10);
 eyes = new Eyes(runner);
 Configuration conf = new Configuration();
@@ -45,7 +87,7 @@ eyes.SetConfiguration(conf);
 eyes.Open(driver);"
 `;
 
-exports[`code-export csharp-nunit hooks beforeEach 4`] = `
+exports[`code-export csharp-xunit hooks beforeEach 4`] = `
 "runner = new VisualGridRunner(10);
 eyes = new Eyes(runner);
 Configuration conf = new Configuration();
@@ -56,7 +98,7 @@ eyes.SetConfiguration(conf);
 eyes.Open(driver);"
 `;
 
-exports[`code-export csharp-nunit hooks dependency 1`] = `
+exports[`code-export csharp-xunit hooks dependency 1`] = `
 "using Applitools;
 using Applitools.Selenium;
 using Applitools.VisualGrid;
@@ -65,7 +107,7 @@ using Configuration = Applitools.Selenium.Configuration;
 using ScreenOrientation = Applitools.VisualGrid.ScreenOrientation;"
 `;
 
-exports[`code-export csharp-nunit hooks dependency 2`] = `
+exports[`code-export csharp-xunit hooks dependency 2`] = `
 "using Applitools;
 using Applitools.Selenium;
 using Applitools.VisualGrid;
@@ -74,17 +116,17 @@ using Configuration = Applitools.Selenium.Configuration;
 using ScreenOrientation = Applitools.VisualGrid.ScreenOrientation;"
 `;
 
-exports[`code-export csharp-nunit hooks inEachEnd 1`] = `"eyes.CloseAsync();"`;
+exports[`code-export csharp-xunit hooks inEachEnd 1`] = `"eyes.CloseAsync();"`;
 
-exports[`code-export csharp-nunit hooks inEachEnd 2`] = `undefined`;
+exports[`code-export csharp-xunit hooks inEachEnd 2`] = `undefined`;
 
-exports[`code-export csharp-nunit hooks variable 1`] = `
+exports[`code-export csharp-xunit hooks variable 1`] = `
 "Eyes eyes;
 string preRenderHook;
 VisualGridRunner runner;"
 `;
 
-exports[`code-export csharp-nunit hooks variable 2`] = `
+exports[`code-export csharp-xunit hooks variable 2`] = `
 "Eyes eyes;
 string preRenderHook;"
 `;

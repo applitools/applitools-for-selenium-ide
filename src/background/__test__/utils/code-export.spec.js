@@ -13,7 +13,6 @@ import {
 } from '../../../background/utils/code-export'
 
 // TODO: a11y
-// NOTE: baselineEnvName is used in setup, it does not have its own emitter
 describe('code-export', () => {
   const languages = [
     'java-junit',
@@ -21,7 +20,7 @@ describe('code-export', () => {
     'python-pytest',
     'ruby-rspec',
     'csharp-nunit',
-    //'csharp-xunit',
+    'csharp-xunit',
   ]
   languages.forEach(language => {
     describe(language, () => {
