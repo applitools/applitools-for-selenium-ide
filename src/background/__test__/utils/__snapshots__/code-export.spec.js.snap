@@ -42,13 +42,13 @@ exports[`code-export csharp-nunit hooks variable 1`] = `undefined`;
 
 exports[`code-export csharp-nunit hooks variable 2`] = `undefined`;
 
-exports[`code-export csharp-xunit commands checkElement 1`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).WithName(\\"blah\\").ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-xunit commands checkElement 1`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).WithName(\\"blah\\").BeforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export csharp-xunit commands checkElement 2`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-xunit commands checkElement 2`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).BeforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export csharp-xunit commands checkWindow 1`] = `"eyes.Check(Target.Window().Fully().WithName(\\"blah\\").ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-xunit commands checkWindow 1`] = `"eyes.Check(Target.Window().Fully().WithName(\\"blah\\").BeforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export csharp-xunit commands checkWindow 2`] = `"eyes.Check(Target.Window().Fully().ScriptHook(preRenderHook));"`;
+exports[`code-export csharp-xunit commands checkWindow 2`] = `"eyes.Check(Target.Window().Fully().BeforeRenderScreenshotHook(preRenderHook));"`;
 
 exports[`code-export csharp-xunit commands setMatchLevel 1`] = `""`;
 
@@ -72,9 +72,15 @@ TestResultsSummary allTestResults = runner.GetAllTestResults();
 System.Console.WriteLine(allTestResults);"
 `;
 
-exports[`code-export csharp-xunit hooks beforeEach 1`] = `"eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"`;
+exports[`code-export csharp-xunit hooks beforeEach 1`] = `
+"eyes = new Eyes();
+eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"
+`;
 
-exports[`code-export csharp-xunit hooks beforeEach 2`] = `"eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"`;
+exports[`code-export csharp-xunit hooks beforeEach 2`] = `
+"eyes = new Eyes();
+eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"
+`;
 
 exports[`code-export csharp-xunit hooks beforeEach 3`] = `
 "runner = new VisualGridRunner(10);

@@ -24,9 +24,9 @@ export function emitCheckWindow(language, stepName) {
         return `@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))`
     case ('csharp-nunit', 'csharp-xunit'):
       if (stepName)
-        return `eyes.Check(Target.Window().Fully().WithName("${stepName}").ScriptHook(preRenderHook));`
+        return `eyes.Check(Target.Window().Fully().WithName("${stepName}").BeforeRenderScreenshotHook(preRenderHook));`
       else
-        return `eyes.Check(Target.Window().Fully().ScriptHook(preRenderHook));`
+        return `eyes.Check(Target.Window().Fully().BeforeRenderScreenshotHook(preRenderHook));`
   }
 }
 
@@ -54,9 +54,9 @@ export function emitCheckElement(language, locator, stepName) {
         return `@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.region(${locator}).script_hook(@pre_render_hook))`
     case ('csharp-nunit', 'csharp-xunit'):
       if (stepName)
-        return `eyes.Check(Target.Region(${locator}).WithName("${stepName}").ScriptHook(preRenderHook));`
+        return `eyes.Check(Target.Region(${locator}).WithName("${stepName}").BeforeRenderScreenshotHook(preRenderHook));`
       else
-        return `eyes.Check(Target.Region(${locator}).ScriptHook(preRenderHook));`
+        return `eyes.Check(Target.Region(${locator}).BeforeRenderScreenshotHook(preRenderHook));`
   }
 }
 
@@ -330,7 +330,8 @@ export function emitBeforeEach(
         result += `\neyes.SetConfiguration(conf);`
         result += `\neyes.Open(driver);`
       } else {
-        result += `eyes.Open(driver, "${projectName}", "${testName}", new Size(${
+        result += `eyes = new Eyes();`
+        result += `\neyes.Open(driver, "${projectName}", "${testName}", new Size(${
           viewportSize[0]
         }, ${viewportSize[1]}));`
       }
