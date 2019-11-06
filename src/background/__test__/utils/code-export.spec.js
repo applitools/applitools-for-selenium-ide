@@ -20,7 +20,7 @@ describe('code-export', () => {
     'javascript-mocha',
     'python-pytest',
     'ruby-rspec',
-    //'csharp-nunit',
+    'csharp-nunit',
     //'csharp-xunit',
   ]
   languages.forEach(language => {
