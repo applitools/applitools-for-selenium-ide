@@ -51,7 +51,7 @@ exports[`code-export java-junit hooks beforeEach 4`] = `
 "runner = new VisualGridRunner(concurrency);
 eyes = new Eyes(runner);
 Configuration config = eyes.getConfiguration();
-config.addBrowser(100, 100, BrowserType.chrome);
+config.addBrowser(100, 100, BrowserType.CHROME);
 eyes.setConfiguration(config);
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 `;

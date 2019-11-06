@@ -138,6 +138,28 @@ export function emitAfterEach(language, { isVisualGridEnabled } = {}) {
   return result
 }
 
+function emitVisualGridOptions(
+  visualGridOptions,
+  { deviceEmitter, browserEmitter } = {}
+) {
+  let result
+  visualGridOptions.forEach(browser => {
+    result = ''
+    if (browser.deviceName)
+      result += deviceEmitter(
+        browser.deviceId,
+        browser.screenOrientation.toUpperCase()
+      )
+    else {
+      browser.type = browser.id
+        ? browser.id.toUpperCase()
+        : browser.name.toUpperCase()
+      result += browserEmitter(browser)
+    }
+  })
+  return result
+}
+
 export function emitBeforeEach(
   language,
   projectName,
@@ -150,17 +172,15 @@ export function emitBeforeEach(
       if (visualGridOptions) {
         result += `runner = new VisualGridRunner(concurrency);\neyes = new Eyes(runner);\n`
         result += `Configuration config = eyes.getConfiguration();`
-        visualGridOptions.forEach(browser => {
-          if (browser.deviceName) {
-            result += `\nconfig.addDeviceEmulation(DeviceName.${
-              browser.deviceId
-            }, ScreenOrientation.${browser.screenOrientation.toUpperCase()});`
-          } else {
-            const browserId = browser.id
-              ? browser.id
-              : browser.name.toUpperCase()
-            result += `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browserId});`
-          }
+        const deviceEmitter = (deviceId, orientation) => {
+          return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation});`
+        }
+        const browserEmitter = browser => {
+          return `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browser.type});`
+        }
+        result += emitVisualGridOptions(visualGridOptions, {
+          deviceEmitter,
+          browserEmitter,
         })
         result += `\neyes.setConfiguration(config);`
       } else {
@@ -176,18 +196,15 @@ export function emitBeforeEach(
         result += `eyes = new Eyes(new VisualGridRunner())\n`
         result += `const config = new Configuration()\n`
         result += 'config.setConcurrentSessions(10)'
-        visualGridOptions.forEach(browser => {
-          if (browser.deviceName) {
-            result += `\nconfig.addDeviceEmulation(DeviceName.${
-              browser.deviceId
-            }, ScreenOrientation.${browser.screenOrientation.toUpperCase()})`
-          } else {
-            result += `\nconfig.addBrowser(${browser.width}, ${
-              browser.height
-            }, BrowserType.${
-              browser.id ? browser.id.toUpperCase() : browser.name.toUpperCase()
-            })`
-          }
+        const deviceEmitter = (deviceId, orientation) => {
+          return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation})`
+        }
+        const browserEmitter = browser => {
+          return `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browser.type})`
+        }
+        result += emitVisualGridOptions(visualGridOptions, {
+          deviceEmitter,
+          browserEmitter,
         })
         result += `\neyes.setConfiguration(config)`
       } else {
@@ -204,18 +221,15 @@ export function emitBeforeEach(
         result += `self.vg_runner = VisualGridRunner(concurrency)\n`
         result += `self.eyes = Eyes(self.vg_runner)\n`
         result += `config = Configuration()`
-        visualGridOptions.forEach(browser => {
-          if (browser.deviceName) {
-            result += `\nconfig.add_device_emulation(DeviceName.${
-              browser.deviceId
-            }, ScreenOrientation.${browser.screenOrientation.toUpperCase()})`
-          } else {
-            result += `\nconfig.add_browser(${browser.width}, ${
-              browser.height
-            }, BrowserType.${
-              browser.id ? browser.id.toUpperCase() : browser.name.toUpperCase()
-            })`
-          }
+        const deviceEmitter = (deviceId, orientation) => {
+          return `\nconfig.add_device_emulation(DeviceName.${deviceId}, ScreenOrientation.${orientation})`
+        }
+        const browserEmitter = browser => {
+          return `\nconfig.add_browser(${browser.width}, ${browser.height}, BrowserType.${browser.type})`
+        }
+        result += emitVisualGridOptions(visualGridOptions, {
+          deviceEmitter,
+          browserEmitter,
         })
         result += `\nself.eyes.configuration = config`
       } else {
@@ -238,22 +252,19 @@ export function emitBeforeEach(
         result += `  c.viewport_size = Applitools::RectangleSize.for('${viewportSize}')`
         if (baselineEnvName)
           result += `\n  c.baseline_env_name = '${baselineEnvName}'`
-        visualGridOptions.forEach(browser => {
-          if (browser.deviceName) {
-            let deviceName = browser.deviceId.replace(/_/g, '')
-            result += `\n  c.add_device_emulation(Devices::${deviceName
-              .charAt(0)
-              .toUpperCase() +
-              deviceName.substring(
-                1
-              )}, Orientations::${browser.screenOrientation.toUpperCase()})`
-          } else {
-            result += `\n  c.add_browser(${browser.width}, ${
-              browser.height
-            }, BrowserTypes::${
-              browser.id ? browser.id.toUpperCase() : browser.name.toUpperCase()
-            })`
-          }
+        const deviceEmitter = (deviceId, orientation) => {
+          const deviceName = deviceId.replace(/_/g, '')
+          return `\n  c.add_device_emulation(Devices::${deviceName
+            .charAt(0)
+            .toUpperCase() +
+            deviceName.substring(1)}, Orientations::${orientation})`
+        }
+        const browserEmitter = browser => {
+          return `\n  c.add_browser(${browser.width}, ${browser.height}, BrowserTypes::${browser.type})`
+        }
+        result += emitVisualGridOptions(visualGridOptions, {
+          deviceEmitter,
+          browserEmitter,
         })
         result += `\nend`
         result += `\n@eyes.config = config`
