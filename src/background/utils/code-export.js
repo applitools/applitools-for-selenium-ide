@@ -22,7 +22,8 @@ export function emitCheckWindow(language, stepName) {
         return `@eyes.check("${stepName}", Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))`
       else
         return `@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))`
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       if (stepName)
         return `eyes.Check(Target.Window().Fully().WithName("${stepName}").BeforeRenderScreenshotHook(preRenderHook));`
       else
@@ -52,7 +53,8 @@ export function emitCheckElement(language, locator, stepName) {
         return `@eyes.check("${stepName}", Applitools::Selenium::Target.region(${locator}).script_hook(@pre_render_hook))`
       else
         return `@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.region(${locator}).script_hook(@pre_render_hook))`
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       if (stepName)
         return `eyes.Check(Target.Region(${locator}).WithName("${stepName}").BeforeRenderScreenshotHook(preRenderHook));`
       else
@@ -70,7 +72,8 @@ export function emitSetMatchLevel(language, level) {
       return `self.eyes.match_level("${level}")`
     case 'ruby-rspec':
       return `@eyes.match_level("${level}")`
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       return '' // TODO -- needs to be set in beforeEach config object
   }
 }
@@ -85,7 +88,8 @@ export function emitSetMatchTimeout(language, timeout) {
       return `self.eyes.match_timeout(${timeout})`
     case 'ruby-rspec':
       return `@eyes.match_timeout(${timeout})`
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       return '' // TODO -- needs to be set in beforeEach config object
   }
 }
@@ -108,7 +112,8 @@ export function emitSetPreRenderHook(
     case 'ruby-rspec':
       if (isVisualGridEnabled) return `preRenderHook = '${jsSnippet}'`
       else return `preRenderHook = ''`
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       if (isVisualGridEnabled) return `preRenderHook = "${jsSnippet}";`
       else return ''
   }
@@ -124,7 +129,8 @@ export function emitSetViewportSize(language, width, height) {
       return `self.eyes.viewport_size = {'width': ${width}, 'height': ${height}}`
     case 'ruby-rspec':
       return '' // handled in beforeEach
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       return '' // handled in beforeEach
   }
 }
@@ -153,7 +159,8 @@ export function emitAfterEach(language, { isVisualGridEnabled } = {}) {
         result += `@visual_grid_runner.get_all_test_results`
       else result += `@eyes.abort_if_not_closed`
       break
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       if (isVisualGridEnabled) {
         result += `TestResultsSummary allTestResults = runner.GetAllTestResults();`
         result += `\nSystem.Console.WriteLine(allTestResults);`
@@ -308,7 +315,8 @@ export function emitBeforeEach(
         result += `\n@eyes.open(driver: @driver, app_name: '${projectName}', test_name: '${testName}', viewport_size: '${viewportSize}')`
       }
       break
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       // TODO:
       // - set matchLevel
       viewportSize = viewportSize ? viewportSize.split('x') : ['1024', '768']
@@ -377,7 +385,8 @@ export function emitDependency(language, { isVisualGridEnabled } = {}) {
     case 'ruby-rspec':
       result += `require 'eyes_selenium'`
       break
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       result += `using Applitools;\n`
       result += `using Applitools.Selenium;\n`
       result += `using Applitools.VisualGrid;\n`
@@ -402,7 +411,8 @@ export function emitInEachEnd(language, { isVisualGridEnabled } = {}) {
       else return `self.eyes.close()`
     case 'ruby-rspec':
       return `@eyes.close(false)`
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       if (isVisualGridEnabled) return undefined
       else return `eyes.CloseAsync();`
   }
@@ -423,7 +433,8 @@ export function emitVariable(language, { isVisualGridEnabled } = {}) {
       return `let eyes\nlet preRenderHook`
     case ('python-pytest', 'ruby-rspec'):
       return undefined
-    case ('csharp-nunit', 'csharp-xunit'):
+    case 'csharp-nunit':
+    case 'csharp-xunit':
       result = `Eyes eyes;`
       result += `\nstring preRenderHook;`
       if (isVisualGridEnabled) result += `\nVisualGridRunner runner;`
