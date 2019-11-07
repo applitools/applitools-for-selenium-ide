@@ -155,12 +155,11 @@ export function emitAfterEach(language, { isVisualGridEnabled } = {}) {
       break
     case ('csharp-nunit', 'csharp-xunit'):
       if (isVisualGridEnabled) {
-        result += `eyes.CloseAsync();`
+        result += `TestResultsSummary allTestResults = runner.GetAllTestResults();`
+        result += `\nSystem.Console.WriteLine(allTestResults);`
       } else {
         result += `eyes.AbortIfNotClosed();`
       }
-      result += `\nTestResultsSummary allTestResults = runner.GetAllTestResults();`
-      result += `\nSystem.Console.WriteLine(allTestResults);`
       break
   }
   return result
@@ -173,14 +172,9 @@ function emitVisualGridOptions(
   let result = ''
   visualGridOptions.forEach(browser => {
     if (browser.deviceName)
-      result += deviceEmitter(
-        browser.deviceId,
-        browser.screenOrientation.toUpperCase()
-      )
+      result += deviceEmitter(browser.deviceId, browser.screenOrientation)
     else {
-      browser.type = browser.id
-        ? browser.id.toUpperCase()
-        : browser.name.toUpperCase()
+      browser.type = browser.id ? browser.id : browser.name
       result += browserEmitter(browser)
     }
   })
@@ -200,10 +194,12 @@ export function emitBeforeEach(
         result += `runner = new VisualGridRunner(concurrency);\neyes = new Eyes(runner);\n`
         result += `Configuration config = eyes.getConfiguration();`
         const deviceEmitter = (deviceId, orientation) => {
-          return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation});`
+          return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation.toUpperCase()});`
         }
         const browserEmitter = browser => {
-          return `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browser.type});`
+          return `\nconfig.addBrowser(${browser.width}, ${
+            browser.height
+          }, BrowserType.${browser.type.toUpperCase()});`
         }
         result += emitVisualGridOptions(visualGridOptions, {
           deviceEmitter,
@@ -224,10 +220,12 @@ export function emitBeforeEach(
         result += `const config = new Configuration()\n`
         result += 'config.setConcurrentSessions(10)'
         const deviceEmitter = (deviceId, orientation) => {
-          return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation})`
+          return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation.toUpperCase()})`
         }
         const browserEmitter = browser => {
-          return `\nconfig.addBrowser(${browser.width}, ${browser.height}, BrowserType.${browser.type})`
+          return `\nconfig.addBrowser(${browser.width}, ${
+            browser.height
+          }, BrowserType.${browser.type.toUpperCase()})`
         }
         result += emitVisualGridOptions(visualGridOptions, {
           deviceEmitter,
@@ -249,10 +247,12 @@ export function emitBeforeEach(
         result += `self.eyes = Eyes(self.vg_runner)\n`
         result += `config = Configuration()`
         const deviceEmitter = (deviceId, orientation) => {
-          return `\nconfig.add_device_emulation(DeviceName.${deviceId}, ScreenOrientation.${orientation})`
+          return `\nconfig.add_device_emulation(DeviceName.${deviceId}, ScreenOrientation.${orientation.toUpperCase()})`
         }
         const browserEmitter = browser => {
-          return `\nconfig.add_browser(${browser.width}, ${browser.height}, BrowserType.${browser.type})`
+          return `\nconfig.add_browser(${browser.width}, ${
+            browser.height
+          }, BrowserType.${browser.type.toUpperCase()})`
         }
         result += emitVisualGridOptions(visualGridOptions, {
           deviceEmitter,
@@ -284,10 +284,14 @@ export function emitBeforeEach(
           return `\n  c.add_device_emulation(Devices::${deviceName
             .charAt(0)
             .toUpperCase() +
-            deviceName.substring(1)}, Orientations::${orientation})`
+            deviceName.substring(
+              1
+            )}, Orientations::${orientation.toUpperCase()})`
         }
         const browserEmitter = browser => {
-          return `\n  c.add_browser(${browser.width}, ${browser.height}, BrowserTypes::${browser.type})`
+          return `\n  c.add_browser(${browser.width}, ${
+            browser.height
+          }, BrowserTypes::${browser.type.toUpperCase()})`
         }
         result += emitVisualGridOptions(visualGridOptions, {
           deviceEmitter,
@@ -305,36 +309,37 @@ export function emitBeforeEach(
       }
       break
     case ('csharp-nunit', 'csharp-xunit'):
-      // TODO: in both w/ & w/o VG
-      // - set baselineEnvName
+      // TODO:
       // - set matchLevel
       viewportSize = viewportSize ? viewportSize.split('x') : ['1024', '768']
+      result += `\nConfiguration conf = new Configuration();`
+      result += `\nconf.SetTestName("${testName}");`
+      result += `\nconf.SetAppName("${projectName}");`
+      result += `\nconf.SetViewportSize(new Size(${viewportSize[0]}, ${
+        viewportSize[1]
+      }));`
+      if (baselineEnvName)
+        result += `\nconf.SetBaselineEnvName("${baselineEnvName}");`
       if (visualGridOptions) {
-        result += `runner = new VisualGridRunner(10);`
-        result += `\neyes = new Eyes(runner);`
-        result += `\nConfiguration conf = new Configuration();`
-        result += `\nconf.SetTestName("${testName}");`
-        result += `\nconf.SetAppName("${projectName}");`
-        if (baselineEnvName)
-          result += `\nconf.setBaselineEnvName("${baselineEnvName}");`
         const deviceEmitter = (deviceId, orientation) => {
-          return `\nconf.AddDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation});`
+          return `\nconf.AddDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation
+            .charAt(0)
+            .toUpperCase() + orientation.substring(1)});`
         }
         const browserEmitter = browser => {
-          return `\nconf.AddBrowser(${browser.width}, ${browser.height}, BrowserType.${browser.type});`
+          return `\nconf.AddBrowser(${browser.width}, ${
+            browser.height
+          }, BrowserType.${browser.type.toUpperCase()});`
         }
         result += emitVisualGridOptions(visualGridOptions, {
           deviceEmitter,
           browserEmitter,
         })
-        result += `\neyes.SetConfiguration(conf);`
-        result += `\neyes.Open(driver);`
-      } else {
-        result += `eyes = new Eyes();`
-        result += `\neyes.Open(driver, "${projectName}", "${testName}", new Size(${
-          viewportSize[0]
-        }, ${viewportSize[1]}));`
-      }
+        result += `\nrunner = new VisualGridRunner(10);`
+        result += `\neyes = new Eyes(runner);`
+      } else result += `\neyes = new Eyes();`
+      result += `\neyes.SetConfiguration(conf);`
+      result += `\neyes.Open(driver);`
       break
   }
   return result

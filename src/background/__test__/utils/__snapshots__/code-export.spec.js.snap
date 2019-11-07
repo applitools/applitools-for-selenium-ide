@@ -61,45 +61,57 @@ exports[`code-export csharp-xunit commands setPreRenderHook 2`] = `""`;
 exports[`code-export csharp-xunit commands setViewportSize 1`] = `""`;
 
 exports[`code-export csharp-xunit hooks afterEach 1`] = `
-"eyes.CloseAsync();
-TestResultsSummary allTestResults = runner.GetAllTestResults();
+"TestResultsSummary allTestResults = runner.GetAllTestResults();
 System.Console.WriteLine(allTestResults);"
 `;
 
-exports[`code-export csharp-xunit hooks afterEach 2`] = `
-"eyes.AbortIfNotClosed();
-TestResultsSummary allTestResults = runner.GetAllTestResults();
-System.Console.WriteLine(allTestResults);"
-`;
+exports[`code-export csharp-xunit hooks afterEach 2`] = `"eyes.AbortIfNotClosed();"`;
 
 exports[`code-export csharp-xunit hooks beforeEach 1`] = `
-"eyes = new Eyes();
-eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"
-`;
-
-exports[`code-export csharp-xunit hooks beforeEach 2`] = `
-"eyes = new Eyes();
-eyes.Open(driver, \\"project blah\\", \\"test blah\\", new Size(1024, 768));"
-`;
-
-exports[`code-export csharp-xunit hooks beforeEach 3`] = `
-"runner = new VisualGridRunner(10);
-eyes = new Eyes(runner);
+"
 Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
-conf.AddDeviceEmulation(DeviceName.IPAD, ScreenOrientation.PORTRAIT);
+conf.SetViewportSize(new Size(1024, 768));
+eyes = new Eyes();
+eyes.SetConfiguration(conf);
+eyes.Open(driver);"
+`;
+
+exports[`code-export csharp-xunit hooks beforeEach 2`] = `
+"
+Configuration conf = new Configuration();
+conf.SetTestName(\\"test blah\\");
+conf.SetAppName(\\"project blah\\");
+conf.SetViewportSize(new Size(1024, 768));
+conf.SetBaselineEnvName(\\"blah\\");
+eyes = new Eyes();
+eyes.SetConfiguration(conf);
+eyes.Open(driver);"
+`;
+
+exports[`code-export csharp-xunit hooks beforeEach 3`] = `
+"
+Configuration conf = new Configuration();
+conf.SetTestName(\\"test blah\\");
+conf.SetAppName(\\"project blah\\");
+conf.SetViewportSize(new Size(1024, 768));
+conf.AddDeviceEmulation(DeviceName.IPAD, ScreenOrientation.Portrait);
+runner = new VisualGridRunner(10);
+eyes = new Eyes(runner);
 eyes.SetConfiguration(conf);
 eyes.Open(driver);"
 `;
 
 exports[`code-export csharp-xunit hooks beforeEach 4`] = `
-"runner = new VisualGridRunner(10);
-eyes = new Eyes(runner);
+"
 Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
+conf.SetViewportSize(new Size(1024, 768));
 conf.AddBrowser(100, 100, BrowserType.CHROME);
+runner = new VisualGridRunner(10);
+eyes = new Eyes(runner);
 eyes.SetConfiguration(conf);
 eyes.Open(driver);"
 `;
