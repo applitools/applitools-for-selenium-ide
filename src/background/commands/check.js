@@ -219,7 +219,7 @@ async function checkWithVisualGrid(
     tag: stepName || pathname,
     sendDOM: (await isDomCaptureEnabled()) || (await isPatternsDomEnabled()),
     matchLevel: eyes.getMatchLevel() || 'Strict',
-    accessibilityLevel: await getAccessibilityLevel(),
+    accessibilityValidation: await getAccessibilityLevel(),
     ...params,
   })
 
