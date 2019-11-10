@@ -300,66 +300,132 @@ browser.runtime.onMessageExternal.addListener(
           return sendResponse(true)
         }
         case CommandIds.SetPreRenderHook: {
-          getEyes(`${message.options.runId}${message.options.testId}`)
-            .then(eyes => {
-              if (!eyes.isVisualGrid) {
-                return ideLogger.log(
-                  "'eyes set pre render screenshot hook' only works on tests run on the Visual Grid."
-                )
-              } else {
-                return eyes.setPreRenderHook(message.command.target)
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.assertionsDisabled
+          ) {
+            return sendResponse(true)
+          } else if (
+            getExternalState().enableVisualCheckpoints &&
+            !!message.options.runId
+          ) {
+            makeEyes(
+              `${playbackOptions.runId}${message.options.originalTestId}`,
+              playbackOptions.runId,
+              playbackOptions.projectName,
+              playbackOptions.suiteName,
+              playbackOptions.testName,
+              {
+                baselineEnvName: playbackOptions.baselineEnvNameCommand
+                  ? playbackOptions.baselineEnvNameCommand.target
+                  : undefined,
+                useNativeOverride: playbackOptions.useNativeOverride,
               }
-            })
-            .then(() => {
-              return sendResponse(true)
-            })
-            .catch(error => {
-              return sendResponse(
-                error instanceof Error ? { error: error.message } : { error }
-              )
-            })
+            )
+              .then(eyes => {
+                if (!eyes.isVisualGrid) {
+                  return ideLogger.log(
+                    "'eyes set pre render screenshot hook' only works on tests run on the Visual Grid."
+                  )
+                } else {
+                  return eyes.setPreRenderHook(message.command.target)
+                }
+              })
+              .then(() => {
+                return sendResponse(true)
+              })
+              .catch(error => {
+                return sendResponse(
+                  error instanceof Error ? { error: error.message } : { error }
+                )
+              })
+          }
           return true
         }
         case CommandIds.SetMatchLevel: {
-          getEyes(`${message.options.runId}${message.options.testId}`)
-            .then(eyes => {
-              return eyes.setMatchLevel(message.command.target)
-            })
-            .then(() => {
-              return sendResponse(true)
-            })
-            .catch(error => {
-              return sendResponse(
-                error instanceof Error ? { error: error.message } : { error }
-              )
-            })
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.assertionsDisabled
+          ) {
+            return sendResponse(true)
+          } else if (
+            getExternalState().enableVisualCheckpoints &&
+            !!message.options.runId
+          ) {
+            makeEyes(
+              `${playbackOptions.runId}${message.options.originalTestId}`,
+              playbackOptions.runId,
+              playbackOptions.projectName,
+              playbackOptions.suiteName,
+              playbackOptions.testName,
+              {
+                baselineEnvName: playbackOptions.baselineEnvNameCommand
+                  ? playbackOptions.baselineEnvNameCommand.target
+                  : undefined,
+                useNativeOverride: playbackOptions.useNativeOverride,
+              }
+            )
+              .then(eyes => {
+                return eyes.setMatchLevel(message.command.target)
+              })
+              .then(() => {
+                return sendResponse(true)
+              })
+              .catch(error => {
+                return sendResponse(
+                  error instanceof Error ? { error: error.message } : { error }
+                )
+              })
+          }
           return true
         }
         case CommandIds.SetMatchTimeout: {
-          getEyes(`${message.options.runId}${message.options.testId}`)
-            .then(eyes => {
-              if (eyes.isVisualGrid) {
-                return ideLogger.log(
-                  "'set match timeout' has no affect in Visual Grid tests."
-                )
-              } else {
-                const timeout = message.command.target.trim()
-                if (!/^\d+$/.test(timeout)) {
-                  throw new Error(
-                    'Timeout is not an integer, pass a timeout in ms to the target field.'
-                  )
-                }
-                return eyes.setMatchTimeout(parseInt(timeout))
+          if (
+            !getExternalState().enableVisualCheckpoints ||
+            message.options.assertionsDisabled
+          ) {
+            return sendResponse(true)
+          } else if (
+            getExternalState().enableVisualCheckpoints &&
+            !!message.options.runId
+          ) {
+            makeEyes(
+              `${playbackOptions.runId}${message.options.originalTestId}`,
+              playbackOptions.runId,
+              playbackOptions.projectName,
+              playbackOptions.suiteName,
+              playbackOptions.testName,
+              {
+                baselineEnvName: playbackOptions.baselineEnvNameCommand
+                  ? playbackOptions.baselineEnvNameCommand.target
+                  : undefined,
+                useNativeOverride: playbackOptions.useNativeOverride,
               }
-            })
-            .then(() => {
-              return sendResponse(true)
-            })
-            .catch(error => {
-              return sendResponse(
-                error instanceof Error ? { error: error.message } : { error }
-              )
-            })
+            )
+              .then(eyes => {
+                if (eyes.isVisualGrid) {
+                  return ideLogger.log(
+                    "'set match timeout' has no affect in Visual Grid tests."
+                  )
+                } else {
+                  const timeout = message.command.target.trim()
+                  if (!/^\d+$/.test(timeout)) {
+                    throw new Error(
+                      'Timeout is not an integer, pass a timeout in ms to the target field.'
+                    )
+                  }
+                  return eyes.setMatchTimeout(parseInt(timeout))
+                }
+              })
+              .then(() => {
+                return sendResponse(true)
+              })
+              .catch(error => {
+                return sendResponse(
+                  error instanceof Error ? { error: error.message } : { error }
+                )
+              })
+          }
           return true
         }
         case CommandIds.SetViewportSize: {
@@ -693,7 +759,7 @@ browser.runtime.onMessageExternal.addListener(
           const { command, target, value } = message.command // eslint-disable-line no-unused-vars
           if (command === CommandIds.CheckWindow) {
             return sendResponse(
-              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityLevel(configuration.params.eyesAccessibilityLevel || "None").fully(true));}`
+              `if (!opts.isNested) {await eyes.check("${target}" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityValidation(configuration.params.eyesAccessibilityLevel || "None").fully(true));}`
             )
           } else if (command === CommandIds.CheckElement) {
             sendMessage({
@@ -705,7 +771,7 @@ browser.runtime.onMessageExternal.addListener(
             })
               .then(locator => {
                 sendResponse(
-                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook).accessibilityLevel(configuration.params.eyesAccessibilityLevel || "None"));}`
+                  `if (!opts.isNested) {await driver.wait(until.elementLocated(${locator}), configuration.timeout); await eyes.check("${value}" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook).accessibilityValidation(configuration.params.eyesAccessibilityLevel || "None"));}`
                 )
               })
               .catch(console.error) // eslint-disable-line no-console
