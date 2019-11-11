@@ -8,9 +8,9 @@ export function emitCheckWindow(
   switch (language) {
     case 'java-junit':
       if (stepName)
-        return `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook).withName("${stepName}"));`
+        return `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook).withName("${stepName}"));`
       else
-        return `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));`
+        return `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));`
     case 'javascript-mocha':
       if (stepName)
         return `await eyes.check("${stepName}", Target.window().webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}").fully(true))`
@@ -44,9 +44,9 @@ export function emitCheckElement(
   switch (language) {
     case 'java-junit':
       if (stepName)
-        return `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook).withName("${stepName}"));`
+        return `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook).withName("${stepName}"));`
       else
-        return `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook));`
+        return `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook));`
     case 'javascript-mocha':
       if (stepName)
         return `await eyes.check("${stepName}", Target.region(${locator}).webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}"))`
@@ -212,6 +212,7 @@ export function emitBeforeEach(
         result += `Configuration config = eyes.getConfiguration();\n`
         result += `config.setAccessibilityValidation(AccessibilityLevel.${accessibilityLevel});`
         const deviceEmitter = (deviceId, orientation) => {
+          deviceId = deviceId.replace(/iPhone_6_7_8_Plus/, 'iPhone6_7_8_Plus')
           return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation.toUpperCase()});`
         }
         const browserEmitter = browser => {
@@ -380,6 +381,7 @@ export function emitDependency(language, { isVisualGridEnabled } = {}) {
         result += `\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;`
         result += `\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;`
         result += `\nimport com.applitools.eyes.selenium.fluent.Target;`
+        result += `\nimport com.applitools.eyes.AccessibilityLevel;`
       }
       break
     case 'javascript-mocha':

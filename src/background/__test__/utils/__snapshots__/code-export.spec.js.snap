@@ -230,17 +230,17 @@ exports[`code-export csharp-xunit hooks variable 2`] = `
 string preRenderHook;"
 `;
 
-exports[`code-export java-junit commands checkElement 1`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderHook(preRenderHook).withName(\\"blah\\"));"`;
+exports[`code-export java-junit commands checkElement 1`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderScreenshotHook(preRenderHook).withName(\\"blah\\"));"`;
 
-exports[`code-export java-junit commands checkElement 2`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderHook(preRenderHook));"`;
+exports[`code-export java-junit commands checkElement 2`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export java-junit commands checkElement 3`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderHook(preRenderHook));"`;
+exports[`code-export java-junit commands checkElement 3`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export java-junit commands checkWindow 1`] = `"eyes.check(Target.window().fully().beforeRenderHook(preRenderHook).withName(\\"blah\\"));"`;
+exports[`code-export java-junit commands checkWindow 1`] = `"eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook).withName(\\"blah\\"));"`;
 
-exports[`code-export java-junit commands checkWindow 2`] = `"eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));"`;
+exports[`code-export java-junit commands checkWindow 2`] = `"eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export java-junit commands checkWindow 3`] = `"eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));"`;
+exports[`code-export java-junit commands checkWindow 3`] = `"eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));"`;
 
 exports[`code-export java-junit commands setMatchLevel 1`] = `"eyes.setMatchLevel(\\"Layout\\");"`;
 
@@ -302,7 +302,8 @@ import com.applitools.eyes.selenium.Configuration;
 import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
 import com.applitools.eyes.visualgrid.services.VisualGridRunner;
-import com.applitools.eyes.selenium.fluent.Target;"
+import com.applitools.eyes.selenium.fluent.Target;
+import com.applitools.eyes.AccessibilityLevel;"
 `;
 
 exports[`code-export java-junit hooks dependency 2`] = `
