@@ -3,6 +3,11 @@ import { PositionProvider } from '@applitools/eyes-images'
 import CSSTranslatePositionMemento from './CSSTranslatePositionMemento'
 import { getEntirePageSize } from './utils.js'
 
+// This is for a potential problem with Chrome 78
+// where changing only one of the translate's axis
+// won't force a re-layout
+const FORCE_TRANSFORM = 'translate(10px, 10px)'
+
 export default class CSSTranslatePositionProvider extends PositionProvider {
   constructor(logger, tabId) {
     super()
@@ -23,6 +28,7 @@ export default class CSSTranslatePositionProvider extends PositionProvider {
     this._logger.verbose(
       `CssTranslatePositionProvider - Setting position to: ${location}`
     )
+    await this.setTransform(FORCE_TRANSFORM)
     const transform = `translate(-${location.getX()}px, -${location.getY()}px)`
     await this.setTransform(transform)
     this._logger.verbose('Done!')
