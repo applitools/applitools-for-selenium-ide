@@ -4,9 +4,13 @@ exports[`code-export csharp-nunit commands checkElement 1`] = `"eyes.Check(Targe
 
 exports[`code-export csharp-nunit commands checkElement 2`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).BeforeRenderScreenshotHook(preRenderHook));"`;
 
+exports[`code-export csharp-nunit commands checkElement 3`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).BeforeRenderScreenshotHook(preRenderHook));"`;
+
 exports[`code-export csharp-nunit commands checkWindow 1`] = `"eyes.Check(Target.Window().Fully().WithName(\\"blah\\").BeforeRenderScreenshotHook(preRenderHook));"`;
 
 exports[`code-export csharp-nunit commands checkWindow 2`] = `"eyes.Check(Target.Window().Fully().BeforeRenderScreenshotHook(preRenderHook));"`;
+
+exports[`code-export csharp-nunit commands checkWindow 3`] = `"eyes.Check(Target.Window().Fully().BeforeRenderScreenshotHook(preRenderHook));"`;
 
 exports[`code-export csharp-nunit commands setMatchLevel 1`] = `""`;
 
@@ -31,6 +35,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.AA;
 eyes = new Eyes();
 eyes.SetConfiguration(conf);
 eyes.Open(driver);"
@@ -42,6 +47,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.None;
 conf.SetBaselineEnvName(\\"blah\\");
 eyes = new Eyes();
 eyes.SetConfiguration(conf);
@@ -54,6 +60,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.None;
 conf.AddDeviceEmulation(DeviceName.IPAD, ScreenOrientation.Portrait);
 runner = new VisualGridRunner(10);
 eyes = new Eyes(runner);
@@ -67,6 +74,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.None;
 conf.AddBrowser(100, 100, BrowserType.CHROME);
 runner = new VisualGridRunner(10);
 eyes = new Eyes(runner);
@@ -111,9 +119,13 @@ exports[`code-export csharp-xunit commands checkElement 1`] = `"eyes.Check(Targe
 
 exports[`code-export csharp-xunit commands checkElement 2`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).BeforeRenderScreenshotHook(preRenderHook));"`;
 
+exports[`code-export csharp-xunit commands checkElement 3`] = `"eyes.Check(Target.Region(By.id(\\"blah\\")).BeforeRenderScreenshotHook(preRenderHook));"`;
+
 exports[`code-export csharp-xunit commands checkWindow 1`] = `"eyes.Check(Target.Window().Fully().WithName(\\"blah\\").BeforeRenderScreenshotHook(preRenderHook));"`;
 
 exports[`code-export csharp-xunit commands checkWindow 2`] = `"eyes.Check(Target.Window().Fully().BeforeRenderScreenshotHook(preRenderHook));"`;
+
+exports[`code-export csharp-xunit commands checkWindow 3`] = `"eyes.Check(Target.Window().Fully().BeforeRenderScreenshotHook(preRenderHook));"`;
 
 exports[`code-export csharp-xunit commands setMatchLevel 1`] = `""`;
 
@@ -138,6 +150,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.AA;
 eyes = new Eyes();
 eyes.SetConfiguration(conf);
 eyes.Open(driver);"
@@ -149,6 +162,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.None;
 conf.SetBaselineEnvName(\\"blah\\");
 eyes = new Eyes();
 eyes.SetConfiguration(conf);
@@ -161,6 +175,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.None;
 conf.AddDeviceEmulation(DeviceName.IPAD, ScreenOrientation.Portrait);
 runner = new VisualGridRunner(10);
 eyes = new Eyes(runner);
@@ -174,6 +189,7 @@ Configuration conf = new Configuration();
 conf.SetTestName(\\"test blah\\");
 conf.SetAppName(\\"project blah\\");
 conf.SetViewportSize(new Size(1024, 768));
+conf.AccessibilityValidation = AccessibilityLevel.None;
 conf.AddBrowser(100, 100, BrowserType.CHROME);
 runner = new VisualGridRunner(10);
 eyes = new Eyes(runner);
@@ -218,9 +234,13 @@ exports[`code-export java-junit commands checkElement 1`] = `"eyes.check(Target.
 
 exports[`code-export java-junit commands checkElement 2`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderHook(preRenderHook));"`;
 
+exports[`code-export java-junit commands checkElement 3`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderHook(preRenderHook));"`;
+
 exports[`code-export java-junit commands checkWindow 1`] = `"eyes.check(Target.window().fully().beforeRenderHook(preRenderHook).withName(\\"blah\\"));"`;
 
 exports[`code-export java-junit commands checkWindow 2`] = `"eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));"`;
+
+exports[`code-export java-junit commands checkWindow 3`] = `"eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));"`;
 
 exports[`code-export java-junit commands setMatchLevel 1`] = `"eyes.setMatchLevel(\\"Layout\\");"`;
 
@@ -242,12 +262,14 @@ exports[`code-export java-junit hooks afterEach 2`] = `"eyes.abortIfNotClosed();
 exports[`code-export java-junit hooks beforeEach 1`] = `
 "eyes = new Eyes();
 eyes.setApiKey(System.getenv(\\"APPLITOOLS_API_KEY\\"));
+eyes.setAccessibilityValidation(AccessibilityLevel.AA);
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 `;
 
 exports[`code-export java-junit hooks beforeEach 2`] = `
 "eyes = new Eyes();
 eyes.setApiKey(System.getenv(\\"APPLITOOLS_API_KEY\\"));
+eyes.setAccessibilityValidation(AccessibilityLevel.None);
 eyes.setBaseLineEnvName(\\"blah\\");
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 `;
@@ -256,6 +278,7 @@ exports[`code-export java-junit hooks beforeEach 3`] = `
 "runner = new VisualGridRunner(concurrency);
 eyes = new Eyes(runner);
 Configuration config = eyes.getConfiguration();
+config.setAccessibilityValidation(AccessibilityLevel.None);
 config.addDeviceEmulation(DeviceName.IPAD, ScreenOrientation.PORTRAIT);
 eyes.setConfiguration(config);
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
@@ -265,6 +288,7 @@ exports[`code-export java-junit hooks beforeEach 4`] = `
 "runner = new VisualGridRunner(concurrency);
 eyes = new Eyes(runner);
 Configuration config = eyes.getConfiguration();
+config.setAccessibilityValidation(AccessibilityLevel.None);
 config.addBrowser(100, 100, BrowserType.CHROME);
 eyes.setConfiguration(config);
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
@@ -299,13 +323,17 @@ private String preRenderHook;"
 
 exports[`code-export java-junit hooks variable 2`] = `"private Eyes eyes;"`;
 
-exports[`code-export javascript-mocha commands checkElement 1`] = `"await eyes.check(\\"blah\\", Target.region(By.id(\\"blah\\")).webHook(preRenderHook))"`;
+exports[`code-export javascript-mocha commands checkElement 1`] = `"await eyes.check(\\"blah\\", Target.region(By.id(\\"blah\\")).webHook(preRenderHook).accessibilityValidation(\\"None\\"))"`;
 
-exports[`code-export javascript-mocha commands checkElement 2`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(By.id(\\"blah\\")).webHook(preRenderHook))"`;
+exports[`code-export javascript-mocha commands checkElement 2`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(By.id(\\"blah\\")).webHook(preRenderHook).accessibilityValidation(\\"None\\"))"`;
 
-exports[`code-export javascript-mocha commands checkWindow 1`] = `"await eyes.check(\\"blah\\", Target.window().webHook(preRenderHook).fully(true))"`;
+exports[`code-export javascript-mocha commands checkElement 3`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(By.id(\\"blah\\")).webHook(preRenderHook).accessibilityValidation(\\"AA\\"))"`;
 
-exports[`code-export javascript-mocha commands checkWindow 2`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true))"`;
+exports[`code-export javascript-mocha commands checkWindow 1`] = `"await eyes.check(\\"blah\\", Target.window().webHook(preRenderHook).accessibilityValidation(\\"None\\").fully(true))"`;
+
+exports[`code-export javascript-mocha commands checkWindow 2`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityValidation(\\"None\\").fully(true))"`;
+
+exports[`code-export javascript-mocha commands checkWindow 3`] = `"await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityValidation(\\"AA\\").fully(true))"`;
 
 exports[`code-export javascript-mocha commands setMatchLevel 1`] = `"await eyes.setMatchLevel(\\"Layout\\");"`;
 
@@ -383,9 +411,13 @@ exports[`code-export python-pytest commands checkElement 1`] = `"self.eyes.check
 
 exports[`code-export python-pytest commands checkElement 2`] = `"self.eyes.check(urlparse(self.driver.current_url).path, Target.region([By.id(\\"blah\\")]))"`;
 
+exports[`code-export python-pytest commands checkElement 3`] = `"self.eyes.check(urlparse(self.driver.current_url).path, Target.region([By.id(\\"blah\\")]))"`;
+
 exports[`code-export python-pytest commands checkWindow 1`] = `"self.eyes.check(\\"blah\\", Target.window().fully(True))"`;
 
 exports[`code-export python-pytest commands checkWindow 2`] = `"self.eyes.check(urlparse(self.driver.current_url).path, Target.window().fully(True))"`;
+
+exports[`code-export python-pytest commands checkWindow 3`] = `"self.eyes.check(urlparse(self.driver.current_url).path, Target.window().fully(True))"`;
 
 exports[`code-export python-pytest commands setMatchLevel 1`] = `"self.eyes.match_level(\\"Layout\\")"`;
 
@@ -464,9 +496,13 @@ exports[`code-export ruby-rspec commands checkElement 1`] = `"@eyes.check(\\"bla
 
 exports[`code-export ruby-rspec commands checkElement 2`] = `"@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.region(By.id(\\"blah\\")).script_hook(@pre_render_hook))"`;
 
+exports[`code-export ruby-rspec commands checkElement 3`] = `"@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.region(By.id(\\"blah\\")).script_hook(@pre_render_hook))"`;
+
 exports[`code-export ruby-rspec commands checkWindow 1`] = `"@eyes.check(\\"blah\\", Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))"`;
 
 exports[`code-export ruby-rspec commands checkWindow 2`] = `"@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))"`;
+
+exports[`code-export ruby-rspec commands checkWindow 3`] = `"@eyes.check(URI.parse(@driver.current_url).path, Applitools::Selenium::Target.window.fully.script_hook(@pre_render_hook))"`;
 
 exports[`code-export ruby-rspec commands setMatchLevel 1`] = `"@eyes.match_level(\\"Layout\\")"`;
 
@@ -503,6 +539,7 @@ config = Applitools::Selenium::Configuration.new.tap do |c|
   c.app_name = 'project blah'
   c.test_name = 'test blah'
   c.viewport_size = Applitools::RectangleSize.for('1024x768')
+  c.accessibility_validation = Applitools::AccessibilityLevel::NONE
   c.add_device_emulation(Devices::IPAD, Orientations::PORTRAIT)
 end
 @eyes.config = config
@@ -517,6 +554,7 @@ config = Applitools::Selenium::Configuration.new.tap do |c|
   c.app_name = 'project blah'
   c.test_name = 'test blah'
   c.viewport_size = Applitools::RectangleSize.for('1024x768')
+  c.accessibility_validation = Applitools::AccessibilityLevel::NONE
   c.add_browser(100, 100, BrowserTypes::CHROME)
 end
 @eyes.config = config

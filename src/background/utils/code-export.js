@@ -1,6 +1,10 @@
 // commands
 
-export function emitCheckWindow(language, stepName) {
+export function emitCheckWindow(
+  language,
+  stepName,
+  { accessibilityLevel } = { accessibilityLevel: 'None' }
+) {
   switch (language) {
     case 'java-junit':
       if (stepName)
@@ -9,9 +13,9 @@ export function emitCheckWindow(language, stepName) {
         return `eyes.check(Target.window().fully().beforeRenderHook(preRenderHook));`
     case 'javascript-mocha':
       if (stepName)
-        return `await eyes.check("${stepName}", Target.window().webHook(preRenderHook).fully(true))`
+        return `await eyes.check("${stepName}", Target.window().webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}").fully(true))`
       else
-        return `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true))`
+        return `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}").fully(true))`
     case 'python-pytest':
       if (stepName)
         return `self.eyes.check("${stepName}", Target.window().fully(True))`
@@ -31,7 +35,12 @@ export function emitCheckWindow(language, stepName) {
   }
 }
 
-export function emitCheckElement(language, locator, stepName) {
+export function emitCheckElement(
+  language,
+  locator,
+  stepName,
+  { accessibilityLevel } = { accessibilityLevel: 'None' }
+) {
   switch (language) {
     case 'java-junit':
       if (stepName)
@@ -40,9 +49,9 @@ export function emitCheckElement(language, locator, stepName) {
         return `eyes.check(Target.window().region(${locator}).beforeRenderHook(preRenderHook));`
     case 'javascript-mocha':
       if (stepName)
-        return `await eyes.check("${stepName}", Target.region(${locator}).webHook(preRenderHook))`
+        return `await eyes.check("${stepName}", Target.region(${locator}).webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}"))`
       else
-        return `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook))`
+        return `await eyes.check((new URL(await driver.getCurrentUrl())).pathname, Target.region(${locator}).webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}"))`
     case 'python-pytest':
       if (stepName)
         return `self.eyes.check("${stepName}", Target.region([${locator}]))`
@@ -192,14 +201,16 @@ export function emitBeforeEach(
   language,
   projectName,
   testName,
-  { baselineEnvName, viewportSize, visualGridOptions } = {}
+  { baselineEnvName, viewportSize, visualGridOptions, accessibilityLevel }
 ) {
   let result = ''
+  accessibilityLevel = accessibilityLevel ? accessibilityLevel : 'None'
   switch (language) {
     case 'java-junit':
       if (visualGridOptions) {
         result += `runner = new VisualGridRunner(concurrency);\neyes = new Eyes(runner);\n`
-        result += `Configuration config = eyes.getConfiguration();`
+        result += `Configuration config = eyes.getConfiguration();\n`
+        result += `config.setAccessibilityValidation(AccessibilityLevel.${accessibilityLevel});`
         const deviceEmitter = (deviceId, orientation) => {
           return `\nconfig.addDeviceEmulation(DeviceName.${deviceId}, ScreenOrientation.${orientation.toUpperCase()});`
         }
@@ -216,6 +227,7 @@ export function emitBeforeEach(
       } else {
         result += `eyes = new Eyes();`
         result += `\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
+        result += `\neyes.setAccessibilityValidation(AccessibilityLevel.${accessibilityLevel});`
         if (baselineEnvName)
           result += `\neyes.setBaseLineEnvName("${baselineEnvName}");`
       }
@@ -283,7 +295,8 @@ export function emitBeforeEach(
         result += `  c.api_key = ENV['APPLITOOLS_API_KEY']\n`
         result += `  c.app_name = '${projectName}'\n`
         result += `  c.test_name = '${testName}'\n`
-        result += `  c.viewport_size = Applitools::RectangleSize.for('${viewportSize}')`
+        result += `  c.viewport_size = Applitools::RectangleSize.for('${viewportSize}')\n`
+        result += `  c.accessibility_validation = Applitools::AccessibilityLevel::${accessibilityLevel.toUpperCase()}`
         if (baselineEnvName)
           result += `\n  c.baseline_env_name = '${baselineEnvName}'`
         const deviceEmitter = (deviceId, orientation) => {
@@ -326,6 +339,7 @@ export function emitBeforeEach(
       result += `\nconf.SetViewportSize(new Size(${viewportSize[0]}, ${
         viewportSize[1]
       }));`
+      result += `\nconf.AccessibilityValidation = AccessibilityLevel.${accessibilityLevel};`
       if (baselineEnvName)
         result += `\nconf.SetBaselineEnvName("${baselineEnvName}");`
       if (visualGridOptions) {

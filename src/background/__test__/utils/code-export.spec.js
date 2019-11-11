@@ -12,7 +12,7 @@ import {
   emitVariable,
 } from '../../../background/utils/code-export'
 
-// TODO: a11y
+// TODO: a11y for Python (not implemented yet)
 describe('code-export', () => {
   const languages = [
     'java-junit',
@@ -28,12 +28,20 @@ describe('code-export', () => {
         it('checkWindow', () => {
           expect(emitCheckWindow(language, 'blah')).toMatchSnapshot()
           expect(emitCheckWindow(language)).toMatchSnapshot()
+          expect(
+            emitCheckWindow(language, undefined, { accessibilityLevel: 'AA' })
+          ).toMatchSnapshot()
         })
         it('checkElement', () => {
           expect(
             emitCheckElement(language, 'By.id("blah")', 'blah')
           ).toMatchSnapshot()
           expect(emitCheckElement(language, 'By.id("blah")')).toMatchSnapshot()
+          expect(
+            emitCheckElement(language, 'By.id("blah")', undefined, {
+              accessibilityLevel: 'AA',
+            })
+          ).toMatchSnapshot()
         })
         it('setMatchLevel', () => {
           expect(emitSetMatchLevel(language, 'Layout')).toMatchSnapshot()
@@ -64,7 +72,9 @@ describe('code-export', () => {
         })
         it('beforeEach', () => {
           expect(
-            emitBeforeEach(language, 'project blah', 'test blah')
+            emitBeforeEach(language, 'project blah', 'test blah', {
+              accessibilityLevel: 'AA',
+            })
           ).toMatchSnapshot()
           expect(
             emitBeforeEach(language, 'project blah', 'test blah', {

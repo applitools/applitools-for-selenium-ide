@@ -22,7 +22,6 @@ import { getViewportSize, setViewportSize } from './commands/viewport'
 import { checkWindow, checkElement, endTest } from './commands/check'
 import {
   makeEyes,
-  getEyes,
   hasEyes,
   getResultsUrl,
   hasValidVisualGridSettings,
@@ -573,7 +572,14 @@ browser.runtime.onMessageExternal.addListener(
           // this command gets hoisted
           return sendResponse(false)
         } else if (command === CommandIds.CheckWindow) {
-          return sendResponse(emitCheckWindow(message.language, target))
+          getExtensionSettings().then(settings => {
+            return sendResponse(
+              emitCheckWindow(message.language, target, {
+                accessibilityLevel: settings.projectSettings.accessibilityLevel,
+              })
+            )
+          })
+          return true
         } else if (command === CommandIds.CheckElement) {
           sendMessage({
             uri: '/export/location',
@@ -584,7 +590,16 @@ browser.runtime.onMessageExternal.addListener(
             },
           })
             .then(locator => {
-              sendResponse(emitCheckElement(message.language, locator, value))
+              getExtensionSettings().then(settings => {
+                return sendResponse(
+                  sendResponse(
+                    emitCheckElement(message.language, locator, value, {
+                      accessibilityLevel:
+                        settings.projectSettings.accessibilityLevel,
+                    })
+                  )
+                )
+              })
             })
             .catch(console.error) // eslint-disable-line no-console
           return true
@@ -666,7 +681,13 @@ browser.runtime.onMessageExternal.addListener(
                   message.language,
                   message.options.project.name,
                   message.options.name,
-                  { baselineEnvName, visualGridOptions, viewportSize }
+                  {
+                    baselineEnvName,
+                    visualGridOptions,
+                    viewportSize,
+                    accessibilityLevel:
+                      settings.projectSettings.accessibilityLevel,
+                  }
                 )
               )
             })
