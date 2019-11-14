@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.9.0
+- Added support for check commands in nested tests
+- Added C# code export support
+- Added Ruby code export support
+- Added accessibilty support to code export
+- Fixed bug in the runner when setting the accessibility level
+
 ## v1.8.1
 - GUI Fixes
 
