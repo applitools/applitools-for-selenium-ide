@@ -1,0 +1,5 @@
+*.log
+*.xml
+*.class
+*.lst
+java-junit/tests/target/
