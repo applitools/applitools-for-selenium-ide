@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  runner:
+    depends_on:
+      - selenium
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./tests:/runner
+      - /runner/node_modules
+      - ../wait-for-it.sh:/usr/local/bin/wait-for-it.sh
+    environment:
+      - APPLITOOLS_API_KEY
+    working_dir: /runner
+    command: wait-for-it.sh selenium:4444 -- npx mocha .
+  selenium:
+    image: "selenium/standalone-chrome:latest"
+    ports:
+      - "4444:4444"

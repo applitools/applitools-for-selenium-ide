@@ -1,0 +1,19 @@
+{
+  "name": "javascript-mocha",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@applitools/eyes-selenium": "^4.31.17",
+    "selenium-webdriver": "^4.0.0-alpha.5",
+    "mocha": "^6.2.2"
+  }
+}
