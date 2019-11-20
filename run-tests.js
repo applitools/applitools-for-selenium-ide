@@ -7,6 +7,7 @@ if (!process.argv[2]) {
   console.log('Options include:')
   console.log('  - java-junit')
   console.log('  - javascript-mocha')
+  console.log('  - ruby-rspec')
   console.log('')
   process.exit(1)
 }
