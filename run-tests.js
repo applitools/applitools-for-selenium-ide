@@ -5,6 +5,7 @@ if (!process.argv[2]) {
   console.log('No language provided!')
   console.log('')
   console.log('Options include:')
+  console.log('  - csharp-nunit')
   console.log('  - java-junit')
   console.log('  - javascript-mocha')
   console.log('  - ruby-rspec')

@@ -4,3 +4,5 @@
 *.class
 *.lst
 java-junit/tests/target/
+csharp-nunit/tests/bin/
+csharp-nunit/tests/obj/
