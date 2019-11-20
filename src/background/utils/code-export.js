@@ -267,6 +267,7 @@ export function emitBeforeEach(
         result += `self.eyes = Eyes(self.vg_runner)\n`
         result += `config = Configuration()`
         const deviceEmitter = (deviceId, orientation) => {
+          deviceId = deviceId.replace(/iPhone_6_7_8_Plus/, 'iPhone6_7_8_Plus')
           return `\nconfig.add_device_emulation(DeviceName.${deviceId}, ScreenOrientation.${orientation.toUpperCase()})`
         }
         const browserEmitter = browser => {
@@ -284,7 +285,7 @@ export function emitBeforeEach(
       }
       result += `\nself.eyes.api_key = os.environ["APPLITOOLS_API_KEY"]`
       if (baselineEnvName)
-        result += `\neyes.baseline_env_name = "${baselineEnvName}"`
+        result += `\nself.eyes.baseline_env_name = "${baselineEnvName}"`
       result += `\nself.eyes.open(self.driver, "${projectName}", "${testName}")`
       break
     case 'ruby-rspec':
