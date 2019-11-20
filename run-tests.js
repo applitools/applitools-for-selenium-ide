@@ -8,6 +8,7 @@ if (!process.argv[2]) {
   console.log('  - csharp-nunit')
   console.log('  - java-junit')
   console.log('  - javascript-mocha')
+  console.log('  - python-pytest')
   console.log('  - ruby-rspec')
   console.log('')
   process.exit(1)
