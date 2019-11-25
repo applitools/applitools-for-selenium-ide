@@ -380,14 +380,14 @@ function emitDependency(language, { isVisualGridEnabled } = {}) {
     case 'java-junit':
       result += `import com.applitools.eyes.selenium.Eyes;`
       result += `\nimport com.applitools.eyes.RectangleSize;`
+      result += `\nimport com.applitools.eyes.AccessibilityLevel;`
+      result += `\nimport com.applitools.eyes.selenium.fluent.Target;`
       if (isVisualGridEnabled) {
         result += `\nimport com.applitools.eyes.selenium.BrowserType;`
         result += `\nimport com.applitools.eyes.selenium.Configuration;`
         result += `\nimport com.applitools.eyes.visualgrid.model.DeviceName;`
         result += `\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;`
         result += `\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;`
-        result += `\nimport com.applitools.eyes.selenium.fluent.Target;`
-        result += `\nimport com.applitools.eyes.AccessibilityLevel;`
       }
       break
     case 'javascript-mocha':
