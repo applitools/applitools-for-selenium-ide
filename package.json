@@ -9,6 +9,7 @@
     "build:prod": "rm -rf build && env NODE_ENV=production yarn build",
     "build:page": "webpack --config webpack.config.page.babel.js",
     "test": "jest",
+    "test:code-export:java": "node tests/e2e/code-export/run-tests.js java-junit",
     "lint": "eslint webpack.config.babel.js src/ --ext .js --ext .jsx",
     "postinstall": "patch-package",
     "version": "node scripts/version.js && git add src/manifest.json",
