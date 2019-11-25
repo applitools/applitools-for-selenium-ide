@@ -63,11 +63,26 @@ function registerEmitters(language) {
     'eyesSetViewportSize',
     emitSetViewportSize.bind(undefined, language)
   )
-  exporter.default.register.afterEach(language, emitAfterEach)
-  exporter.default.register.beforeEach(language, emitBeforeEach)
-  exporter.default.register.dependency(language, emitDependency)
-  exporter.default.register.inEachEnd(language, emitInEachEnd)
-  exporter.default.register.variable(language, emitVariable)
+  exporter.default.register.afterEach(
+    language,
+    emitAfterEach.bind(undefined, language)
+  )
+  exporter.default.register.beforeEach(
+    language,
+    emitBeforeEach.bind(undefined, language)
+  )
+  exporter.default.register.dependency(
+    language,
+    emitDependency.bind(undefined, language)
+  )
+  exporter.default.register.inEachEnd(
+    language,
+    emitInEachEnd.bind(undefined, language)
+  )
+  exporter.default.register.variable(
+    language,
+    emitVariable.bind(undefined, language)
+  )
 }
 
 function generateSuite(projectFile, language) {
@@ -89,22 +104,36 @@ function generateSuite(projectFile, language) {
   return exporter.default.emit
     .suite(language, options)
     .then(result => {
-      writeFileSync(result.filename, result.body)
+      const filePath = language.includes('java')
+        ? path.join(
+            __dirname,
+            language,
+            'tests',
+            'src',
+            'test',
+            'java',
+            result.filename
+          )
+        : path.join(__dirname, language, 'tests', result.filename)
+      writeFileSync(filePath, result.body)
     })
     .catch(console.error)
 }
 
-if (!process.argv[2]) {
-  console.log('No language provided!')
-  console.log('')
-  console.log('Options include:')
-  console.log('  - csharp-nunit')
-  console.log('  - java-junit')
-  console.log('  - javascript-mocha')
-  console.log('  - python-pytest')
-  console.log('  - ruby-rspec')
-  console.log('')
-  process.exit(1)
-}
+//if (!process.argv[2]) {
+//  console.log('No language provided!')
+//  console.log('')
+//  console.log('Options include:')
+//  console.log('  - csharp-nunit')
+//  console.log('  - java-junit')
+//  console.log('  - javascript-mocha')
+//  console.log('  - python-pytest')
+//  console.log('  - ruby-rspec')
+//  console.log('')
+//  process.exit(1)
+//}
+// generateSuite(projectFile, process.argv[2])
 
-generateSuite(projectFile, process.argv[2])
+module.exports = {
+  generateSuite: generateSuite.bind(undefined, projectFile),
+}
