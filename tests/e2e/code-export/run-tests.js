@@ -1,5 +1,8 @@
 const { exec } = require('child_process')
 const { writeFileSync } = require('fs')
+const { generateSuite } = require('./generate-test-code')
+
+/* eslint-disable no-alert, no-console */
 
 if (!process.argv[2]) {
   console.log('No language provided!')
@@ -14,10 +17,16 @@ if (!process.argv[2]) {
   process.exit(1)
 }
 
-const up = exec(`cd ${process.argv[2]}; docker-compose up`);
+generateSuite(process.argv[2])
+console.log('Test code generated!')
+
+console.log('Starting node for testing.')
+const up = exec(
+  `cd tests/e2e/code-export/${process.argv[2]}; docker-compose up`
+)
 let log = ''
 
-process.stdin.pipe(up.stdin)
+//process.stdin.pipe(up.stdin)
 
 console.log('Tests are running. Please wait...')
 
@@ -26,7 +35,11 @@ function getCode(message) {
   if (match) return match[1]
 }
 
-up.stdout.on('data', (data) => {
+up.stderr.on('data', data => {
+  console.log('stderr: ' + data.toString())
+})
+
+up.stdout.on('data', data => {
   console.log(data)
   log += data
   if (data.includes('exited with code')) {
@@ -34,9 +47,9 @@ up.stdout.on('data', (data) => {
     const down = exec(`cd ${process.argv[2]}; docker-compose down`)
     writeFileSync('run-tests.log', log)
     console.log('Logs written to run-tests.log')
-    down.on('close', (_code) => {
+    down.on('close', _code => {
       console.log(`Terminating session with exit code ${code}`)
       process.exit(code)
     })
   }
-});
+})
