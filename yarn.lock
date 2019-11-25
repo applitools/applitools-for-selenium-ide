@@ -1138,6 +1138,80 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
+"@seleniumhq/code-export-csharp-commons@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-csharp-commons/-/code-export-csharp-commons-3.16.0.tgz#206fe9af23c25cac4233695ecffceed1f0fc4f98"
+  integrity sha512-2nOapB70itGiHo//2PIQaEmr/IVxeojmLuEiKoUH2xJj+OF6Tbf+ECa/ppLbkBEE01YU2RRKUtYvnf2EKwYuPw==
+
+"@seleniumhq/code-export-csharp-nunit@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-csharp-nunit/-/code-export-csharp-nunit-3.16.0.tgz#4d266431b543452c2c5ef94e85101d42181cb819"
+  integrity sha512-O4IzCJCAoO9+I/74ogj7/gUyL569IRBWQlJWCkdXiDn/rj0ZOP6jp9ej6ycYmGy83mGca9f1bhOJKgXYDAVpRA==
+  dependencies:
+    "@seleniumhq/code-export-csharp-commons" "^3.16.0"
+    "@seleniumhq/side-utils" "^3.16.0"
+
+"@seleniumhq/code-export-csharp-xunit@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-csharp-xunit/-/code-export-csharp-xunit-3.16.0.tgz#3c7f7e1437e142b1bcc3a3fca9a58f705104f00b"
+  integrity sha512-n9/XdPzZ7DIWswT+eeyx+ENLZ25QqBQKj+gkw81j19N+JrO38Dd9G6APsR2q7vhdhd5dGT0Le11kHXPs/0l87w==
+  dependencies:
+    "@seleniumhq/code-export-csharp-commons" "^3.16.0"
+    "@seleniumhq/side-utils" "^3.16.0"
+
+"@seleniumhq/code-export-java-junit@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-java-junit/-/code-export-java-junit-3.16.0.tgz#ea71469d8d1bc89d42b247f014cb1fa0333b7257"
+  integrity sha512-F6j0zOFh9w+3V2jvF77ot0LImFLPnzhQ1n9NbP/rkFY4Q9a/e+9WccDYuN3Z0G7VlOd06/1i2R6uOVhqbjXyWA==
+  dependencies:
+    "@seleniumhq/side-utils" "^3.16.0"
+
+"@seleniumhq/code-export-javascript-mocha@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-javascript-mocha/-/code-export-javascript-mocha-3.16.0.tgz#ed7bfd896b31400c699ab4cc1653509d569ad816"
+  integrity sha512-xGAPwbf2nSdmi9GeteI2QK8UN34t8zarWXO2B8S3mxN1XqEPCtH7yGD6lNMuS1adU9k1b3nYancDY4xisxWW4w==
+  dependencies:
+    "@seleniumhq/side-utils" "^3.16.0"
+
+"@seleniumhq/code-export-python-pytest@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-python-pytest/-/code-export-python-pytest-3.16.0.tgz#a03954499c9c21da93e93c5c4ee8177deae2bef3"
+  integrity sha512-YJsRl8xPHMID4rjUDRmtBmNqIo3GhYRfP/METqHfpjl02K4yz69wZRkKrUSuSI/WtpI8wHrxJydVG0yhsgnF5A==
+  dependencies:
+    "@seleniumhq/side-utils" "^3.16.0"
+
+"@seleniumhq/code-export-ruby-rspec@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export-ruby-rspec/-/code-export-ruby-rspec-3.16.0.tgz#3f41e97fee546e2ef160fedde920eaa1fe8b8773"
+  integrity sha512-5W9oGkKdD8oScoNJnizDoLcQDekXhrUjQWjHpJkgho8xtiLOtwrYiQPUpAHlkuQW3MvGPp5LYW/pkmEVrPfGpw==
+  dependencies:
+    "@seleniumhq/side-utils" "^3.16.0"
+
+"@seleniumhq/code-export@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/code-export/-/code-export-3.16.0.tgz#09bbe334408d8687e77d71b9e08f593e399056d2"
+  integrity sha512-0800vmcO9Di8z4hgaC8MHpADXz6Ab51ovoak2h2P91lWMJxaDAMZErTiJ/fcTsMTwRhghbDARomkaj4P8Z5b1Q==
+  dependencies:
+    "@seleniumhq/code-export-csharp-nunit" "^3.16.0"
+    "@seleniumhq/code-export-csharp-xunit" "^3.16.0"
+    "@seleniumhq/code-export-java-junit" "^3.16.0"
+    "@seleniumhq/code-export-javascript-mocha" "^3.16.0"
+    "@seleniumhq/code-export-python-pytest" "^3.16.0"
+    "@seleniumhq/code-export-ruby-rspec" "^3.16.0"
+
+"@seleniumhq/side-model@^3.15.0":
+  version "3.15.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.15.0.tgz#a177794a41875da08e52dd53bff40d8b6ceacb09"
+  integrity sha512-8YJr6/+mcwfwa3fJIAKYmmJ3T7hJGXJuFQ12YMYqg9IRIpmUIv75oLxZWQb5dD9j5MxNLdPQoQENVmrDgs5ilw==
+
+"@seleniumhq/side-utils@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@seleniumhq/side-utils/-/side-utils-3.16.0.tgz#3d0857165d006dca3dd91bb2ca0de6cefdfa3b92"
+  integrity sha512-25YCQUjUq8hGf/v5A3ZkBF6/Jr/n74Y3jbZtXb6pRlRUfB3qwbsj82HvDEdzDz1/adOg1GnhwHvik5Hwktvu1w==
+  dependencies:
+    "@seleniumhq/side-model" "^3.15.0"
+    ua-parser-js "^0.7.17"
+
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.2.tgz#8013f2af54a2b7d735f71560ff360d3a8176a87b"
@@ -11617,7 +11691,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-ua-parser-js@^0.7.18:
+ua-parser-js@^0.7.17, ua-parser-js@^0.7.18:
   version "0.7.20"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.20.tgz#7527178b82f6a62a0f243d1f94fd30e3e3c21098"
   integrity sha512-8OaIKfzL5cpx8eCMAhhvTlft8GYF8b2eQr6JkCyVdrgjcytyOmPCXrqXFcUnhonRpLlh5yxEZVohm6mzaowUOw==
