@@ -8,3 +8,11 @@ yarn-error.log
 dist
 .web-extension-id
 *.log
+*.xml
+*.class
+*.lst
+target/
+bin/
+obj/
+__pycache__/
+.pytest_cache/
