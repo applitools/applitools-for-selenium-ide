@@ -1,6 +1,6 @@
 // commands
 
-export function emitCheckWindow(
+function emitCheckWindow(
   language,
   stepName,
   { accessibilityLevel } = { accessibilityLevel: 'None' }
@@ -35,7 +35,7 @@ export function emitCheckWindow(
   }
 }
 
-export function emitCheckElement(
+function emitCheckElement(
   language,
   locator,
   stepName,
@@ -71,7 +71,7 @@ export function emitCheckElement(
   }
 }
 
-export function emitSetMatchLevel(language, level) {
+function emitSetMatchLevel(language, level) {
   switch (language) {
     case 'java-junit':
       return `eyes.setMatchLevel("${level}");`
@@ -87,7 +87,7 @@ export function emitSetMatchLevel(language, level) {
   }
 }
 
-export function emitSetMatchTimeout(language, timeout) {
+function emitSetMatchTimeout(language, timeout) {
   switch (language) {
     case 'java-junit':
       return `eyes.setMatchTimeout(${timeout});`
@@ -103,7 +103,7 @@ export function emitSetMatchTimeout(language, timeout) {
   }
 }
 
-export function emitSetPreRenderHook(
+function emitSetPreRenderHook(
   language,
   jsSnippet,
   { isVisualGridEnabled } = {}
@@ -128,7 +128,12 @@ export function emitSetPreRenderHook(
   }
 }
 
-export function emitSetViewportSize(language, width, height) {
+function emitSetViewportSize(language, width, height) {
+  if (isNaN(width) && width.includes('x')) {
+    const viewportSizes = width.split('x')
+    width = viewportSizes[0]
+    height = viewportSizes[1]
+  }
   switch (language) {
     case 'java-junit':
       return `Eyes.setViewportSize(driver, new RectangleSize(${width}, ${height}));`
@@ -145,7 +150,7 @@ export function emitSetViewportSize(language, width, height) {
 }
 
 // hooks
-export function emitAfterEach(language, { isVisualGridEnabled } = {}) {
+function emitAfterEach(language, { isVisualGridEnabled } = {}) {
   let result = ''
   switch (language) {
     case 'java-junit':
@@ -197,11 +202,11 @@ function emitVisualGridOptions(
   return result
 }
 
-export function emitBeforeEach(
+function emitBeforeEach(
   language,
   projectName,
   testName,
-  { baselineEnvName, viewportSize, visualGridOptions, accessibilityLevel }
+  { baselineEnvName, viewportSize, visualGridOptions, accessibilityLevel } = {}
 ) {
   let result = ''
   accessibilityLevel = accessibilityLevel ? accessibilityLevel : 'None'
@@ -369,7 +374,7 @@ export function emitBeforeEach(
   return result
 }
 
-export function emitDependency(language, { isVisualGridEnabled } = {}) {
+function emitDependency(language, { isVisualGridEnabled } = {}) {
   let result = ''
   switch (language) {
     case 'java-junit':
@@ -415,7 +420,7 @@ export function emitDependency(language, { isVisualGridEnabled } = {}) {
   return result
 }
 
-export function emitInEachEnd(language, { isVisualGridEnabled } = {}) {
+function emitInEachEnd(language, { isVisualGridEnabled } = {}) {
   switch (language) {
     case 'java-junit':
       if (isVisualGridEnabled) return undefined
@@ -435,7 +440,7 @@ export function emitInEachEnd(language, { isVisualGridEnabled } = {}) {
   }
 }
 
-export function emitVariable(language, { isVisualGridEnabled } = {}) {
+function emitVariable(language, { isVisualGridEnabled } = {}) {
   let result
   switch (language) {
     case 'java-junit':
@@ -457,4 +462,18 @@ export function emitVariable(language, { isVisualGridEnabled } = {}) {
       if (isVisualGridEnabled) result += `\nVisualGridRunner runner;`
       return result
   }
+}
+
+module.exports = {
+  emitCheckWindow,
+  emitCheckElement,
+  emitSetMatchLevel,
+  emitSetMatchTimeout,
+  emitSetPreRenderHook,
+  emitSetViewportSize,
+  emitAfterEach,
+  emitBeforeEach,
+  emitDependency,
+  emitInEachEnd,
+  emitVariable,
 }
