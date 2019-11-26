@@ -2,9 +2,10 @@
 
 function emitCheckWindow(
   language,
-  { accessibilityLevel, isVisualGridEnabled } = { accessibilityLevel: 'None' },
+  { accessibilityLevel, isVisualGridEnabled } = {},
   stepName
 ) {
+  accessibilityLevel = accessibilityLevel ? accessibilityLevel : 'None'
   switch (language) {
     case 'java-junit':
       return `eyes.check(Target.window().fully()${
@@ -36,12 +37,11 @@ function emitCheckWindow(
 
 async function emitCheckElement(
   language,
-  { accessibilityLevel, locatorEmitter, isVisualGridEnabled } = {
-    accessibilityLevel: 'None',
-  },
+  { accessibilityLevel, locatorEmitter, isVisualGridEnabled } = {},
   _locator,
   stepName
 ) {
+  accessibilityLevel = accessibilityLevel ? accessibilityLevel : 'None'
   const locator = locatorEmitter ? await locatorEmitter(_locator) : _locator
   switch (language) {
     case 'java-junit':
