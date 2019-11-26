@@ -68,7 +68,7 @@ function registerEmitters(
   exporter.default.register.command(
     language,
     'eyesSetPreRenderHook',
-    emitSetPreRenderHook.bind(undefined, language)
+    emitSetPreRenderHook.bind(undefined, language, { isVisualGridEnabled })
   )
   exporter.default.register.command(
     language,
@@ -77,32 +77,55 @@ function registerEmitters(
   )
   exporter.default.register.afterEach(
     language,
-    emitAfterEach.bind(undefined, language)
+    emitAfterEach.bind(undefined, language, {
+      isVisualGridEnabled,
+    })
   )
   exporter.default.register.beforeEach(
     language,
-    emitBeforeEach.bind(undefined, language, appName, testName)
+    emitBeforeEach.bind(undefined, language, appName, testName, {
+      accessibilityLevel,
+      visualGridOptions: isVisualGridEnabled
+        ? [
+            {
+              name: 'Chrome',
+              width: 2048,
+              height: 1536,
+            },
+            {
+              deviceName: 'iPad',
+              deviceId: 'iPad',
+              screenOrientation: 'portrait',
+            },
+          ]
+        : undefined,
+    })
   )
   exporter.default.register.dependency(
     language,
-    emitDependency.bind(undefined, language)
+    emitDependency.bind(undefined, language, { isVisualGridEnabled })
   )
   exporter.default.register.inEachEnd(
     language,
-    emitInEachEnd.bind(undefined, language)
+    emitInEachEnd.bind(undefined, language, { isVisualGridEnabled })
   )
   exporter.default.register.variable(
     language,
-    emitVariable.bind(undefined, language)
+    emitVariable.bind(undefined, language, { isVisualGridEnabled })
   )
 }
 
-function generateSuite(projectFile, language) {
+function generateSuite(projectFile, language, isVisualGridEnabled = false) {
+  isVisualGridEnabled = isVisualGridEnabled
+    ? JSON.parse(isVisualGridEnabled)
+    : false
   const suite = project.normalizeTestsInSuite({
     suite: projectFile.suites[0],
     tests: projectFile.tests,
   })
-  registerEmitters(language, projectFile.name, suite.name)
+  registerEmitters(language, projectFile.name, suite.name, {
+    isVisualGridEnabled,
+  })
   const options = {
     url: projectFile.url,
     suite,

@@ -629,9 +629,13 @@ browser.runtime.onMessageExternal.addListener(
             const isVisualGridEnabled =
               settings.projectSettings.enableVisualGrid
             return sendResponse(
-              emitSetPreRenderHook(message.language, target, {
-                isVisualGridEnabled,
-              })
+              emitSetPreRenderHook(
+                message.language,
+                {
+                  isVisualGridEnabled,
+                },
+                target
+              )
             )
           })
           return true

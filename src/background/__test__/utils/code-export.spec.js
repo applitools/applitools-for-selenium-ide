@@ -69,9 +69,13 @@ describe('code-export', () => {
         })
         it('setPreRenderHook', () => {
           expect(
-            emitSetPreRenderHook(language, 'console.log("blah");', {
-              isVisualGridEnabled: true,
-            })
+            emitSetPreRenderHook(
+              language,
+              {
+                isVisualGridEnabled: true,
+              },
+              'console.log("blah");'
+            )
           ).toMatchSnapshot()
           expect(
             emitSetPreRenderHook(language, 'console.log("blah");')

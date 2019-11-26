@@ -106,8 +106,8 @@ function emitSetMatchTimeout(language, timeout) {
 
 function emitSetPreRenderHook(
   language,
-  jsSnippet,
-  { isVisualGridEnabled } = {}
+  { isVisualGridEnabled } = {},
+  jsSnippet
 ) {
   switch (language) {
     case 'java-junit':

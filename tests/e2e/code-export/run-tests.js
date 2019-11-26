@@ -18,7 +18,7 @@ if (!process.argv[2]) {
   process.exit(1)
 }
 
-generateSuite(process.argv[2])
+generateSuite(process.argv[2], process.argv[3])
 console.log('Test code generated!')
 
 console.log('Starting node for testing.')
