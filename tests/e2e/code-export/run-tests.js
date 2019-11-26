@@ -1,6 +1,7 @@
 const { exec } = require('child_process')
 const { writeFileSync } = require('fs')
 const { generateSuite } = require('./generate-test-code')
+const path = require('path')
 
 /* eslint-disable no-alert, no-console */
 
@@ -22,7 +23,7 @@ console.log('Test code generated!')
 
 console.log('Starting node for testing.')
 const up = exec(
-  `cd tests/e2e/code-export/${process.argv[2]}; docker-compose up`
+  `cd ${path.join(__dirname, process.argv[2])}; docker-compose up`
 )
 let log = ''
 
