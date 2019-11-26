@@ -18,3 +18,5 @@ __pycache__/
 .pytest_cache/
 *.java
 tests/e2e/code-export/javascript-mocha/**/*.spec.js
+*.rb
+*.py
