@@ -2,15 +2,14 @@
 
 function emitCheckWindow(
   language,
-  stepName,
-  { accessibilityLevel } = { accessibilityLevel: 'None' }
+  { accessibilityLevel, isVisualGridEnabled } = { accessibilityLevel: 'None' },
+  stepName
 ) {
   switch (language) {
     case 'java-junit':
-      if (stepName)
-        return `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook).withName("${stepName}"));`
-      else
-        return `eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));`
+      return `eyes.check(Target.window().fully()${
+        isVisualGridEnabled ? '.beforeRenderScreenshotHook(preRenderHook)' : ''
+      }${stepName ? `.withName("${stepName}")` : ''});`
     case 'javascript-mocha':
       if (stepName)
         return `await eyes.check("${stepName}", Target.window().webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}").fully(true))`
@@ -35,18 +34,20 @@ function emitCheckWindow(
   }
 }
 
-function emitCheckElement(
+async function emitCheckElement(
   language,
-  locator,
-  stepName,
-  { accessibilityLevel } = { accessibilityLevel: 'None' }
+  { accessibilityLevel, locatorEmitter, isVisualGridEnabled } = {
+    accessibilityLevel: 'None',
+  },
+  _locator,
+  stepName
 ) {
+  const locator = locatorEmitter ? await locatorEmitter(_locator) : _locator
   switch (language) {
     case 'java-junit':
-      if (stepName)
-        return `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook).withName("${stepName}"));`
-      else
-        return `eyes.check(Target.window().region(${locator}).beforeRenderScreenshotHook(preRenderHook));`
+      return `eyes.check(Target.window().region(${locator})${
+        isVisualGridEnabled ? '.beforeRenderScreenshotHook(preRenderHook)' : ''
+      }${stepName ? `.withName("${stepName}")` : ''});`
     case 'javascript-mocha':
       if (stepName)
         return `await eyes.check("${stepName}", Target.region(${locator}).webHook(preRenderHook).accessibilityValidation("${accessibilityLevel}"))`
@@ -233,7 +234,9 @@ function emitBeforeEach(
       } else {
         result += `eyes = new Eyes();`
         result += `\neyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));`
-        result += `\neyes.setAccessibilityValidation(AccessibilityLevel.${accessibilityLevel});`
+        result += `\nConfiguration config = eyes.getConfiguration();`
+        result += `\nconfig.setAccessibilityValidation(AccessibilityLevel.${accessibilityLevel});`
+        result += `\neyes.setConfiguration(config);`
         if (baselineEnvName)
           result += `\neyes.setBaseLineEnvName("${baselineEnvName}");`
       }
@@ -382,9 +385,9 @@ function emitDependency(language, { isVisualGridEnabled } = {}) {
       result += `\nimport com.applitools.eyes.RectangleSize;`
       result += `\nimport com.applitools.eyes.AccessibilityLevel;`
       result += `\nimport com.applitools.eyes.selenium.fluent.Target;`
+      result += `\nimport com.applitools.eyes.selenium.Configuration;`
       if (isVisualGridEnabled) {
         result += `\nimport com.applitools.eyes.selenium.BrowserType;`
-        result += `\nimport com.applitools.eyes.selenium.Configuration;`
         result += `\nimport com.applitools.eyes.visualgrid.model.DeviceName;`
         result += `\nimport com.applitools.eyes.visualgrid.model.ScreenOrientation;`
         result += `\nimport com.applitools.eyes.visualgrid.services.VisualGridRunner;`

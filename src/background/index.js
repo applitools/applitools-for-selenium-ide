@@ -574,9 +574,14 @@ browser.runtime.onMessageExternal.addListener(
         } else if (command === CommandIds.CheckWindow) {
           getExtensionSettings().then(settings => {
             return sendResponse(
-              emitCheckWindow(message.language, target, {
-                accessibilityLevel: settings.projectSettings.accessibilityLevel,
-              })
+              emitCheckWindow(
+                message.language,
+                {
+                  accessibilityLevel:
+                    settings.projectSettings.accessibilityLevel,
+                },
+                target
+              )
             )
           })
           return true
@@ -593,10 +598,15 @@ browser.runtime.onMessageExternal.addListener(
               getExtensionSettings().then(settings => {
                 return sendResponse(
                   sendResponse(
-                    emitCheckElement(message.language, locator, value, {
-                      accessibilityLevel:
-                        settings.projectSettings.accessibilityLevel,
-                    })
+                    emitCheckElement(
+                      message.language,
+                      {
+                        accessibilityLevel:
+                          settings.projectSettings.accessibilityLevel,
+                      },
+                      locator,
+                      value
+                    )
                   )
                 )
               })

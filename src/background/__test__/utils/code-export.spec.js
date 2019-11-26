@@ -26,22 +26,37 @@ describe('code-export', () => {
     describe(language, () => {
       describe('commands', () => {
         it('checkWindow', () => {
-          expect(emitCheckWindow(language, 'blah')).toMatchSnapshot()
+          expect(emitCheckWindow(language, undefined, 'blah')).toMatchSnapshot()
           expect(emitCheckWindow(language)).toMatchSnapshot()
           expect(
-            emitCheckWindow(language, undefined, { accessibilityLevel: 'AA' })
+            emitCheckWindow(
+              language,
+              {
+                accessibilityLevel: 'AA',
+                isVisualGridEnabled: true,
+              },
+              undefined
+            )
           ).toMatchSnapshot()
         })
         it('checkElement', () => {
           expect(
-            emitCheckElement(language, 'By.id("blah")', 'blah')
-          ).toMatchSnapshot()
-          expect(emitCheckElement(language, 'By.id("blah")')).toMatchSnapshot()
+            emitCheckElement(language, undefined, 'By.id("blah")', 'blah')
+          ).resolves.toMatchSnapshot()
           expect(
-            emitCheckElement(language, 'By.id("blah")', undefined, {
-              accessibilityLevel: 'AA',
-            })
-          ).toMatchSnapshot()
+            emitCheckElement(language, undefined, 'By.id("blah")')
+          ).resolves.toMatchSnapshot()
+          expect(
+            emitCheckElement(
+              language,
+              {
+                accessibilityLevel: 'AA',
+                isVisualGridEnabled: true,
+              },
+              'By.id("blah")',
+              undefined
+            )
+          ).resolves.toMatchSnapshot()
         })
         it('setMatchLevel', () => {
           expect(emitSetMatchLevel(language, 'Layout')).toMatchSnapshot()

@@ -230,15 +230,15 @@ exports[`code-export csharp-xunit hooks variable 2`] = `
 string preRenderHook;"
 `;
 
-exports[`code-export java-junit commands checkElement 1`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderScreenshotHook(preRenderHook).withName(\\"blah\\"));"`;
+exports[`code-export java-junit commands checkElement 1`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).withName(\\"blah\\"));"`;
 
-exports[`code-export java-junit commands checkElement 2`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderScreenshotHook(preRenderHook));"`;
+exports[`code-export java-junit commands checkElement 2`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")));"`;
 
 exports[`code-export java-junit commands checkElement 3`] = `"eyes.check(Target.window().region(By.id(\\"blah\\")).beforeRenderScreenshotHook(preRenderHook));"`;
 
-exports[`code-export java-junit commands checkWindow 1`] = `"eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook).withName(\\"blah\\"));"`;
+exports[`code-export java-junit commands checkWindow 1`] = `"eyes.check(Target.window().fully().withName(\\"blah\\"));"`;
 
-exports[`code-export java-junit commands checkWindow 2`] = `"eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));"`;
+exports[`code-export java-junit commands checkWindow 2`] = `"eyes.check(Target.window().fully());"`;
 
 exports[`code-export java-junit commands checkWindow 3`] = `"eyes.check(Target.window().fully().beforeRenderScreenshotHook(preRenderHook));"`;
 
@@ -262,14 +262,18 @@ exports[`code-export java-junit hooks afterEach 2`] = `"eyes.abortIfNotClosed();
 exports[`code-export java-junit hooks beforeEach 1`] = `
 "eyes = new Eyes();
 eyes.setApiKey(System.getenv(\\"APPLITOOLS_API_KEY\\"));
-eyes.setAccessibilityValidation(AccessibilityLevel.AA);
+Configuration config = eyes.getConfiguration();
+config.setAccessibilityValidation(AccessibilityLevel.AA);
+eyes.setConfiguration(config);
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 `;
 
 exports[`code-export java-junit hooks beforeEach 2`] = `
 "eyes = new Eyes();
 eyes.setApiKey(System.getenv(\\"APPLITOOLS_API_KEY\\"));
-eyes.setAccessibilityValidation(AccessibilityLevel.None);
+Configuration config = eyes.getConfiguration();
+config.setAccessibilityValidation(AccessibilityLevel.None);
+eyes.setConfiguration(config);
 eyes.setBaseLineEnvName(\\"blah\\");
 eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 `;
@@ -297,18 +301,21 @@ eyes.open(driver, \\"project blah\\", \\"test blah\\");"
 exports[`code-export java-junit hooks dependency 1`] = `
 "import com.applitools.eyes.selenium.Eyes;
 import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.selenium.BrowserType;
+import com.applitools.eyes.AccessibilityLevel;
+import com.applitools.eyes.selenium.fluent.Target;
 import com.applitools.eyes.selenium.Configuration;
+import com.applitools.eyes.selenium.BrowserType;
 import com.applitools.eyes.visualgrid.model.DeviceName;
 import com.applitools.eyes.visualgrid.model.ScreenOrientation;
-import com.applitools.eyes.visualgrid.services.VisualGridRunner;
-import com.applitools.eyes.selenium.fluent.Target;
-import com.applitools.eyes.AccessibilityLevel;"
+import com.applitools.eyes.visualgrid.services.VisualGridRunner;"
 `;
 
 exports[`code-export java-junit hooks dependency 2`] = `
 "import com.applitools.eyes.selenium.Eyes;
-import com.applitools.eyes.RectangleSize;"
+import com.applitools.eyes.RectangleSize;
+import com.applitools.eyes.AccessibilityLevel;
+import com.applitools.eyes.selenium.fluent.Target;
+import com.applitools.eyes.selenium.Configuration;"
 `;
 
 exports[`code-export java-junit hooks inEachEnd 1`] = `"eyes.close();"`;
@@ -443,7 +450,7 @@ self.eyes.open(self.driver, \\"project blah\\", \\"test blah\\")"
 exports[`code-export python-pytest hooks beforeEach 2`] = `
 "self.eyes = Eyes()
 self.eyes.api_key = os.environ[\\"APPLITOOLS_API_KEY\\"]
-eyes.baseline_env_name = \\"blah\\"
+self.eyes.baseline_env_name = \\"blah\\"
 self.eyes.open(self.driver, \\"project blah\\", \\"test blah\\")"
 `;
 
