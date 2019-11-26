@@ -32,16 +32,28 @@ commands.forEach(command => {
   })
 })
 
-function registerEmitters(language) {
+function registerEmitters(
+  language,
+  appName,
+  testName,
+  { accessibilityLevel, isVisualGridEnabled } = {}
+) {
   exporter.default.register.command(
     language,
     'eyesCheckWindow',
-    emitCheckWindow.bind(undefined, language)
+    emitCheckWindow.bind(undefined, language, {
+      accessibilityLevel,
+      isVisualGridEnabled,
+    })
   )
   exporter.default.register.command(
     language,
     'eyesCheckElement',
-    emitCheckElement.bind(undefined, language)
+    emitCheckElement.bind(undefined, language, {
+      accessibilityLevel,
+      isVisualGridEnabled,
+      locatorEmitter: exporter.default.emit.locator.bind(undefined, language),
+    })
   )
   exporter.default.register.command(
     language,
@@ -69,7 +81,7 @@ function registerEmitters(language) {
   )
   exporter.default.register.beforeEach(
     language,
-    emitBeforeEach.bind(undefined, language)
+    emitBeforeEach.bind(undefined, language, appName, testName)
   )
   exporter.default.register.dependency(
     language,
@@ -90,7 +102,7 @@ function generateSuite(projectFile, language) {
     suite: projectFile.suites[0],
     tests: projectFile.tests,
   })
-  registerEmitters(language)
+  registerEmitters(language, projectFile.name, suite.name)
   const options = {
     url: projectFile.url,
     suite,
@@ -98,7 +110,7 @@ function generateSuite(projectFile, language) {
     project: projectFile,
     beforeEachOptions: {
       browserName: 'Chrome',
-      gridUrl: 'http://localhost:4444/wd/hub',
+      gridUrl: 'http://selenium:4444/wd/hub',
     },
   }
   return exporter.default.emit
@@ -120,19 +132,9 @@ function generateSuite(projectFile, language) {
     .catch(console.error)
 }
 
-//if (!process.argv[2]) {
-//  console.log('No language provided!')
-//  console.log('')
-//  console.log('Options include:')
-//  console.log('  - csharp-nunit')
-//  console.log('  - java-junit')
-//  console.log('  - javascript-mocha')
-//  console.log('  - python-pytest')
-//  console.log('  - ruby-rspec')
-//  console.log('')
-//  process.exit(1)
+//if (process.argv[2]) {
+//  generateSuite(projectFile, process.argv[2])
 //}
-// generateSuite(projectFile, process.argv[2])
 
 module.exports = {
   generateSuite: generateSuite.bind(undefined, projectFile),
