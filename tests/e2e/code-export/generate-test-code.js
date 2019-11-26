@@ -36,7 +36,12 @@ function registerEmitters(
   language,
   appName,
   testName,
-  { accessibilityLevel, isVisualGridEnabled, baselineEnvName, viewportSize } = {}
+  {
+    accessibilityLevel,
+    isVisualGridEnabled,
+    baselineEnvName,
+    viewportSize,
+  } = {}
 ) {
   exporter.default.register.command(
     language,
@@ -153,17 +158,18 @@ function generateSuite(projectFile, language, isVisualGridEnabled = false) {
   return exporter.default.emit
     .suite(language, options)
     .then(result => {
-      const filePath = language.includes('java')
-        ? path.join(
-            __dirname,
-            language,
-            'tests',
-            'src',
-            'test',
-            'java',
-            result.filename
-          )
-        : path.join(__dirname, language, 'tests', result.filename)
+      const filePath =
+        language === 'java-junit'
+          ? path.join(
+              __dirname,
+              language,
+              'tests',
+              'src',
+              'test',
+              'java',
+              result.filename
+            )
+          : path.join(__dirname, language, 'tests', result.filename)
       writeFileSync(filePath, result.body)
     })
     .catch(console.error)
