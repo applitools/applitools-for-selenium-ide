@@ -176,7 +176,7 @@ function generateSuite(projectFile, language, isVisualGridEnabled = false) {
 }
 
 //if (process.argv[2]) {
-//  generateSuite(projectFile, process.argv[2])
+//  generateSuite(projectFile, process.argv[2], process.argv[3])
 //}
 
 module.exports = {
