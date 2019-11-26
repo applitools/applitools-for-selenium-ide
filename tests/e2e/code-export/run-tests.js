@@ -22,9 +22,8 @@ generateSuite(process.argv[2], process.argv[3])
 console.log('Test code generated!')
 
 console.log('Starting node for testing.')
-const up = exec(
-  `cd ${path.join(__dirname, process.argv[2])}; docker-compose up`
-)
+const workingDir = path.join(__dirname, process.argv[2])
+const up = exec(`cd ${workingDir}; docker-compose up`)
 let log = ''
 
 console.log('Tests are running. Please wait...')
@@ -43,7 +42,7 @@ up.stdout.on('data', data => {
   log += data
   if (data.includes('exited with code')) {
     const code = getCode(data)
-    const down = exec(`cd ${process.argv[2]}; docker-compose down`)
+    const down = exec(`cd ${workingDir}; docker-compose down`)
     writeFileSync('run-tests.log', log)
     console.log('Logs written to run-tests.log')
     down.on('close', _code => {
