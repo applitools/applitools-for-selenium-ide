@@ -26,8 +26,6 @@ const up = exec(
 )
 let log = ''
 
-//process.stdin.pipe(up.stdin)
-
 console.log('Tests are running. Please wait...')
 
 function getCode(message) {
