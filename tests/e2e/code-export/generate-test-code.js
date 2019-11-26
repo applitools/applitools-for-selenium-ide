@@ -36,7 +36,7 @@ function registerEmitters(
   language,
   appName,
   testName,
-  { accessibilityLevel, isVisualGridEnabled } = {}
+  { accessibilityLevel, isVisualGridEnabled, baselineEnvName, viewportSize } = {}
 ) {
   exporter.default.register.command(
     language,
@@ -85,12 +85,14 @@ function registerEmitters(
     language,
     emitBeforeEach.bind(undefined, language, appName, testName, {
       accessibilityLevel,
+      baselineEnvName,
+      viewportSize,
       visualGridOptions: isVisualGridEnabled
         ? [
             {
               name: 'Chrome',
-              width: 2048,
-              height: 1536,
+              width: 1280,
+              height: 800,
             },
             {
               deviceName: 'iPad',
@@ -123,8 +125,20 @@ function generateSuite(projectFile, language, isVisualGridEnabled = false) {
     suite: projectFile.suites[0],
     tests: projectFile.tests,
   })
+  const setBaselineEnvNameCommand = projectFile.tests[0].commands.find(
+    command => command.command === 'eyesSetBaselineEnvName'
+  )
+  const setViewportSizeCommand = projectFile.tests[0].commands.find(
+    command => command.command === 'eyesSetViewportSize'
+  )
   registerEmitters(language, projectFile.name, suite.name, {
     isVisualGridEnabled,
+    baselineEnvName: setBaselineEnvNameCommand
+      ? setBaselineEnvNameCommand.target
+      : undefined,
+    viewportSize: setViewportSizeCommand
+      ? setViewportSizeCommand.target
+      : '1280x800',
   })
   const options = {
     url: projectFile.url,
