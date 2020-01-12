@@ -63,7 +63,7 @@
   }],
   "urls": ["https://en.wikipedia.org/", "https://applitools.com/"],
   "plugins": [{
-    "id": "nknickobkcecmkiiefhjmiaihliikohm",
+    "id": "phbnhaaclebeollfekbadkabcdklfgfj",
     "name": "Applitools",
     "version": "1.0.0"
   }],
@@ -74,7 +74,7 @@
     "suites": [{
       "name": "hello world",
       "snapshot": {
-        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = Eyes.fromBrowserInfo(serverUrl, configuration.params.eyesDisabled, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : undefined);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => (\"eyes.seleniumide.runner 1.7.5 \" + (eyes._isVisualGrid ? \"visualgrid\" : \"local\"));eyes.setAgentId(\"eyes.seleniumide.runner 1.7.5 \" + (eyes._isVisualGrid ? \"visualgrid\" : \"local\"));eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode(\"CSS\");}eyes.setSendDom(configuration.params.eyesDomUploadEnabled === undefined ? true : configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}});afterEach(async () => {if (eyes._isOpen) {eyes.getEyesRunner ? await eyes.getEyesRunner().getAllResults() : await eyes.close();}});"
+        "hook": "beforeAll(async () => {batchName = \"hello world\";});beforeEach(async () => {global.eyes = Eyes.fromBrowserInfo(serverUrl, configuration.params.eyesDisabled, configuration.params.eyesRendering ? { browser: configuration.params.eyesRendering } : undefined);eyes.setApiKey(apiKey);eyes.getBaseAgentId = () => (\"eyes.seleniumide.runner.\" + (eyes._isVisualGrid ? \"visualgrid\" : \"local\") + \"/1.9.0\");eyes.setAgentId(\"eyes.seleniumide.runner.\" + (eyes._isVisualGrid ? \"visualgrid\" : \"local\") + \"/1.9.0\");eyes.setBatch(new BatchInfo(batchName, undefined, batchId));if(!eyes._isVisualGrid){eyes.setHideScrollbars(true);eyes.setStitchMode(\"CSS\");}eyes.setSendDom(configuration.params.eyesDomUploadEnabled === undefined ? true : configuration.params.eyesDomUploadEnabled);if (configuration.params.eyesLogsEnabled) {eyes.setLogHandler(new ConsoleLogHandler(true));}});afterEach(async () => {if (eyes._isOpen) {eyes.getEyesRunner ? await eyes.getEyesRunner().getAllResults() : await eyes.close();}});"
       }
     }],
     "tests": [{
@@ -82,7 +82,7 @@
       "snapshot": {
         "commands": {
           "d12706ea-0336-4b8c-bda0-d171c9f9f465": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "bed43289-dbbf-4f69-94c0-7c8c13ea455d": "if (!opts.isNested) {await driver.wait(until.elementLocated(By.css(`button`)), configuration.timeout); await eyes.check(\"a button\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(By.css(`button`)).webHook(preRenderHook));}"
+          "bed43289-dbbf-4f69-94c0-7c8c13ea455d": "if (!opts.isNested) {await driver.wait(until.elementLocated(By.css(`button`)), configuration.timeout); await eyes.check(\"a button\" || (new URL(await driver.getCurrentUrl())).pathname, Target.region(By.css(`button`)).webHook(preRenderHook).accessibilityValidation(configuration.params.eyesAccessibilityLevel || \"None\"));}"
         },
         "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check element\");global.preRenderHook = \"\";"],
         "teardownHooks": ["driver = _driver;"]
@@ -92,7 +92,7 @@
       "snapshot": {
         "commands": {
           "d74a069d-325a-476d-958b-05f01359a9b6": "await eyes.setViewportSize({width: 1280, height: 800});",
-          "fce61563-638b-49d8-8fe9-2ee18bc05043": "if (!opts.isNested) {await eyes.check(\"check full page\" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).fully(true));}"
+          "fce61563-638b-49d8-8fe9-2ee18bc05043": "if (!opts.isNested) {await eyes.check(\"check full page\" || (new URL(await driver.getCurrentUrl())).pathname, Target.window().webHook(preRenderHook).accessibilityValidation(configuration.params.eyesAccessibilityLevel || \"None\").fully(true));}"
         },
         "setupHooks": ["const _driver = driver;driver = await eyes.open(driver, appName, \"check window full\");global.preRenderHook = \"\";"],
         "teardownHooks": ["driver = _driver;"]
@@ -100,7 +100,7 @@
     }]
   },
   "dependencies": {
-    "@applitools/eyes-selenium": "4.23.6"
+    "@applitools/eyes-selenium": "4.30.0"
   },
   "jest": {
     "extraGlobals": ["Math"]

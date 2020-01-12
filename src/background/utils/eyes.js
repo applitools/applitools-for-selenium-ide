@@ -135,6 +135,12 @@ export async function makeEyes(
   return eye
 }
 
+function makeAgentId(runningLocation) {
+  return `eyes.seleniumide.${browserName.toLowerCase()}.${runningLocation}/${
+    manifest.version
+  } `
+}
+
 async function createImagesEyes(
   batchId,
   appName,
@@ -151,11 +157,8 @@ async function createImagesEyes(
   eyes.setApiKey(apiKey)
   eyes.setBranchName(branch)
   eyes.setParentBranchName(parentBranch)
-  eyes.getBaseAgentId = () =>
-    `eyes.seleniumide.${browserName.toLowerCase()} ${manifest.version} local`
-  eyes.setAgentId(
-    `eyes.seleniumide.${browserName.toLowerCase()} ${manifest.version} local`
-  )
+  eyes.getBaseAgentId = () => makeAgentId('local')
+  eyes.setAgentId(makeAgentId('local'))
   eyes.setInferredEnvironment(`useragent:${navigator.userAgent}`)
   eyes.setBatch(batchName, batchId)
   if (baselineEnvName) eyes.setBaselineEnvName(baselineEnvName)
@@ -271,9 +274,7 @@ async function createVisualGridEyes(
   const eyes = await makeVisualGridClient({
     apiKey,
     serverUrl,
-    agentId: `eyes.seleniumide.${browserName.toLowerCase()} ${
-      manifest.version
-    } visualgrid`,
+    agentId: makeAgentId('visualgrid'),
     showLogs: true,
     useDom,
     enablePatterns,
