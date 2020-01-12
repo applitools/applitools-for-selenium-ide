@@ -76,7 +76,7 @@
     "url-loader": "^2.0.1",
     "web-ext-submit": "^3.1.1",
     "webpack": "^3.5.6",
-    "webpack-dev-server": "^2.8.2",
+    "webpack-dev-server": "^3.1.11",
     "@seleniumhq/code-export": "^3.16.0",
     "@seleniumhq/side-model": "^3.15.0",
     "@seleniumhq/side-utils": "^3.16.0"
