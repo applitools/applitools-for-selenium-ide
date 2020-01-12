@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.9.1
+- Changed the user agent formatting sent to Eyes
+
 ## v1.9.0
 - Added support for check commands in nested tests
 - Added C# code export support
