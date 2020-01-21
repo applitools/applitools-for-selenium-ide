@@ -47,6 +47,21 @@ export default {
             test: /\.(jsx?)$/,
             include: [
               path.resolve(__dirname, 'src'),
+              /\/node_modules\/@applitools\/visual-grid-client/,
+            ],
+            use: [
+              {
+                loader: 'babel-loader',
+                options: {
+                  compact: true,
+                },
+              },
+            ],
+          },
+          {
+            test: /\.(jsx?)$/,
+            include: [
+              path.resolve(__dirname, 'src'),
               /\/node_modules\/@applitools\/eyes-sdk-core/,
             ],
             use: [
