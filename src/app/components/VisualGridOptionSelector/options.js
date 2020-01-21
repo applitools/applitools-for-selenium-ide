@@ -1,4 +1,4 @@
-export const browsers = ['Chrome', 'Firefox', 'IE10', 'IE11', 'Edge']
+export const browsers = ['Chrome', 'Firefox', 'IE10', 'IE11', 'Edge', 'Safari']
 export const browserIds = { ie10: 'IE_10', ie11: 'IE_11' }
 export const experimentalBrowsers = []
 
