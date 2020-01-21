@@ -25,7 +25,8 @@ export default class DownloadConfig extends React.Component {
     return (
       <div
         className="download-config"
-        data-tip="<p>Download visual grid configuration</p>"
+        data-tip="<p>Download Ultrafast Grid configuration</p>"
+        data-place="left"
       >
         <DownloadButton
           onClick={() => {
