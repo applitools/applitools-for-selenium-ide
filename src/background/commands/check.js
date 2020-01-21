@@ -327,7 +327,7 @@ async function preCheck(eyes, viewport) {
         appName: eyes.getAppName(),
         eyesServer: eyes.getServerUrl(),
         environment: eyes.isVisualGrid
-          ? 'Visual Grid'
+          ? 'Ultrafast Grid'
           : parseEnvironment(navigator.userAgent, viewport),
         branch: eyes.getBranchName(),
       },

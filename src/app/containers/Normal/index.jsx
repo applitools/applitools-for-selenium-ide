@@ -164,7 +164,7 @@ export default class Normal extends React.Component {
               id="enable-visual-grid"
               className="checkbox"
               name="enable-visual-grid"
-              label="Execute using visual grid"
+              label="Execute using Ultrafast Grid"
               checked={this.state.projectSettings.enableVisualGrid}
               onChange={this.handleCheckboxChange.bind(
                 this,
