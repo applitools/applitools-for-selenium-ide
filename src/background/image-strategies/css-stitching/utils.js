@@ -22,9 +22,11 @@ const JS_COMPUTE_CONTENT_ENTIRE_SIZE =
 const JS_RETURN_CONTENT_ENTIRE_SIZE = `${JS_COMPUTE_CONTENT_ENTIRE_SIZE}[totalWidth, totalHeight];`
 
 export async function getEntirePageSize(tabId) {
-  const result = (await browser.tabs.executeScript(tabId, {
-    code: JS_RETURN_CONTENT_ENTIRE_SIZE,
-  }))[0]
+  const result = (
+    await browser.tabs.executeScript(tabId, {
+      code: JS_RETURN_CONTENT_ENTIRE_SIZE,
+    })
+  )[0]
   return new RectangleSize(
     parseInt(result[0], 10) || 0,
     parseInt(result[1], 10) || 0
@@ -32,8 +34,10 @@ export async function getEntirePageSize(tabId) {
 }
 
 export async function getCurrentScrollPosition(tabId) {
-  const result = (await browser.tabs.executeScript(tabId, {
-    code: JS_GET_CURRENT_SCROLL_POSITION,
-  }))[0]
+  const result = (
+    await browser.tabs.executeScript(tabId, {
+      code: JS_GET_CURRENT_SCROLL_POSITION,
+    })
+  )[0]
   return new Location(Math.ceil(result[0]) || 0, Math.ceil(result[1]) || 0)
 }

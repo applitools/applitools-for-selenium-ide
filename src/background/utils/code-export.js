@@ -346,9 +346,7 @@ function emitBeforeEach(
       result += `\nConfiguration conf = new Configuration();`
       result += `\nconf.SetTestName("${testName}");`
       result += `\nconf.SetAppName("${projectName}");`
-      result += `\nconf.SetViewportSize(new Size(${viewportSize[0]}, ${
-        viewportSize[1]
-      }));`
+      result += `\nconf.SetViewportSize(new Size(${viewportSize[0]}, ${viewportSize[1]}));`
       result += `\nconf.AccessibilityValidation = AccessibilityLevel.${accessibilityLevel};`
       if (baselineEnvName)
         result += `\nconf.SetBaselineEnvName("${baselineEnvName}");`

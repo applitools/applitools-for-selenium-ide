@@ -15,10 +15,12 @@ export async function hideCaret(tabId) {
 
 export async function hideScrollbars(tabId) {
   const initialOverflow =
-    (await browser.tabs.executeScript(tabId, {
-      code:
-        'var originalOverflow = document.documentElement.style["overflow"]; document.documentElement.style["overflow"] = "hidden"; originalOverflow;',
-    }))[0] || ''
+    (
+      await browser.tabs.executeScript(tabId, {
+        code:
+          'var originalOverflow = document.documentElement.style["overflow"]; document.documentElement.style["overflow"] = "hidden"; originalOverflow;',
+      })
+    )[0] || ''
 
   return async () =>
     await browser.tabs.executeScript(tabId, {

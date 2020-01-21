@@ -59,10 +59,12 @@ export async function elevateSetWindowSizeIfNecessary() {
     cmd => cmd.command === CommandIds.SetViewportSize
   )
   if (!hasSetViewportSize) {
-    const tabId = (await sendMessage({
-      uri: '/record/tab',
-      verb: 'get',
-    })).id
+    const tabId = (
+      await sendMessage({
+        uri: '/record/tab',
+        verb: 'get',
+      })
+    ).id
     const { width, height } = await getTabViewportSize(tabId)
     const setWindowSize = commands.find(cmd => cmd.command === 'setWindowSize')
     if (setWindowSize) {

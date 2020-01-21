@@ -58,9 +58,11 @@ export default class CSSTranslatePositionProvider extends PositionProvider {
 
   async getTransform() {
     return (
-      (await browser.tabs.executeScript(this._tabId, {
-        code: 'document.documentElement.style["transform"]',
-      }))[0] || ''
+      (
+        await browser.tabs.executeScript(this._tabId, {
+          code: 'document.documentElement.style["transform"]',
+        })
+      )[0] || ''
     )
   }
 
