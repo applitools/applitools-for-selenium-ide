@@ -106,6 +106,8 @@
     "js-yaml": "^3.13.0",
     "braces": "^2.3.1",
     "mime": "^2.0.3",
-    "clean-css": "^4.1.11"
+    "clean-css": "^4.1.11",
+    "mem": "6.0.1",
+    "serialize-javascript": "2.1.2"
   }
 }
