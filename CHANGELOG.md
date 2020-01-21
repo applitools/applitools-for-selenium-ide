@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.10.0
+- Fixed UX bug with the tooltip when downloading the visual grid config
+- Added Safari as a browser option when running on the visual grid [Trello 179](https://trello.com/c/h8KIkB4x)
+- Updated the UI to refer to the visual grid as the "Ultrafast Grid" [Trello 179](https://trello.com/c/h8KIkB4x)
+- Updated underlying Applitools SDKs to latest [Trello 144](https://trello.com/c/TiUiXE26)
+- Updated underlying and transitive dependencies to resolve security vulnerabilities
+
 ## v1.9.1
 - Changed the user agent formatting sent to Eyes
 
