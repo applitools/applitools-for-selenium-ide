@@ -1,5 +1,7 @@
 # Applitools Selenium IDE plugin &middot; [![Build Status](https://travis-ci.com/applitools/applitools-for-selenium-ide.svg?token=QdqsevXuKPcBpNJ7ADxQ&branch=master)](https://travis-ci.com/applitools/applitools-for-selenium-ide)
 
+__NOTE: This repo has been moved to [eyes-sdk-javascript](https://github.com/applitools/eyes.sdk.javascript1)__
+
 ## Building The Project
 
 ```sh
